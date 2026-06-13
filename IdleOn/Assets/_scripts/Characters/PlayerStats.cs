@@ -6,6 +6,8 @@ namespace IdleOn.Characters
     [RequireComponent(typeof(HealthComponent))]
     public class PlayerStats : MonoBehaviour
     {
+        public static PlayerStats Instance { get; private set; }
+
         [Header("Base Stats")]
         [SerializeField] private StatSheet baseStats = new StatSheet();
 
@@ -16,6 +18,7 @@ namespace IdleOn.Characters
 
         void Awake()
         {
+            Instance = this;
             _health = GetComponent<HealthComponent>();
             Recalculate();
         }

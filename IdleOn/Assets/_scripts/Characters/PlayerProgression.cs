@@ -5,8 +5,7 @@ namespace IdleOn.Characters
 {
     public class PlayerProgression : MonoBehaviour
     {
-        public float TotalExp  { get; private set; }
-        public int   Coins     { get; private set; }
+        public float TotalExp { get; private set; }
 
         void OnEnable()
         {
@@ -18,13 +17,11 @@ namespace IdleOn.Characters
             GameEvents.OnEnemyKilled -= HandleEnemyKilled;
         }
 
-        private void HandleEnemyKilled(string enemyId, float xp, int coins)
+        private void HandleEnemyKilled(string enemyId, float xp)
         {
             TotalExp += xp;
-            Coins    += coins;
             GameEvents.RaisePlayerExpGained(xp);
-            GameEvents.RaisePlayerCoinsChanged(Coins);
-            Debug.Log($"[Progression] +{xp} EXP  +{coins} Coins  |  Total: {TotalExp} EXP  {Coins} Coins");
+            Debug.Log($"[Progression] +{xp} EXP  |  Total: {TotalExp} EXP");
         }
     }
 }

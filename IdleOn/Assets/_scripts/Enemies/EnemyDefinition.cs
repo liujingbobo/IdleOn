@@ -1,4 +1,5 @@
 using UnityEngine;
+using IdleOn.Loot;
 
 namespace IdleOn.Enemies
 {
@@ -10,13 +11,15 @@ namespace IdleOn.Enemies
         public string DisplayName;
 
         [Header("Stats")]
-        public float MaxHP = 50f;
-        public float ATK = 5f;
-        public float DEF = 0f;
-        public float MoveSpeed = 1.5f;
+        public float MaxHP      = 50f;
+        public float ATK        = 5f;
+        public float DEF        = 0f;
+        public float MoveSpeed  = 1.5f;
 
         [Header("Rewards")]
-        public float XPReward = 10f;
-        public int CoinReward = 3;
+        public float XPReward   = 10f;
+
+        [Header("Drops")]
+        public LootTable LootTable;
     }
 }
