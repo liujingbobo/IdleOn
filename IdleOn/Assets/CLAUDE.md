@@ -88,32 +88,184 @@ Use instead:
 * Static Instance properties for true singletons (e.g. PlayerStats.Instance)
 * Dependency injection via the spawner or initializer
 
+Every time you change a system, update ALL related systems. Never leave a half-broken dependency.
+
 ---
 
 ## Folder Structure
 
-Assets/_Project/
+```
+Assets/_scripts/
+  Core/
+  Characters/
+  Combat/
+  Enemies/
+  Loot/
+  World/
+  Inventory/
+  Save/
+  Equipment/
+  Talents/
+  Vault/
+  Quests/
+  UI/
+```
 
-* Art
-* Audio
-* Prefabs
-* Scenes
-* ScriptableObjects
-* Scripts
+### Namespaces
 
-Scripts:
+| Folder     | Namespace          |
+|------------|--------------------|
+| Core       | IdleOn.Core        |
+| Characters | IdleOn.Characters  |
+| Combat     | IdleOn.Combat      |
+| Enemies    | IdleOn.Enemies     |
+| Loot       | IdleOn.Loot        |
+| World      | IdleOn.World       |
+| Inventory  | IdleOn.Inventory   |
+| Save       | IdleOn.Save        |
+| UI         | IdleOn.UI          |
 
-* Core
-* Characters
-* Combat
-* Enemies
-* Inventory
-* Equipment
-* Talents
-* Vault
-* Quests
-* Save
-* UI
+---
+
+## Save System
+
+`GameBootstrap` runs at [DefaultExecutionOrder(-100)] and calls `SaveManager.CreateNewSave()` in Awake.
+
+Every Play session starts with a fresh in-memory save. No auto-load from disk on startup yet.
+
+`SaveManager.SaveToDisk()` and `LoadFromDisk()` are implemented but NOT called automatically.
+
+Systems that need save data must use this pattern in Start():
+
+```csharp
+void Start()
+{
+    if (SaveManager.Instance.IsLoaded)
+        Initialize();
+    else
+        SaveManager.OnSaveLoaded += Initialize;
+}
+```
+
+`PlayerSaveData` owns:
+- Level, Exp
+- SilverCoins, GoldCoins (long)
+- InventoryData (20 slots default)
+- EquippedItems (List<EquipmentSlotEntry>)
+- CurrentMapId, LastLogoutTime
+
+---
+
+## Loot System
+
+### Pipeline
+
+Every loot source (enemy, chest, tree, etc.) uses the same two lines:
+
+```csharp
+LootResult result = LootEvaluator.Evaluate(definition.LootTable, luckMultiplier);
+DropManager.Instance.Spawn(result, transform.position);
+```
+
+Never instantiate WorldDrop directly. Always go through DropManager.
+
+### LootTable
+
+`LootTable` is a ScriptableObject (Create → IdleOn → Loot Table).
+
+`EnemyDefinition.LootTable` is a reference to a LootTable asset — NOT an inline list.
+
+Each DropEntry rolls independently. Multiple entries can drop from one kill.
+
+### WorldDrop
+
+WorldDrop prefab is on the "Drop" physics layer (index 8).
+
+WorldDrop is passive — no self-input logic. All pickup input lives in PlayerCombatController.
+
+No auto-pickup. No despawn timer.
+
+### Pickup
+
+PlayerCombatController checks the Drop layer mask on every LMB hold frame.
+
+If a WorldDrop collider is found: call `DropManager.Instance.Collect(drop)` and consume the input frame.
+
+Drop pickup takes priority over movement and attack input.
+
+`dropLayerMask` on PlayerCombatController must be set to the "Drop" layer (index 8, mask = 256).
+
+### Currency drops
+
+Currency goes through the WorldDrop pipeline like items. On collect, CurrencySystem.Add() is called. Currency collection always succeeds (no wallet-full state).
+
+### Inventory full
+
+On item collect failure: `WorldDrop.OnCollectionFailed()` sets a 0.5s cooldown. `GameEvents.RaiseInventoryFull()` fires. The drop stays in the world.
+
+---
+
+## Inventory System
+
+`InventorySystem` is the only entry point for reading and writing inventory data.
+
+UI must read from `InventorySystem.Instance` only — never from `SaveManager` or `InventoryData` directly.
+
+Key methods:
+- `TryAddItem(itemId, qty) → bool`
+- `RemoveItem(itemId, qty) → bool`
+- `GetSlots() → IReadOnlyList<InventorySlotData>`
+- `GetCapacity() → int`
+
+`CurrencySystem` is the only entry point for reading and writing currency.
+
+Key methods:
+- `Add(CurrencyType, long amount)`
+- `Spend(CurrencyType, long amount) → bool`
+- `GetAmount(CurrencyType) → long`
+
+---
+
+## Inventory UI
+
+Tab key opens/closes the inventory panel.
+
+`InventoryUI` subscribes to `GameEvents.OnInventoryChanged`.
+
+`Refresh()` only runs when the panel is active.
+
+`InventoryUI` reads from `InventorySystem.Instance` only.
+
+`InventoryUI` needs a `[SerializeField] ItemDatabase itemDatabase` reference to resolve icons.
+
+If `ItemDefinition.Icon` is null, a grey placeholder sprite is generated at runtime.
+
+Stack count is hidden when quantity == 1.
+
+---
+
+## GameEvents
+
+Current events:
+
+```csharp
+// Combat
+OnAutoCombatChanged   Action<bool>
+OnEnemyKilled         Action<string, float>   // enemyId, xp
+
+// Player HP
+OnPlayerHPChanged     Action<float, float>    // current, max
+
+// Progression
+OnPlayerExpGained     Action<float>
+
+// Inventory
+OnInventoryChanged    Action
+OnInventoryFull       Action
+
+// Currency
+OnCurrencyChanged     Action<CurrencyType, long>  // type, new total
+```
 
 ---
 
@@ -128,6 +280,10 @@ Types: `Physical` (orange), `Magic` (blue), `Heal` (green).
 `isCritical = true` increases font size.
 
 FloatTextManager uses an object pool — do not instantiate FloatText directly.
+
+### Inventory UI
+
+Press Tab to open/close. 20 slots displayed in a 4×5 grid. Reads from InventorySystem.
 
 ---
 
@@ -146,6 +302,8 @@ Monsters and the player stand on top of floor/platform tiles.
 3. Auto combat ON → player repeatedly finds a monster, moves to attack range, attacks, and continues.
 4. Auto combat ON + click monster → interrupt current action, move to clicked monster, attack once, then resume auto combat.
 5. Auto combat ON + click floor → interrupt current action, move to that floor position, then resume auto combat.
+
+LMB hold over a WorldDrop (Drop layer) → collect drop. This check runs before movement/attack.
 
 ### Movement Implementation
 
@@ -196,7 +354,7 @@ Enemy drops support both item drops and currency drops via the same drop table.
 
 ## Drop System
 
-Each `EnemyDefinition` holds a `DropTable` — a list of `DropEntry` records.
+Each source (enemy, chest, tree, etc.) holds a `LootTable` reference — not an inline DropEntry list.
 
 Each `DropEntry` defines:
 
@@ -213,12 +371,15 @@ Evaluate each entry independently on kill. Multiple entries can drop in one kill
 Use ScriptableObjects for:
 
 * ItemDefinition (Equipment, Consumable, Material)
-* EnemyDefinition (includes DropTable)
+* LootTable (shared, reusable drop tables)
+* EnemyDefinition (stats + LootTable reference — NOT inline DropEntry list)
 * Talents
 * Vault Upgrades
 * Quests
 * MapDefinition
 * MapRegistry
+* ItemDatabase (master item registry)
+* CurrencyDatabase (master currency registry)
 
 Do not hardcode game data into UI scripts.
 
@@ -233,6 +394,9 @@ Examples:
 * PlayerCombatController
 * EnemySpawner
 * InventorySystem
+* CurrencySystem
+* DropManager
+* LootEvaluator
 * TalentSystem
 * VaultSystem
 * QuestSystem

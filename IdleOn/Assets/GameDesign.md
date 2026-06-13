@@ -119,6 +119,12 @@ If auto combat is enabled and the player clicks the floor:
 * Move to the clicked floor position
 * Resume auto combat
 
+### Drop Pickup
+
+Hold left mouse button over a world drop to collect it.
+
+Drop pickup input takes priority over movement and attack.
+
 ## Movement
 
 Use simple direct 2D movement toward the target position.
@@ -127,11 +133,11 @@ Use Vector2.MoveTowards — no A* pathfinding required.
 
 ## Enemy Behavior
 
-Enemies stand at their spawn position.
+Enemies patrol between two points at their spawn position.
 
-When the player enters the enemy's attack range, the enemy attacks the player periodically.
+When hit or when the player enters their attack range, enemies enter Combat state and chase the player.
 
-Enemies do not chase the player.
+Enemies return to Patrol after a cooldown with no hit received (combatForgetTime).
 
 ## Damage Feedback
 
@@ -215,6 +221,20 @@ Capacity can be increased by using an Inventory Expansion consumable item.
 
 Inventory data is saved as part of the player save file.
 
+## Inventory UI
+
+Press Tab to open/close the inventory panel.
+
+Displays 20 slots in a 4×5 grid.
+
+Each slot shows:
+* Item icon (or grey placeholder if no icon assigned)
+* Stack count when quantity > 1
+
+Empty slots show an empty dark frame.
+
+No drag and drop yet. No item interaction yet.
+
 ---
 
 # Items
@@ -263,6 +283,8 @@ Two currencies:
 
 Currency is stored as numeric values in player save data, not as inventory items.
 
+Currency drops appear as world drops (same pickup flow as items). Collecting a currency drop delivers it directly to the wallet.
+
 ---
 
 # Equipment
@@ -275,18 +297,44 @@ Slots: Hat, Weapon, Armor, Accessory, Pants, Shoes, Ring1, Ring2.
 
 # Loot
 
-Each enemy has a drop table.
+## Drop Pipeline
 
-Each drop entry defines:
+All loot sources (enemies, chests, trees, fishing spots, quest rewards) use the same pipeline:
+
+1. `LootEvaluator.Evaluate(lootTable, luckMultiplier)` → produces a `LootResult`
+2. `DropManager.Instance.Spawn(result, position)` → spawns WorldDrop objects
+3. Player holds LMB over drop → `DropManager.Collect()` → item to inventory or currency to wallet
+
+## LootTable
+
+Each source holds a `LootTable` ScriptableObject reference (not an inline list).
+
+LootTables are reusable — multiple enemies can share one table.
+
+Each DropEntry defines:
 
 * Drop type: Item or Currency
 * Which item or which currency
-* Drop chance
+* Drop chance (0.0 – 1.0)
 * Min and Max quantity
 
-Multiple entries can drop from one kill.
+Multiple entries can drop from one kill. Each entry rolls independently.
 
-Loot enters inventory (items) or currency wallet (coins) automatically.
+## WorldDrop
+
+World drops are pooled objects (DropManager owns the pool).
+
+Drops stay in the world indefinitely until collected — no despawn timer.
+
+Currency drops use the same WorldDrop prefab but deliver to wallet on collect.
+
+## Inventory Full
+
+If inventory is full on item collect attempt:
+
+* Drop stays in the world
+* OnInventoryFull event fires
+* A 0.5s cooldown suppresses repeated attempts
 
 ---
 
@@ -381,23 +429,34 @@ Display rewards in a popup.
 
 # Save System
 
-Save:
+## What is Saved
 
 * Level
 * EXP
-* Coins
-* Inventory
-* Equipment
+* Silver Coins
+* Gold Coins
+* Inventory (slot list)
+* Equipped items (slot name → item id pairs)
 * Talent Levels
 * Vault Levels
 * Quest Progress
 * Last Logout Time
+* Current Map Id
+
+## Implementation Notes
+
+* `SaveManager` singleton with `DontDestroyOnLoad`
+* JSON serialization via `JsonUtility`
+* Save file at `Application.persistentDataPath/player_save.json`
+* Each Play session starts with `CreateNewSave()` (fresh in-memory data)
+* `SaveToDisk()` and `LoadFromDisk()` are implemented but not yet auto-called
+* Systems initialize only after `SaveManager.OnSaveLoaded` fires
 
 ---
 
 # UI
 
-Main HUD:
+## Main HUD
 
 * Character Name
 * Class
@@ -406,16 +465,16 @@ Main HUD:
 * MP Bar
 * Auto Combat Toggle
 
-Buttons:
+## Buttons
 
-* Inventory
+* Inventory (or press Tab)
 * Talents
 * Quests
 * Map
 
-Windows:
+## Windows
 
-* Inventory
+* Inventory (Tab — implemented)
 * Talents
 * Quests
 * Vault

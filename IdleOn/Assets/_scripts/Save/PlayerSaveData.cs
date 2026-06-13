@@ -1,23 +1,9 @@
 using System;
-using System.Collections.Generic;
 using IdleOn.Items;
+using IdleOn.Equipment;
 
 namespace IdleOn.Save
 {
-    [Serializable]
-    public class EquipmentSlotEntry
-    {
-        public string SlotName;
-        public string ItemId;
-
-        public EquipmentSlotEntry() { }
-        public EquipmentSlotEntry(string slotName, string itemId)
-        {
-            SlotName = slotName;
-            ItemId   = itemId;
-        }
-    }
-
     [Serializable]
     public class PlayerSaveData
     {
@@ -30,10 +16,10 @@ namespace IdleOn.Save
         public long GoldCoins   = 0;
 
         // Inventory
-        public InventoryData Inventory = new InventoryData(20);
+        public InventoryData  Inventory  = new InventoryData(20);
 
-        // Equipment: one entry per filled slot (SlotName → ItemId)
-        public List<EquipmentSlotEntry> EquippedItems = new List<EquipmentSlotEntry>();
+        // Equipment: one entry per occupied slot
+        public EquipmentData  Equipment  = new EquipmentData();
 
         // Location — used for offline progression (implemented later)
         public string CurrentMapId   = "town";

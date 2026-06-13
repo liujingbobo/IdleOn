@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af658e6ee8a02444ab49a326290d8369, type: 3}
+  m_Name: Armor
+  m_EditorClassIdentifier: 
+  ItemId: Armor0
+  DisplayName: Armor
+  Description: 'This is Armor. '
+  ItemType: 0
+  Icon: {fileID: 2616769441569973188, guid: 80bbac1af9cc09e44ac2d1ffbc85664d, type: 3}
+  SellValue: 0
+  Rarity: 0
+  EquipmentSlot: 2
+  StatBonuses:
+    STR: 1
+    AGI: 1
+    WIS: 1
+    LUK: 1
+    MaxHP: 100
+    MaxMP: 50
+    ATKMin: 5
+    ATKMax: 10
+    DEF: 2
+    ACC: 90
+    CRITChance: 5
+    MoveSpeed: 3
+  ConsumableType: 0

@@ -10,23 +10,41 @@ namespace IdleOn.Loot
             var result = new LootResult();
             if (table == null) return result;
 
+            Debug.Log($"[LootEvaluator] Evaluating '{table.name}' ({table.Entries.Count} entries, luck={luckMultiplier}).");
+
             foreach (var entry in table.Entries)
             {
-                if (entry == null) continue;
+                if (entry == null) { Debug.LogWarning("[LootEvaluator] Null entry skipped."); continue; }
 
+                float roll            = Random.value;
                 float effectiveChance = Mathf.Clamp01(entry.DropChance * luckMultiplier);
-                if (Random.value > effectiveChance) continue;
-
-                int qty = Random.Range(entry.MinQuantity, entry.MaxQuantity + 1);
-                if (qty <= 0) continue;
 
                 if (entry.DropType == DropType.Item)
                 {
-                    if (entry.ItemDefinition == null) continue;
+                    string itemName = entry.ItemDefinition != null ? entry.ItemDefinition.ItemId : "NULL";
+                    if (roll > effectiveChance)
+                    {
+                        Debug.Log($"[LootEvaluator]   Item '{itemName}': roll {roll:F2} > chance {effectiveChance:F2} — MISS.");
+                        continue;
+                    }
+                    if (entry.ItemDefinition == null)
+                    {
+                        Debug.LogWarning($"[LootEvaluator]   Item entry passed roll but ItemDefinition is null — skipped.");
+                        continue;
+                    }
+                    int qty = Random.Range(entry.MinQuantity, entry.MaxQuantity + 1);
+                    Debug.Log($"[LootEvaluator]   Item '{itemName}': roll {roll:F2} <= chance {effectiveChance:F2} — HIT x{qty}.");
                     result.Entries.Add(LootResultEntry.ForItem(entry.ItemDefinition.ItemId, qty));
                 }
                 else
                 {
+                    if (roll > effectiveChance)
+                    {
+                        Debug.Log($"[LootEvaluator]   Currency '{entry.CurrencyType}': roll {roll:F2} > chance {effectiveChance:F2} — MISS.");
+                        continue;
+                    }
+                    int qty = Random.Range(entry.MinQuantity, entry.MaxQuantity + 1);
+                    Debug.Log($"[LootEvaluator]   Currency '{entry.CurrencyType}': roll {roll:F2} <= chance {effectiveChance:F2} — HIT x{qty}.");
                     result.Entries.Add(LootResultEntry.ForCurrency(entry.CurrencyType, qty));
                 }
             }

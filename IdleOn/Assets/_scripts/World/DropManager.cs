@@ -12,9 +12,7 @@ namespace IdleOn.World
         public static DropManager Instance { get; private set; }
 
         [Header("References")]
-        [SerializeField] private WorldDrop        dropPrefab;
-        [SerializeField] private ItemDatabase     itemDatabase;
-        [SerializeField] private CurrencyDatabase currencyDatabase;
+        [SerializeField] private WorldDrop dropPrefab;
 
         [Header("Pool")]
         [SerializeField] private int preWarmCount = 10;
@@ -41,8 +39,8 @@ namespace IdleOn.World
 
             foreach (var entry in result.Entries)
             {
-                var drop  = GetFromPool();
-                var icon  = ResolveIcon(entry);
+                var drop = GetFromPool();
+                var icon = ResolveIcon(entry);
                 drop.Setup(entry, icon);
                 drop.transform.position = new Vector3(
                     origin.x + Random.Range(-0.6f, 0.6f),
@@ -109,16 +107,13 @@ namespace IdleOn.World
 
         private Sprite ResolveIcon(LootResultEntry entry)
         {
+            var db = GameDatabase.Instance;
+            if (db == null) return null;
+
             if (entry.DropType == DropType.Item)
-            {
-                var def = itemDatabase != null ? itemDatabase.GetItem(entry.ItemId) : null;
-                return def != null ? def.Icon : null;
-            }
+                return db.Items != null ? db.Items.GetItem(entry.ItemId)?.Icon : null;
             else
-            {
-                var def = currencyDatabase != null ? currencyDatabase.GetCurrency(entry.CurrencyType) : null;
-                return def != null ? def.Icon : null;
-            }
+                return db.Currency != null ? db.Currency.GetCurrency(entry.CurrencyType)?.Icon : null;
         }
     }
 }

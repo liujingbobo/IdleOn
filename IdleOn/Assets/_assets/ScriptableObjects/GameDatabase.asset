@@ -9,13 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c06f4388694b148ac21ecfb2af3e56, type: 3}
-  m_Name: SlimeLootTable
+  m_Script: {fileID: 11500000, guid: b5c4056082ac45143b6912e6407410ad, type: 3}
+  m_Name: GameDatabase
   m_EditorClassIdentifier: 
-  entries:
-  - DropType: 0
-    ItemDefinition: {fileID: 11400000, guid: 56b97ef12e2b98c49b2d766a4cee9d04, type: 2}
-    CurrencyType: 0
-    DropChance: 1
-    MinQuantity: 1
-    MaxQuantity: 2
+  itemDatabase: {fileID: 11400000, guid: 81feb92f6de20ed4ebd7b236f491911f, type: 2}
+  currencyDatabase: {fileID: 11400000, guid: 5bdbff68575fd324596a5135316a5bcb, type: 2}

@@ -16,6 +16,8 @@ namespace IdleOn.World
         void Awake()
         {
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if (_spriteRenderer == null)
+                Debug.LogWarning("[WorldDrop] No SpriteRenderer found in children — icon will never display.", this);
         }
 
         void Update()
@@ -29,8 +31,17 @@ namespace IdleOn.World
             _entry              = entry;
             _collectionCooldown = 0f;
 
-            if (_spriteRenderer != null)
-                _spriteRenderer.sprite = icon;
+            if (_spriteRenderer == null)
+            {
+                Debug.LogWarning("[WorldDrop] Setup: _spriteRenderer is null — cannot display icon.", this);
+                return;
+            }
+
+            if (icon == null)
+                Debug.LogWarning($"[WorldDrop] Setup: icon is null for '{entry?.ItemId ?? entry?.CurrencyType.ToString()}' — sprite will be blank.", this);
+
+            _spriteRenderer.sprite  = icon;
+            _spriteRenderer.enabled = true;
         }
 
         // Called by DropManager when collection fails (e.g. inventory full).

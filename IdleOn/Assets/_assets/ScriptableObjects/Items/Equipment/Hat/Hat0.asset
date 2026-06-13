@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af658e6ee8a02444ab49a326290d8369, type: 3}
+  m_Name: Hat0
+  m_EditorClassIdentifier: 
+  ItemId: Hat0
+  DisplayName: SlimeHat
+  Description: This is slimeHat
+  ItemType: 0
+  Icon: {fileID: -8371496420460332859, guid: 2d61f0f3c0054f146b16b07a2036cd97, type: 3}
+  SellValue: 0
+  Rarity: 0
+  EquipmentSlot: 0
+  StatBonuses:
+    STR: 1
+    AGI: 1
+    WIS: 1
+    LUK: 1
+    MaxHP: 100
+    MaxMP: 50
+    ATKMin: 5
+    ATKMax: 10
+    DEF: 2
+    ACC: 90
+    CRITChance: 5
+    MoveSpeed: 3
+  ConsumableType: 0

@@ -14,23 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemId: slime_gel
   DisplayName: Slime Gel
-  Description: 
+  Description: 'This is slime gel. '
   ItemType: 2
-  Icon: {fileID: 0}
+  Icon: {fileID: 3000608211166667148, guid: a18976b5975e7e4479468935ef11029a, type: 3}
   SellValue: 0
   Rarity: 0
   EquipmentSlot: 0
   StatBonuses:
-    STR: 1
-    AGI: 1
-    WIS: 1
-    LUK: 1
-    MaxHP: 100
-    MaxMP: 50
-    ATKMin: 5
-    ATKMax: 10
-    DEF: 2
-    ACC: 90
-    CRITChance: 5
-    MoveSpeed: 3
+    STR: 0
+    AGI: 0
+    WIS: 0
+    LUK: 0
+    MaxHP: 0
+    MaxMP: 0
+    ATKMin: 0
+    ATKMax: 0
+    DEF: 0
+    ACC: 0
+    CRITChance: 0
+    MoveSpeed: 0
   ConsumableType: 0

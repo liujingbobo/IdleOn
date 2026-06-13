@@ -189,11 +189,26 @@ namespace IdleOn.Enemies
             float xp = definition != null ? definition.XPReward : 0f;
             GameEvents.RaiseEnemyKilled(definition != null ? definition.EnemyId : string.Empty, xp);
 
-            if (definition != null && definition.LootTable != null && DropManager.Instance != null)
+            // ── Loot debug ───────────────────────────────────────────────────
+            if (definition == null)
+            {
+                Debug.LogWarning($"[EnemyController] {name}: definition is null — no loot.", this);
+            }
+            else if (definition.LootTable == null)
+            {
+                Debug.LogWarning($"[EnemyController] {name}: definition '{definition.EnemyId}' has no LootTable assigned.", this);
+            }
+            else if (DropManager.Instance == null)
+            {
+                Debug.LogWarning($"[EnemyController] {name}: DropManager.Instance is null — is DropManager in the scene?");
+            }
+            else
             {
                 LootResult result = LootEvaluator.Evaluate(definition.LootTable);
+                Debug.Log($"[EnemyController] {name}: LootResult has {result.Entries.Count} entries (IsEmpty={result.IsEmpty}).");
                 DropManager.Instance.Spawn(result, transform.position);
             }
+            // ─────────────────────────────────────────────────────────────────
 
             OnKilled?.Invoke(this);
             gameObject.SetActive(false);
