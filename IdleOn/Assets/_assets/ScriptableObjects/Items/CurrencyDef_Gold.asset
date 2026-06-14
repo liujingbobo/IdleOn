@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02701297fb711784b987d9e3d367b19d, type: 3}
-  m_Name: CurrencyDatabase
+  m_Script: {fileID: 11500000, guid: b2b921c7124f80c49b62cce9cb18cd23, type: 3}
+  m_Name: CurrencyDef_Gold
   m_EditorClassIdentifier: 
-  currencies:
-  - {fileID: 11400000, guid: 174ddad7b57150a49a6dc5bfcd74ac90, type: 2}
-  - {fileID: 11400000, guid: 6560dec2c39d7ca479727e1ee6e21743, type: 2}
+  CurrencyType: 1
+  DisplayName: Gold Coin
+  Icon: {fileID: 0}
