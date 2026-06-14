@@ -26,6 +26,7 @@ namespace IdleOn.UI
         [SerializeField] private ItemWindow     itemWindow;
         [SerializeField] private CraftingWindow craftingWindow;
         [SerializeField] private VaultWindow    vaultWindow;
+        [SerializeField] private MapWindow      mapWindow;
 
         [Header("Combat")]
         [SerializeField] private PlayerCombatController combatController;
@@ -82,7 +83,7 @@ namespace IdleOn.UI
 
         public void OnTalentButtonClicked()   => Debug.Log("[MainHUD] Talent not implemented yet.");
         public void OnQuestButtonClicked()    => Debug.Log("[MainHUD] Quest not implemented yet.");
-        public void OnMapButtonClicked()      => Debug.Log("[MainHUD] Map not implemented yet.");
+        public void OnMapButtonClicked()      => mapWindow?.Toggle();
         public void OnSettingsButtonClicked() => Debug.Log("[MainHUD] Settings not implemented yet.");
 
         // ── Event handlers ───────────────────────────────────────────────────

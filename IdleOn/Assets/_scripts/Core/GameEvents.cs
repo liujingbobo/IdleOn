@@ -29,6 +29,11 @@ namespace IdleOn.Core
         // Vault
         public static event Action OnVaultChanged;
 
+        // Map
+        public static event Action<string>   OnMapChanged;               // newMapId
+        public static event Action<int, int> OnMapObjectiveProgress;     // current, required
+        public static event Action<string>   OnMapObjectiveCompleted;    // completedMapId
+
         public static void RaiseAutoCombatChanged(bool active)                          => OnAutoCombatChanged?.Invoke(active);
         public static void RaiseEnemyKilled(string enemyId, float xp)                  => OnEnemyKilled?.Invoke(enemyId, xp);
         public static void RaisePlayerHPChanged(float current, float max)              => OnPlayerHPChanged?.Invoke(current, max);
@@ -39,5 +44,8 @@ namespace IdleOn.Core
         public static void RaiseCurrencyChanged(CurrencyType type, long newTotal)      => OnCurrencyChanged?.Invoke(type, newTotal);
         public static void RaiseEquipmentChanged()                                     => OnEquipmentChanged?.Invoke();
         public static void RaiseVaultChanged()                                         => OnVaultChanged?.Invoke();
+        public static void RaiseMapChanged(string mapId)                                => OnMapChanged?.Invoke(mapId);
+        public static void RaiseMapObjectiveProgress(int current, int required)         => OnMapObjectiveProgress?.Invoke(current, required);
+        public static void RaiseMapObjectiveCompleted(string mapId)                     => OnMapObjectiveCompleted?.Invoke(mapId);
     }
 }

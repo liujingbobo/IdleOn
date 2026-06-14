@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using IdleOn.Items;
 using IdleOn.Equipment;
 using IdleOn.Vault;
+using IdleOn.World;
 
 namespace IdleOn.Save
 {
@@ -27,8 +29,11 @@ namespace IdleOn.Save
         public VaultSaveData VaultData = new VaultSaveData();
 
         // Location — used for offline progression (implemented later)
-        public string CurrentMapId   = "town";
+        public string CurrentMapId   = "grassland_1";
         public string LastLogoutTime = string.Empty;
+
+        // Map progression
+        public List<MapProgressData> MapProgress = new List<MapProgressData>();
 
         // Talent / Quest data added when those systems are implemented
     }
