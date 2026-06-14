@@ -4,6 +4,7 @@ using IdleOn.Loot;
 using IdleOn.Items;
 using IdleOn.Inventory;
 using IdleOn.Core;
+using IdleOn.Vault;
 
 namespace IdleOn.World
 {
@@ -72,7 +73,10 @@ namespace IdleOn.World
             else
             {
                 if (CurrencySystem.Instance == null) return;
-                CurrencySystem.Instance.Add(entry.CurrencyType, entry.Quantity);
+                long amount = entry.Quantity;
+                var vault = VaultSystem.Instance;
+                if (vault != null) amount = Mathf.RoundToInt(amount * vault.GetCurrencyMultiplier());
+                CurrencySystem.Instance.Add(entry.CurrencyType, amount);
             }
 
             ReturnToPool(drop);

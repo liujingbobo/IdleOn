@@ -56,6 +56,11 @@ namespace IdleOn.UI
                     itemInfoPanel.Hide();
         }
 
+        // Called by MainHUD buttons.
+        public void Open()   { windowPanel.SetActive(true);  RefreshInventory(); RefreshEquipment(); }
+        public void Close()  { windowPanel.SetActive(false); itemInfoPanel.Hide(); dragHandler.Cancel(); }
+        public void Toggle() { if (windowPanel.activeSelf) Close(); else Open(); }
+
         private void ToggleWindow()
         {
             bool open = !windowPanel.activeSelf;

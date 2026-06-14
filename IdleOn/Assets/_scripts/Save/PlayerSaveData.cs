@@ -1,6 +1,7 @@
 using System;
 using IdleOn.Items;
 using IdleOn.Equipment;
+using IdleOn.Vault;
 
 namespace IdleOn.Save
 {
@@ -21,10 +22,13 @@ namespace IdleOn.Save
         // Equipment: one entry per occupied slot
         public EquipmentData  Equipment  = new EquipmentData();
 
+        // Vault upgrades
+        public VaultSaveData VaultData = new VaultSaveData();
+
         // Location — used for offline progression (implemented later)
         public string CurrentMapId   = "town";
         public string LastLogoutTime = string.Empty;
 
-        // Talent / Vault / Quest data added when those systems are implemented
+        // Talent / Quest data added when those systems are implemented
     }
 }

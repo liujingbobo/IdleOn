@@ -1,5 +1,26 @@
 # IdleOn-Inspired Demo
 
+## Implementation Status
+
+| System | Status |
+|---|---|
+| Combat (click-to-move, auto-combat, enemy AI) | Implemented |
+| Loot drop pipeline (WorldDrop, DropManager, LootEvaluator) | Implemented |
+| Inventory (slot-based, 20 slots, drag-and-drop UI) | Implemented |
+| Equipment (8 slots, stat bonuses, drag-and-drop) | Implemented |
+| Currency (Silver, Gold, wallet system) | Implemented |
+| Crafting (recipes, ingredient check, crafting window) | Implemented |
+| Vault upgrades (Bigger Damage, Monster Tax, Natural Talent) | Implemented |
+| Main HUD (HP/MP/XP bars, currency, window buttons) | Implemented |
+| Save/Load (JSON to disk) | Scaffolded — not yet triggered automatically |
+| Talent system | Not implemented |
+| Quest system | Not implemented |
+| Map system / travel | Not implemented |
+| Offline progression | Not implemented |
+| Settings | Not implemented |
+
+---
+
 ## Goal
 
 Build a polished vertical slice inspired by the early-game experience of IdleOn.
@@ -454,28 +475,87 @@ Display rewards in a popup.
 
 ---
 
+# Crafting
+
+## Recipes
+
+Recipes are ScriptableObjects (`CraftRecipeDefinition`) stored in a `CraftingDatabase` assigned to `GameDatabase`.
+
+Each recipe defines:
+* Result item and quantity
+* List of required ingredients (ItemDefinition + quantity)
+* Optional required level (not enforced yet)
+
+## Craft Logic
+
+1. Check all ingredient quantities in inventory.
+2. Attempt to add result to inventory first — if full, abort without consuming anything.
+3. Remove ingredients from inventory.
+
+## Current Recipes
+
+* Slime Armor — 5× Slime Gel → Armor
+* Basic Hat — 3× Slime Gel → Hat
+
+---
+
 # UI
 
 ## Main HUD
 
-* Character Name
-* Class
-* Level
-* HP Bar
-* MP Bar
-* Auto Combat Toggle
+Always-visible HUD anchored to the bottom of the screen.
 
-## Buttons
+**Character panel** (bottom-left):
+* Name placeholder ("Hero") + Level
+* HP bar — live via `OnPlayerHPChanged`
+* MP bar — shows MaxMP/MaxMP (placeholder until current-MP tracking exists)
+* XP bar — fills toward `Level × xpPerLevel` via `OnPlayerExpGained`
+* Silver and Gold coin display — live via `OnCurrencyChanged`
 
-* Inventory (or press Tab)
-* Talents
-* Quests
-* Map
+**Button bar** (bottom strip):
+* Auto Combat toggle — calls `PlayerCombatController.SetAutoCombat()`
+* Inv — opens/closes Inventory window
+* Craft — opens/closes Crafting window
+* Vault — opens/closes Vault window
+* Talent / Quest / Map / Settings — placeholder buttons (log only)
+
+## Window Flow
+
+All windows expose `Open()`, `Close()`, `Toggle()`. MainHUD buttons call `Toggle()`.
+
+Multiple windows can be open simultaneously. No window manager.
+
+Temporary debug keys remain active:
+* **Tab** — Inventory window
+* **C** — Crafting window
+* **V** — Vault window
 
 ## Windows
 
-* Inventory (Tab — implemented)
-* Talents
-* Quests
-* Vault
-* Offline Rewards
+| Window | Status | Open via |
+|---|---|---|
+| Inventory + Equipment | Implemented | Tab key or Inv button |
+| Crafting | Implemented | C key or Craft button |
+| Vault | Implemented | V key or Vault button |
+| Talents | Not implemented | Talent button (logs placeholder) |
+| Quests | Not implemented | Quest button (logs placeholder) |
+| Map | Not implemented | Map button (logs placeholder) |
+| Offline Rewards popup | Not implemented | — |
+
+---
+
+# Recommended Next Features
+
+Priority order based on completeness of the core loop:
+
+1. **Player Level-Up** — add level-up logic to `PlayerProgression`. Fire an `OnLevelChanged` event. Wire to HUD level display and XP bar cap. Grant talent points on level-up (feeds NaturalTalent vault bonus).
+
+2. **Save/Load Trigger** — call `SaveToDisk()` on a zone transition or on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice).
+
+3. **Talent System** — add `TalentSystem`, `TalentDefinition` ScriptableObjects, and `TalentWindow` UI. Wire `GetTalentPointBonus()` from VaultSystem to the talent point pool.
+
+4. **Quest System** — add `QuestSystem`, `QuestDefinition` ScriptableObjects (Kill 10 Slimes, Kill 20 Slimes), and `QuestWindow` UI with progress tracking.
+
+5. **Skills (Fireball, Arcane Power)** — add MP spending, skill cooldowns, and skill buttons to MainHUD. Requires current-MP tracking and `OnPlayerMPChanged` event.
+
+6. **Offline Progression** — save logout time on quit. On next load, calculate EXP/coins/materials earned while away and display a popup.

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6fe026d56c869842817698c49999364, type: 3}
+  m_Name: VaultDatabase
+  m_EditorClassIdentifier: 
+  upgrades:
+  - {fileID: 11400000, guid: 00d089d14f2133746bbb7899bcb19d7a, type: 2}
+  - {fileID: 11400000, guid: 1b14bc42f2ebe5e4ea376d9e4c375bdf, type: 2}
+  - {fileID: 11400000, guid: b265745dba324c242a9b488b0ce2a890, type: 2}

@@ -1,6 +1,7 @@
 using UnityEngine;
 using IdleOn.Core;
 using IdleOn.Equipment;
+using IdleOn.Vault;
 
 namespace IdleOn.Characters
 {
@@ -67,6 +68,14 @@ namespace IdleOn.Characters
                     _finalStats.CRITChance += b.CRITChance;
                     _finalStats.MoveSpeed  += b.MoveSpeed;
                 }
+            }
+
+            // Apply vault attack bonuses
+            var vault = VaultSystem.Instance;
+            if (vault != null)
+            {
+                _finalStats.ATKMin += vault.GetATKMinBonus();
+                _finalStats.ATKMax += vault.GetATKMaxBonus();
             }
 
             if (!_initialized)

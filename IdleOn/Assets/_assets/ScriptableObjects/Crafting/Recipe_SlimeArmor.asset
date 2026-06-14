@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6588242faf2dd947b483e7c50ee0bb8, type: 3}
+  m_Name: Recipe_SlimeArmor
+  m_EditorClassIdentifier: 
+  RecipeId: recipe_slime_armor
+  ResultItem: {fileID: 11400000, guid: 2be26534c8977b848ac4d3039aa12009, type: 2}
+  ResultQuantity: 1
+  RequiredIngredients:
+  - Item: {fileID: 11400000, guid: 3834f2ff1abc585458ef127207cd9475, type: 2}
+    Quantity: 5
+  RequiredLevel: 1

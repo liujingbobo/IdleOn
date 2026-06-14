@@ -1,5 +1,7 @@
 using UnityEngine;
 using IdleOn.Items;
+using IdleOn.Crafting;
+using IdleOn.Vault;
 
 namespace IdleOn.Core
 {
@@ -10,9 +12,13 @@ namespace IdleOn.Core
 
         [SerializeField] private ItemDatabase     itemDatabase;
         [SerializeField] private CurrencyDatabase currencyDatabase;
+        [SerializeField] private CraftingDatabase craftingDatabase;
+        [SerializeField] private VaultDatabase    vaultDatabase;
 
         public ItemDatabase     Items    => itemDatabase;
         public CurrencyDatabase Currency => currencyDatabase;
+        public CraftingDatabase Crafting => craftingDatabase;
+        public VaultDatabase    Vault    => vaultDatabase;
 
         public static void Register(GameDatabase db)
         {

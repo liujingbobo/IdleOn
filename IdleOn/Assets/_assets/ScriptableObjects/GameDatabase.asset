@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 11400000, guid: 81feb92f6de20ed4ebd7b236f491911f, type: 2}
   currencyDatabase: {fileID: 11400000, guid: 5bdbff68575fd324596a5135316a5bcb, type: 2}
+  craftingDatabase: {fileID: 11400000, guid: 6aa6e6ac4eef7f34abfae549d0b5c1cd, type: 2}
+  vaultDatabase: {fileID: 11400000, guid: 67568882b50527a4ab32fb5a7f89ffed, type: 2}

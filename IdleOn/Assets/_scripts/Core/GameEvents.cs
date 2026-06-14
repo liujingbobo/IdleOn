@@ -25,6 +25,9 @@ namespace IdleOn.Core
         // Equipment
         public static event Action OnEquipmentChanged;
 
+        // Vault
+        public static event Action OnVaultChanged;
+
         public static void RaiseAutoCombatChanged(bool active)                          => OnAutoCombatChanged?.Invoke(active);
         public static void RaiseEnemyKilled(string enemyId, float xp)                  => OnEnemyKilled?.Invoke(enemyId, xp);
         public static void RaisePlayerHPChanged(float current, float max)              => OnPlayerHPChanged?.Invoke(current, max);
@@ -33,5 +36,6 @@ namespace IdleOn.Core
         public static void RaiseInventoryFull()                                        => OnInventoryFull?.Invoke();
         public static void RaiseCurrencyChanged(CurrencyType type, long newTotal)      => OnCurrencyChanged?.Invoke(type, newTotal);
         public static void RaiseEquipmentChanged()                                     => OnEquipmentChanged?.Invoke();
+        public static void RaiseVaultChanged()                                         => OnVaultChanged?.Invoke();
     }
 }

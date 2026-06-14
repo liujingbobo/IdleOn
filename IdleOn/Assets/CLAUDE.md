@@ -29,7 +29,6 @@ Do not implement:
 * Backend server
 * Login system
 * Cloud save
-* Crafting
 * Additional classes
 * Complex pathfinding
 * Additional maps
@@ -152,6 +151,7 @@ void Start()
 - SilverCoins, GoldCoins (long)
 - InventoryData (20 slots default)
 - EquippedItems (List<EquipmentSlotEntry>)
+- VaultData (VaultSaveData — upgrade levels by upgradeId string)
 - CurrentMapId, LastLogoutTime
 
 ---
@@ -265,6 +265,12 @@ OnInventoryFull       Action
 
 // Currency
 OnCurrencyChanged     Action<CurrencyType, long>  // type, new total
+
+// Equipment
+OnEquipmentChanged    Action
+
+// Vault
+OnVaultChanged        Action
 ```
 
 ---
@@ -281,9 +287,65 @@ Types: `Physical` (orange), `Magic` (blue), `Heal` (green).
 
 FloatTextManager uses an object pool — do not instantiate FloatText directly.
 
-### Inventory UI
+### Inventory UI (ItemWindow)
 
-Press Tab to open/close. 20 slots displayed in a 4×5 grid. Reads from InventorySystem.
+`ItemWindow` component lives on the **Canvas** GameObject itself (not a child).
+
+Press **Tab** to open/close (debug key in ItemWindow.Update).
+
+Public API: `Open()`, `Close()`, `Toggle()` — call these from MainHUD buttons.
+
+### Crafting Window
+
+`CraftingWindow` component lives on `Canvas/CraftingWindow` child.
+
+Press **C** to open/close (temporary debug key — `enableDebugKey` bool on component).
+
+Public API: `Open()`, `Close()`, `Toggle()`.
+
+Two-panel layout: right panel = recipe list, left panel = recipe detail with craft button.
+
+Subscribes to `OnInventoryChanged` to refresh affordability dots.
+
+Add result item first before consuming ingredients. If inventory full, `RaiseInventoryFull()` fires and nothing is consumed.
+
+### Vault Window
+
+`VaultWindow` component lives on `Canvas/VaultWindow` child.
+
+Press **V** to open/close (temporary debug key — `enableDebugKey` bool on component).
+
+Public API: `Open()`, `Close()`, `Toggle()`.
+
+Subscribes to `OnVaultChanged` and `OnCurrencyChanged` (Silver only).
+
+### Main HUD
+
+`MainHUD` component lives on `Canvas/MainHUD` child.
+
+Persistent HUD — always visible. No open/close.
+
+**Character panel** (bottom-left): Name/Level, HP bar, MP bar, XP bar, Silver, Gold.
+**Button bar** (bottom strip): Auto Combat toggle, Inv, Craft, Vault, Talent, Quest, Map, Settings.
+
+Reads from:
+- `GameEvents.OnPlayerHPChanged` → HP bar
+- `GameEvents.OnCurrencyChanged` → Silver/Gold text
+- `GameEvents.OnPlayerExpGained` → XP bar (reads `PlayerProgression.TotalExp`)
+- `GameEvents.OnAutoCombatChanged` → Auto button label
+- `GameEvents.OnEquipmentChanged` → refresh MP bar (MaxMP only — no current-MP tracking yet)
+
+Window buttons call `Toggle()` on their respective window components.
+
+Placeholder buttons (Talent, Quest, Map, Settings) call `Debug.Log(...)` only.
+
+Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `PlayerProgression`.
+
+**MP bar is a known placeholder** — shows MaxMP/MaxMP (always full) until a current-MP system is built.
+
+**XP bar** uses a serialized `xpPerLevel` float (default 100) as cap — not tied to a real level-up formula yet.
+
+Player name is hardcoded as "Hero" — no Name field in SaveData yet.
 
 ---
 
@@ -427,6 +489,67 @@ Avoid:
 * update
 * test
 * aaa
+
+---
+
+## Crafting System
+
+Data: `CraftRecipeDefinition` (ScriptableObject) + `CraftIngredient` (serializable struct) + `CraftingDatabase` (ScriptableObject list).
+
+Logic: `CraftingSystem` MonoBehaviour singleton. `CanCraft(recipe)` checks quantities. `Craft(recipe)` adds result first — if inventory full, abort before consuming ingredients.
+
+`CraftingDatabase` is assigned to `GameDatabase.Crafting`.
+
+Do NOT add: crafting levels, crafting time, auto-craft, or unlock conditions.
+
+---
+
+## Vault System
+
+Data: `VaultUpgradeDefinition` (ScriptableObject) + `VaultSaveData` (serializable) + `VaultDatabase` (ScriptableObject list).
+
+Logic: `VaultSystem` MonoBehaviour singleton. Upgrades cost Silver. `Upgrade(def)` spends Silver, increments level, calls `PlayerStats.Recalculate()` for BiggerDamage.
+
+`VaultDatabase` is assigned to `GameDatabase.Vault`.
+
+Three upgrade types: `BiggerDamage`, `MonsterTax`, `NaturalTalent`.
+
+- `BiggerDamage` bonus is applied inside `PlayerStats.Recalculate()` after equipment pass.
+- `MonsterTax` multiplier is applied inside `DropManager.Collect()` for currency drops only.
+- `NaturalTalent` only stores level and exposes `GetTalentPointBonus()` — no TalentSystem wired yet.
+
+Cost formula: `floor(BaseCost × CostGrowthRate ^ currentLevel)`.
+
+Do NOT add: new upgrade types, prestige resets, or cross-character sharing without explicit request.
+
+---
+
+## Protected Systems — Do Not Modify Without Explicit Instruction
+
+These systems are complete and stable. Do not refactor, rename, or add to them unless directly asked:
+
+- `InventorySystem`, `CurrencySystem` — inventory and wallet logic
+- `EquipmentSystem` — equip/unequip logic
+- `DropManager` — loot collection pipeline
+- `SaveManager`, `GameBootstrap` — save lifecycle
+- `CraftingSystem` — crafting logic
+- `VaultSystem` — vault upgrade logic
+- `PlayerStats.Recalculate()` — stat pipeline (only extend at the end with new bonuses)
+- `ItemWindow`, `CraftingWindow`, `VaultWindow` — window UI logic (buttons and events are wired)
+
+---
+
+## Known Limitations / TODOs
+
+- **MP bar** in MainHUD shows MaxMP/MaxMP (always full). No current-MP system exists yet. When MP spending is implemented, add `OnPlayerMPChanged(float current, float max)` to GameEvents and wire MainHUD.
+- **XP bar** uses hardcoded `xpPerLevel` float on MainHUD. PlayerProgression has no level-up formula yet. When leveling is implemented, PlayerProgression should expose `GetLevel()` and `GetExpForNextLevel()`.
+- **Level** in HUD reads `SaveManager.CurrentSave.Level` (stays 1). Level-up logic needs to be added to PlayerProgression.
+- **Player name** is hardcoded "Hero". Add a `PlayerName` field to PlayerSaveData when character creation is built.
+- **Debug keys** C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.
+- **Talent / Quest / Map / Settings** buttons log placeholder messages. These systems are not implemented.
+- **NaturalTalent** vault upgrade stores a level and exposes `GetTalentPointBonus()` but is not wired to any TalentSystem.
+- **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh.
+- **Multiple windows** can be open simultaneously. No WindowManager exists. Add one only if needed.
 
 ---
 
