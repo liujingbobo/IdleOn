@@ -257,7 +257,8 @@ OnEnemyKilled         Action<string, float>   // enemyId, xp
 OnPlayerHPChanged     Action<float, float>    // current, max
 
 // Progression
-OnPlayerExpGained     Action<float>
+OnPlayerExpGained     Action<float>           // xp delta this kill
+OnPlayerLevelChanged  Action<int>             // new level (fires before OnPlayerExpGained on the same kill)
 
 // Inventory
 OnInventoryChanged    Action
@@ -524,6 +525,68 @@ Do NOT add: new upgrade types, prestige resets, or cross-character sharing witho
 
 ---
 
+## Progression System
+
+### PlayerProgression
+
+`PlayerProgression` MonoBehaviour lives on the Player GameObject.
+
+Public API (read-only properties):
+- `Level` (int) — current player level, starts at 1
+- `CurrentExp` (float) — XP accumulated within the current level
+- `TalentPoints` (int) — unspent talent points (spent by TalentSystem when built)
+- `ExpForNextLevel(int level) → int` — XP required to advance from `level` to `level + 1`
+
+XP curve: `floor(100 × 1.2 ^ (level − 1))`
+- Level 1→2: 100 XP | Level 2→3: 120 | Level 3→4: 144 | Level 10→11: 516
+- Base (100) and growth rate (1.2) are `[SerializeField]` fields on the component — tweak in Inspector.
+
+### Level-Up Data Flow
+
+```
+OnEnemyKilled fires
+  → PlayerProgression.HandleEnemyKilled
+      CurrentExp += xp
+      while CurrentExp >= ExpForNextLevel(Level):
+          CurrentExp -= ExpForNextLevel(Level)   // carry over remainder
+          Level++
+          TalentPoints += 1 + VaultSystem.GetTalentPointBonus()
+          sync → SaveManager.CurrentSave (.Level, .TalentPoints)
+          RaisePlayerLevelChanged(Level)         // HUD updates level text + resets XP cap
+      sync → SaveManager.CurrentSave.Exp = CurrentExp
+      RaisePlayerExpGained(xp)                  // HUD fills XP bar
+```
+
+`OnPlayerLevelChanged` always fires **before** `OnPlayerExpGained` within the same kill. MainHUD receives `OnPlayerLevelChanged` first (resets bar cap to new level's threshold), then `OnPlayerExpGained` (fills bar with carry-over remainder). This ordering prevents the bar from showing > 100% for one frame.
+
+### Save Fields Used
+
+| Field | Type | Meaning |
+|---|---|---|
+| `PlayerSaveData.Level` | int | Current level |
+| `PlayerSaveData.Exp` | float | CurrentExp **within** the current level (not lifetime total) |
+| `PlayerSaveData.TalentPoints` | int | Accumulated unspent talent points |
+
+`PlayerProgression.Initialize()` reads all three from `SaveManager.CurrentSave` on Start.
+
+### NaturalTalent Vault Interaction
+
+On each level-up: `TalentPoints += 1 + VaultSystem.Instance.GetTalentPointBonus()`
+
+`GetTalentPointBonus()` returns `NaturalTalent.level × BonusPerLevel` (BonusPerLevel defaults to 1 on the VaultUpgradeDefinition). At NaturalTalent level 0: +1/level. At level 3: +4/level.
+
+Do NOT wire `TalentPoints` to anything else until TalentSystem is built.
+
+### Rules
+
+- `PlayerProgression` is NOT a singleton. MainHUD holds a `[SerializeField]` reference to it.
+- Never read `TotalExp` from PlayerProgression — that property no longer exists. Use `CurrentExp`.
+- `PlayerSaveData.Exp` stores within-level XP only, not lifetime XP.
+- Never call `ExpForNextLevel` with level 0 — the formula is undefined for level < 1.
+- The level-up `while` loop handles multi-level gains in a single kill correctly.
+
+---
+
 ## Protected Systems — Do Not Modify Without Explicit Instruction
 
 These systems are complete and stable. Do not refactor, rename, or add to them unless directly asked:
@@ -534,6 +597,7 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - `SaveManager`, `GameBootstrap` — save lifecycle
 - `CraftingSystem` — crafting logic
 - `VaultSystem` — vault upgrade logic
+- `PlayerProgression` — level-up logic and talent point grant
 - `PlayerStats.Recalculate()` — stat pipeline (only extend at the end with new bonuses)
 - `ItemWindow`, `CraftingWindow`, `VaultWindow` — window UI logic (buttons and events are wired)
 
@@ -542,13 +606,12 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 ## Known Limitations / TODOs
 
 - **MP bar** in MainHUD shows MaxMP/MaxMP (always full). No current-MP system exists yet. When MP spending is implemented, add `OnPlayerMPChanged(float current, float max)` to GameEvents and wire MainHUD.
-- **XP bar** uses hardcoded `xpPerLevel` float on MainHUD. PlayerProgression has no level-up formula yet. When leveling is implemented, PlayerProgression should expose `GetLevel()` and `GetExpForNextLevel()`.
-- **Level** in HUD reads `SaveManager.CurrentSave.Level` (stays 1). Level-up logic needs to be added to PlayerProgression.
 - **Player name** is hardcoded "Hero". Add a `PlayerName` field to PlayerSaveData when character creation is built.
 - **Debug keys** C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.
 - **Talent / Quest / Map / Settings** buttons log placeholder messages. These systems are not implemented.
-- **NaturalTalent** vault upgrade stores a level and exposes `GetTalentPointBonus()` but is not wired to any TalentSystem.
-- **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh.
+- **TalentPoints** accumulate in `PlayerSaveData.TalentPoints` on every level-up (1 + NaturalTalent bonus). No TalentWindow or TalentSystem exists yet to spend them. Do not wire TalentPoints to anything until TalentSystem is built.
+- **NaturalTalent** vault upgrade is now wired: each level-up grants `1 + GetTalentPointBonus()` talent points. The points accumulate but cannot be spent until TalentSystem is implemented.
+- **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh — level and talent points reset on restart.
 - **Multiple windows** can be open simultaneously. No WindowManager exists. Add one only if needed.
 
 ---

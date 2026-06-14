@@ -6,7 +6,6 @@ using IdleOn.Items;
 using IdleOn.Inventory;
 using IdleOn.Characters;
 using IdleOn.Combat;
-using IdleOn.Save;
 
 namespace IdleOn.UI
 {
@@ -23,9 +22,6 @@ namespace IdleOn.UI
         [SerializeField] private TextMeshProUGUI silverText;
         [SerializeField] private TextMeshProUGUI goldText;
 
-        [Header("XP Settings")]
-        [SerializeField] private float xpPerLevel = 100f;
-
         [Header("Windows")]
         [SerializeField] private ItemWindow     itemWindow;
         [SerializeField] private CraftingWindow craftingWindow;
@@ -40,20 +36,22 @@ namespace IdleOn.UI
 
         void Awake()
         {
-            GameEvents.OnPlayerHPChanged   += OnHPChanged;
-            GameEvents.OnCurrencyChanged   += OnCurrencyChanged;
-            GameEvents.OnPlayerExpGained   += OnExpGained;
-            GameEvents.OnAutoCombatChanged += OnAutoCombatChanged;
-            GameEvents.OnEquipmentChanged  += OnEquipmentChanged;
+            GameEvents.OnPlayerHPChanged    += OnHPChanged;
+            GameEvents.OnCurrencyChanged    += OnCurrencyChanged;
+            GameEvents.OnPlayerExpGained    += OnExpGained;
+            GameEvents.OnAutoCombatChanged  += OnAutoCombatChanged;
+            GameEvents.OnEquipmentChanged   += OnEquipmentChanged;
+            GameEvents.OnPlayerLevelChanged += OnLevelChanged;
         }
 
         void OnDestroy()
         {
-            GameEvents.OnPlayerHPChanged   -= OnHPChanged;
-            GameEvents.OnCurrencyChanged   -= OnCurrencyChanged;
-            GameEvents.OnPlayerExpGained   -= OnExpGained;
-            GameEvents.OnAutoCombatChanged -= OnAutoCombatChanged;
-            GameEvents.OnEquipmentChanged  -= OnEquipmentChanged;
+            GameEvents.OnPlayerHPChanged    -= OnHPChanged;
+            GameEvents.OnCurrencyChanged    -= OnCurrencyChanged;
+            GameEvents.OnPlayerExpGained    -= OnExpGained;
+            GameEvents.OnAutoCombatChanged  -= OnAutoCombatChanged;
+            GameEvents.OnEquipmentChanged   -= OnEquipmentChanged;
+            GameEvents.OnPlayerLevelChanged -= OnLevelChanged;
         }
 
         void Start()
@@ -103,7 +101,8 @@ namespace IdleOn.UI
                 goldText.text   = $"Gold: {newTotal}";
         }
 
-        private void OnExpGained(float delta) => RefreshXP();
+        private void OnExpGained(float delta)          => RefreshXP();
+        private void OnLevelChanged(int newLevel)      { RefreshNameLevel(); RefreshXP(); }
 
         private void OnAutoCombatChanged(bool active)
         {
@@ -117,7 +116,7 @@ namespace IdleOn.UI
 
         private void RefreshNameLevel()
         {
-            int level = SaveManager.Instance?.CurrentSave?.Level ?? 1;
+            int level = playerProgression != null ? playerProgression.Level : 1;
             nameLevelText.text = $"Hero  Lv.{level}";
         }
 
@@ -130,11 +129,11 @@ namespace IdleOn.UI
 
         private void RefreshXP()
         {
-            float total = playerProgression != null ? playerProgression.TotalExp : 0f;
-            int   level = SaveManager.Instance?.CurrentSave?.Level ?? 1;
-            float cap   = level * xpPerLevel;
-            xpSlider.value = cap > 0f ? Mathf.Clamp01(total / cap) : 0f;
-            xpText.text    = $"{Mathf.FloorToInt(total)} XP";
+            if (playerProgression == null) return;
+            float current = playerProgression.CurrentExp;
+            float cap     = playerProgression.ExpForNextLevel(playerProgression.Level);
+            xpSlider.value = cap > 0f ? Mathf.Clamp01(current / cap) : 0f;
+            xpText.text    = $"{Mathf.FloorToInt(current)}/{cap} XP";
         }
 
         private void RefreshCurrency()

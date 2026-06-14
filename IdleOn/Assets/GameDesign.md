@@ -12,6 +12,7 @@
 | Crafting (recipes, ingredient check, crafting window) | Implemented |
 | Vault upgrades (Bigger Damage, Monster Tax, Natural Talent) | Implemented |
 | Main HUD (HP/MP/XP bars, currency, window buttons) | Implemented |
+| Player level-up (XP curve, HUD update, talent point grant) | Implemented |
 | Save/Load (JSON to disk) | Scaffolded — not yet triggered automatically |
 | Talent system | Not implemented |
 | Quest system | Not implemented |
@@ -359,6 +360,49 @@ If inventory is full on item collect attempt:
 
 ---
 
+# Player Level-Up
+
+## Current Behavior
+
+Killing enemies awards XP. When accumulated XP reaches the threshold for the current level, the player levels up.
+
+- Level display in the HUD updates immediately (e.g. `Hero Lv.1` → `Hero Lv.2`)
+- The XP bar resets and refills toward the next level's threshold, carrying over any excess XP from the kill that triggered the level-up
+- The player can gain multiple levels from a single kill if XP is large enough
+- XP text shows `current / required XP` (e.g. `75/100 XP`)
+
+## XP Curve
+
+| Level | XP to next level |
+|---|---|
+| 1 | 100 |
+| 2 | 120 |
+| 3 | 144 |
+| 5 | 207 |
+| 10 | 516 |
+
+Formula: `floor(100 × 1.2 ^ (level − 1))`
+
+## Talent Points
+
+Each level-up grants talent points:
+
+- Base: **1 point per level**
+- With NaturalTalent vault upgrade: **1 + upgrade level** points per level
+
+Example: NaturalTalent at level 2 → 3 points per level-up.
+
+Talent points accumulate but cannot be spent yet — TalentSystem is not implemented.
+
+## TODOs
+
+- Implement **TalentSystem** and **TalentWindow** to let the player spend accumulated talent points
+- Add a visual/audio cue on level-up (flash, sound, particle) for game feel
+- Wire **SaveToDisk** so level and talent points persist across sessions
+- Consider a **level-up popup** showing what was gained (talent points, new stat unlocks)
+
+---
+
 # Quest System
 
 ## Quest 1
@@ -548,14 +592,12 @@ Temporary debug keys remain active:
 
 Priority order based on completeness of the core loop:
 
-1. **Player Level-Up** — add level-up logic to `PlayerProgression`. Fire an `OnLevelChanged` event. Wire to HUD level display and XP bar cap. Grant talent points on level-up (feeds NaturalTalent vault bonus).
+1. **Save/Load Trigger** — call `SaveToDisk()` on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice). Without this, level and talent points reset every session.
 
-2. **Save/Load Trigger** — call `SaveToDisk()` on a zone transition or on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice).
+2. **Talent System** — add `TalentSystem`, `TalentDefinition` ScriptableObjects, and `TalentWindow` UI. Talent points already accumulate in `PlayerSaveData.TalentPoints` — the system just needs to read and spend from that pool.
 
-3. **Talent System** — add `TalentSystem`, `TalentDefinition` ScriptableObjects, and `TalentWindow` UI. Wire `GetTalentPointBonus()` from VaultSystem to the talent point pool.
+3. **Quest System** — add `QuestSystem`, `QuestDefinition` ScriptableObjects (Kill 10 Slimes, Kill 20 Slimes), and `QuestWindow` UI with progress tracking.
 
-4. **Quest System** — add `QuestSystem`, `QuestDefinition` ScriptableObjects (Kill 10 Slimes, Kill 20 Slimes), and `QuestWindow` UI with progress tracking.
+4. **Skills (Fireball, Arcane Power)** — add MP spending, skill cooldowns, and skill buttons to MainHUD. Requires current-MP tracking and `OnPlayerMPChanged` event.
 
-5. **Skills (Fireball, Arcane Power)** — add MP spending, skill cooldowns, and skill buttons to MainHUD. Requires current-MP tracking and `OnPlayerMPChanged` event.
-
-6. **Offline Progression** — save logout time on quit. On next load, calculate EXP/coins/materials earned while away and display a popup.
+5. **Offline Progression** — save logout time on quit. On next load, calculate EXP/coins/materials earned while away and display a popup.

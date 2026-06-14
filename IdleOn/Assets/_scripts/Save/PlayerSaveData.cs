@@ -9,8 +9,9 @@ namespace IdleOn.Save
     public class PlayerSaveData
     {
         // Progression
-        public int   Level = 1;
-        public float Exp   = 0f;
+        public int   Level        = 1;
+        public float Exp          = 0f;
+        public int   TalentPoints = 0;
 
         // Currency (not stored in inventory)
         public long SilverCoins = 0;

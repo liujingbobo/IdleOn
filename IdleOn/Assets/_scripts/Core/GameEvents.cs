@@ -13,7 +13,8 @@ namespace IdleOn.Core
         public static event Action<float, float>  OnPlayerHPChanged;   // current, max
 
         // Progression
-        public static event Action<float>         OnPlayerExpGained;   // amount gained this kill
+        public static event Action<float>         OnPlayerExpGained;    // amount gained this kill
+        public static event Action<int>           OnPlayerLevelChanged; // new level
 
         // Inventory
         public static event Action                OnInventoryChanged;
@@ -32,6 +33,7 @@ namespace IdleOn.Core
         public static void RaiseEnemyKilled(string enemyId, float xp)                  => OnEnemyKilled?.Invoke(enemyId, xp);
         public static void RaisePlayerHPChanged(float current, float max)              => OnPlayerHPChanged?.Invoke(current, max);
         public static void RaisePlayerExpGained(float amount)                          => OnPlayerExpGained?.Invoke(amount);
+        public static void RaisePlayerLevelChanged(int newLevel)                       => OnPlayerLevelChanged?.Invoke(newLevel);
         public static void RaiseInventoryChanged()                                     => OnInventoryChanged?.Invoke();
         public static void RaiseInventoryFull()                                        => OnInventoryFull?.Invoke();
         public static void RaiseCurrencyChanged(CurrencyType type, long newTotal)      => OnCurrencyChanged?.Invoke(type, newTotal);
