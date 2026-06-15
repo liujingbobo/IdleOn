@@ -14,7 +14,8 @@
 | Main HUD (HP/MP/XP bars, currency, window buttons) | Implemented |
 | Player level-up (XP curve, HUD update, talent point grant) | Implemented |
 | Save/Load (JSON to disk) | Scaffolded — not yet triggered automatically |
-| Talent system | Not implemented |
+| Talent system (grid UI, upgrades, skill hotbar assignment) | Implemented |
+| Skill casting (Fireball — MP cost, damage, cooldown) | Not implemented |
 | Quest system | Not implemented |
 | Map system / area progression (3 Grassland maps, ObjectiveHelper, MapWindow) | Implemented |
 | Offline progression | Not implemented |
@@ -392,11 +393,10 @@ Each level-up grants talent points:
 
 Example: NaturalTalent at level 2 → 3 points per level-up.
 
-Talent points accumulate but cannot be spent yet — TalentSystem is not implemented.
+Talent points accumulate and can be spent in the Talent Window (T key or Talent HUD button).
 
 ## TODOs
 
-- Implement **TalentSystem** and **TalentWindow** to let the player spend accumulated talent points
 - Add a visual/audio cue on level-up (flash, sound, particle) for game feel
 - Wire **SaveToDisk** so level and talent points persist across sessions
 - Consider a **level-up popup** showing what was gained (talent points, new stat unlocks)
@@ -487,23 +487,44 @@ Rewards:
 
 # Talent System
 
-Players gain Talent Points when leveling up.
+Players gain Talent Points when leveling up. Open the Talent Window with T or the Talent HUD button.
 
-## Basic Talents
+## Current Behavior
 
-* Max HP
-* Max MP
-* Defense
-* Move Speed
-* Wisdom
-* AFK Gains
+The Talent Window shows a grid of square talent slots (72×72px, 3-column grid). Clicking a slot selects it and shows details in the info panel on the right. The info panel has an Upgrade button that spends one talent point to level up the selected talent (max level 5).
 
-## Mage Talents I
+**Normal mode:** click any slot to view and upgrade it.
 
-* Fireball Damage
+**Assign mode** (toggle button in title bar): passive talent slots dim and become unclickable. Skill talent slots that are unlocked can be dragged to the 3-slot Skill Hotbar at the bottom of the screen. Locked skill slots are dimmed but not draggable.
+
+## Implemented Talents
+
+| Talent | Effect per Level | Type |
+|---|---|---|
+| Power Strike | ATK Min +1, ATK Max +2 | Passive |
+| Thick Skin | Max HP +5 | Passive |
+| Swift Feet | Move Speed +0.1 | Passive |
+| Lucky Hunter | Silver drop +5% | Passive |
+| Mana Training | Max MP +5 | Passive |
+| Fireball Training | Fireball damage +1 | Skill unlock |
+
+## Skill Hotbar
+
+3 slots at the bottom-center of the screen (above the HUD button bar). Drag an unlocked skill talent from the Talent Window in Assign mode to assign it to a slot. Clicking a hotbar slot is a placeholder — skill casting is not yet implemented.
+
+## TODOs (Phase 2B)
+
+- Implement Fireball casting: MP cost, cooldown timer, projectile/area damage
+- Add MP spending and `OnPlayerMPChanged` event to drain and refill the MP bar
+- Add Arcane Power skill
+- Assign icon sprites to TalentDefinition and SkillDefinition ScriptableObject assets
+
+## Mage Talents I (planned)
+
+* Fireball Damage ✓ (implemented as Fireball Training)
 * Magic Damage
 
-## Mage Talents II
+## Mage Talents II (planned)
 
 * Fireball Cooldown
 * Mana Regeneration
@@ -642,7 +663,7 @@ Temporary debug keys remain active:
 | Inventory + Equipment | Implemented | Tab key or Inv button |
 | Crafting | Implemented | C key or Craft button |
 | Vault | Implemented | V key or Vault button |
-| Talents | Not implemented | Talent button (logs placeholder) |
+| Talents | Implemented | T key or Talent button |
 | Quests | Not implemented | Quest button (logs placeholder) |
 | Map | Implemented | M key or Map button |
 | Offline Rewards popup | Not implemented | — |
@@ -653,12 +674,12 @@ Temporary debug keys remain active:
 
 Priority order based on completeness of the core loop:
 
-1. **Save/Load Trigger** — call `SaveToDisk()` on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice). Without this, level, talent points, and map progress reset every session.
+1. **Save/Load Trigger** — call `SaveToDisk()` on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice). Without this, level, talent levels, hotbar assignments, and map progress reset every session.
 
-2. **Talent System** — add `TalentSystem`, `TalentDefinition` ScriptableObjects, and `TalentWindow` UI. Talent points already accumulate in `PlayerSaveData.TalentPoints` — the system just needs to read and spend from that pool.
+2. **Skill Casting (Phase 2B)** — Fireball is assigned to the hotbar but does nothing when clicked. Implement: MP spending, `OnPlayerMPChanged` event, cooldown timer on `SkillSlotUI`, projectile or area damage via `FloatTextManager`. Arcane Power can follow the same pattern.
 
 3. **Quest System** — add `QuestSystem`, `QuestDefinition` ScriptableObjects (Kill 10 Slimes, Kill 20 Slimes), and `QuestWindow` UI with progress tracking.
 
-4. **Skills (Fireball, Arcane Power)** — add MP spending, skill cooldowns, and skill buttons to MainHUD. Requires current-MP tracking and `OnPlayerMPChanged` event.
+4. **Offline Progression** — save logout time on quit. On next load, calculate EXP/coins/materials earned while away and display a popup.
 
-5. **Offline Progression** — save logout time on quit. On next load, calculate EXP/coins/materials earned while away and display a popup.
+5. **Talent / Skill Icons** — assign `Icon` sprites to all six `TalentDefinition` assets and `SkillDef_Fireball` in the Inspector. The slot grid already renders them; they just show grey until sprites are set.

@@ -4,7 +4,7 @@ using IdleOn.Items;
 
 namespace IdleOn.UI
 {
-    public enum DragSource { Inventory, EquipmentSlot }
+    public enum DragSource { Inventory, EquipmentSlot, SkillPanel }
 
     public class DragHandler : MonoBehaviour
     {
@@ -40,6 +40,16 @@ namespace IdleOn.UI
             CurrentItemId    = itemId;
             dragIcon.sprite  = icon;
             dragIcon.enabled = icon != null;
+            dragIcon.gameObject.SetActive(true);
+        }
+
+        public void BeginDrag(string id, Sprite icon, DragSource source)
+        {
+            Source           = source;
+            FromSlot         = default;
+            CurrentItemId    = id;
+            dragIcon.sprite  = icon;
+            dragIcon.enabled = true;
             dragIcon.gameObject.SetActive(true);
         }
 

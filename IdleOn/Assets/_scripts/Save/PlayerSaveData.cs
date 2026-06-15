@@ -39,6 +39,7 @@ namespace IdleOn.Save
         // Talent levels
         public List<TalentSaveData> TalentData = new List<TalentSaveData>();
 
-        // Talent / Quest data added when those systems are implemented
+        // Skill hotbar (3 slots; empty string = unassigned)
+        public List<string> HotbarSkillIds = new List<string> { "", "", "" };
     }
 }

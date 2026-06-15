@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TalentId: fireball_training
   DisplayName: Fireball Training
-  Description: Increases Fireball damage. (Phase 2)
+  Description: Increases Fireball damage. Unlocks Fireball at Lv.1.
   MaxLevel: 5
   ATKMinPerLevel: 0
   ATKMaxPerLevel: 0

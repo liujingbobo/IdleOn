@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TalentId: thick_skin
   DisplayName: Thick Skin
-  Description: Increases maximum health.
+  Description: Increases Max HP.
   MaxLevel: 5
   ATKMinPerLevel: 0
   ATKMaxPerLevel: 0

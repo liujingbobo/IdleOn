@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TalentId: swift_feet
   DisplayName: Swift Feet
-  Description: Increases movement speed.
+  Description: Increases Move Speed.
   MaxLevel: 5
   ATKMinPerLevel: 0
   ATKMaxPerLevel: 0

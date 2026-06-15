@@ -124,6 +124,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   definition: {fileID: 11400000, guid: 89748108d781f584191e0645c0ad8953, type: 2}
+  patrolLeftX: 0
+  patrolRightX: 0
+  patrolSpeed: 1.5
+  attackRange: 1.2
+  attackCooldown: 2
+  attackDamageMin: 5
+  attackDamageMax: 10
+  combatForgetTime: 4
 --- !u!1 &3962173887181344524
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,9 +205,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingLayerID: -1115869363
+  m_SortingLayer: 3
+  m_SortingOrder: 0
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0

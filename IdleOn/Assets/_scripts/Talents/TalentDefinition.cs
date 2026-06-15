@@ -5,6 +5,9 @@ namespace IdleOn.Talents
     [CreateAssetMenu(fileName = "TalentDef_", menuName = "IdleOn/Talent Definition")]
     public class TalentDefinition : ScriptableObject
     {
+        [Header("Visuals")]
+        public Sprite Icon;
+
         [Header("Identity")]
         public string TalentId;
         public string DisplayName;

@@ -1,24 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using IdleOn.Core;
 using IdleOn.Save;
+using IdleOn.Talents;
 
 namespace IdleOn.UI
 {
     public class TalentWindow : MonoBehaviour
     {
         [Header("Panels")]
-        [SerializeField] private GameObject  windowPanel;
-        [SerializeField] private Transform   rowContainer;
-        [SerializeField] private TalentRowUI rowPrefab;
-        [SerializeField] private TMP_Text    pointsText;
+        [SerializeField] private GameObject      windowPanel;
+        [SerializeField] private Transform       slotContainer;
+        [SerializeField] private TalentSlotUI    slotPrefab;
+        [SerializeField] private TMP_Text        pointsText;
+        [SerializeField] private TalentInfoPanel infoPanel;
+
+        [Header("Assign Mode")]
+        [SerializeField] private Button      assignModeButton;
+        [SerializeField] private TMP_Text    assignModeButtonText;
+        [SerializeField] private DragHandler dragHandler;
 
         [Header("Debug")]
         [SerializeField] private bool    enableDebugKey = true;
         [SerializeField] private KeyCode debugOpenKey   = KeyCode.T;
 
-        private readonly List<TalentRowUI> _rows = new List<TalentRowUI>();
+        private readonly List<TalentSlotUI> _slots = new List<TalentSlotUI>();
+        private bool _assignMode;
 
         void Awake()
         {
@@ -28,7 +37,7 @@ namespace IdleOn.UI
 
         void OnDestroy() => GameEvents.OnTalentChanged -= RefreshAll;
 
-        void Start() => PopulateRows();
+        void Start() => PopulateSlots();
 
         void Update()
         {
@@ -42,7 +51,12 @@ namespace IdleOn.UI
             RefreshAll();
         }
 
-        public void Close()  => windowPanel.SetActive(false);
+        public void Close()
+        {
+            SetAssignMode(false);
+            windowPanel.SetActive(false);
+            infoPanel?.Hide();
+        }
 
         public void Toggle()
         {
@@ -50,7 +64,18 @@ namespace IdleOn.UI
             else Open();
         }
 
-        private void PopulateRows()
+        public void ToggleAssignMode() => SetAssignMode(!_assignMode);
+
+        private void SetAssignMode(bool on)
+        {
+            _assignMode = on;
+            if (assignModeButtonText != null)
+                assignModeButtonText.text = on ? "Assign: ON" : "Assign Skills";
+            foreach (var slot in _slots)
+                slot.SetAssignMode(on);
+        }
+
+        private void PopulateSlots()
         {
             var db = GameDatabase.Instance?.Talents;
             if (db == null) return;
@@ -58,11 +83,13 @@ namespace IdleOn.UI
             foreach (var def in db.Talents)
             {
                 if (def == null) continue;
-                var row = Instantiate(rowPrefab, rowContainer);
-                row.Initialize(def);
-                _rows.Add(row);
+                var slot = Instantiate(slotPrefab, slotContainer);
+                slot.Initialize(def, OnSlotClicked, dragHandler);
+                _slots.Add(slot);
             }
         }
+
+        private void OnSlotClicked(TalentDefinition def) => infoPanel?.Show(def);
 
         private void RefreshAll()
         {
@@ -74,7 +101,8 @@ namespace IdleOn.UI
                 pointsText.text = $"Points: {pts}";
             }
 
-            foreach (var row in _rows) row.Refresh();
+            foreach (var slot in _slots) slot.Refresh();
+            infoPanel?.Refresh();
         }
     }
 }

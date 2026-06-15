@@ -153,6 +153,9 @@ void Start()
 - EquippedItems (List<EquipmentSlotEntry>)
 - VaultData (VaultSaveData — upgrade levels by upgradeId string)
 - CurrentMapId, LastLogoutTime
+- TalentData (List<TalentSaveData> — talentId + level pairs)
+- TalentPoints (int — unspent points available to spend)
+- HotbarSkillIds (List<string> — 3 entries, skillId per slot, empty string = unassigned)
 
 ---
 
@@ -273,6 +276,9 @@ OnEquipmentChanged    Action
 // Vault
 OnVaultChanged        Action
 
+// Talents
+OnTalentChanged       Action                  // fires after every Upgrade(); refreshes TalentWindow + MainHUD MP bar
+
 // Map
 OnMapChanged              Action<string>       // newMapId — fires on travel and on Initialize
 OnMapObjectiveProgress    Action<int, int>     // current kills, required kills
@@ -369,17 +375,19 @@ Persistent HUD — always visible. No open/close.
 Reads from:
 - `GameEvents.OnPlayerHPChanged` → HP bar
 - `GameEvents.OnCurrencyChanged` → Silver/Gold text
-- `GameEvents.OnPlayerExpGained` → XP bar (reads `PlayerProgression.TotalExp`)
+- `GameEvents.OnPlayerExpGained` → XP bar (reads `PlayerProgression.CurrentExp`)
 - `GameEvents.OnAutoCombatChanged` → Auto button label
 - `GameEvents.OnEquipmentChanged` → refresh MP bar (MaxMP only — no current-MP tracking yet)
+- `GameEvents.OnTalentChanged` → refresh MP bar (Mana Training talent changes MaxMP)
 
 Window buttons call `Toggle()` on their respective window components.
 
 **Map button** calls `mapWindow?.Toggle()`.
+**Talent button** calls `talentWindow?.Toggle()`.
 
-Placeholder buttons (Talent, Quest, Settings) still call `Debug.Log(...)` only.
+Placeholder buttons (Quest, Settings) still call `Debug.Log(...)` only.
 
-Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `PlayerProgression`.
+Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `TalentWindow`, `PlayerProgression`.
 
 **MP bar is a known placeholder** — shows MaxMP/MaxMP (always full) until a current-MP system is built.
 
@@ -685,6 +693,128 @@ On objective complete: sets `IsComplete=true`, unlocks next map (if `UnlocksMapI
 
 ---
 
+## Talent System
+
+### Files
+
+| File | Location | Role |
+|---|---|---|
+| `TalentDefinition.cs` | `_scripts/Talents/` | SO — TalentId, DisplayName, Description, MaxLevel, stat bonuses per level, `Icon` (Sprite), `GetEffectText(level)` |
+| `TalentDatabase.cs` | `_scripts/Talents/` | SO list — exposes `Talents` (IReadOnlyList) |
+| `TalentSaveData.cs` | `_scripts/Talents/` | `[Serializable]` — TalentId + Level |
+| `TalentSystem.cs` | `_scripts/Talents/` | Singleton MonoBehaviour — `GetLevel()`, `CanUpgrade()`, `Upgrade()`, stat bonus getters |
+| `SkillDefinition.cs` | `_scripts/Skills/` | SO — SkillId, DisplayName, Description, Icon, MpCost, Cooldown, BaseDamage, RequiredTalentId, RequiredTalentLevel |
+| `SkillDatabase.cs` | `_scripts/Skills/` | SO list — exposes `Skills` (IReadOnlyList) and `GetSkill(skillId)` |
+| `TalentSlotUI.cs` | `_scripts/UI/` | Square 72×72 slot — icon + level text, click to select, drag in assign mode |
+| `TalentWindow.cs` | `_scripts/UI/` | Popup window — grid of TalentSlotUI, assign mode toggle, delegates to TalentInfoPanel |
+| `TalentInfoPanel.cs` | `_scripts/UI/` | Read-only detail panel + Upgrade button for the currently selected talent |
+| `SkillSlotUI.cs` | `_scripts/UI/` | One hotbar slot — receives drag-drop from TalentSlotUI, stores skillId |
+| `SkillHotbarUI.cs` | `_scripts/UI/` | 3-slot hotbar at bottom-center — initializes slots from `HotbarSkillIds` |
+
+### Assets
+
+| Asset | Path |
+|---|---|
+| `TalentDatabase.asset` | `_assets/ScriptableObjects/Talents/` |
+| `TalentDef_*.asset` (×6) | `_assets/ScriptableObjects/Talents/` |
+| `SkillDatabase.asset` | `_assets/ScriptableObjects/Skills/` |
+| `SkillDef_Fireball.asset` | `_assets/ScriptableObjects/Skills/` |
+| `TalentSlotUI.prefab` | `_assets/Prefabs/UI/` |
+
+### TalentWindow Layout
+
+```
+TalentWindow (TalentWindow component)
+  └── WindowPanel [620×500] (Image, VLG)
+        ├── TitleBar [44px] (HLG) — TitleText, PointsText, AssignModeBtn, CloseBtn
+        └── ContentRow (HLG)
+              ├── TalentGrid (GridLayoutGroup, 3 cols, 72×72 cells)
+              └── TalentInfoPanel (TalentInfoPanel component)
+                    └── InfoContent (VLG) — NameText, LevelText, Description,
+                                           CurrentEffect, NextEffect, UpgradeBtn,
+                                           SkillSection (shown only for skill talents)
+```
+
+Press **T** to open/close (debug key on TalentWindow component).
+
+### TalentSlotUI Prefab Structure
+
+```
+TalentSlotUI [72×72] (Image dark bg, TalentSlotUI component)
+  ├── Icon (Image — TalentDefinition.Icon; grey placeholder if null)
+  └── LevelText (TMP — "0/5" at bottom)
+```
+
+No upgrade button on the slot. Clicking the slot selects it and updates TalentInfoPanel.
+
+### Normal Mode vs Assign Mode
+
+**Normal mode (Assign OFF):**
+- Click any slot → TalentInfoPanel shows talent details + Upgrade button
+- No dragging
+
+**Assign mode (Assign ON — toggle button in TitleBar):**
+
+| Slot type | State | alpha | blocksRaycasts | Draggable |
+|---|---|---|---|---|
+| Passive talent | — | 0.35 | false | no |
+| Skill talent | locked (level < RequiredTalentLevel) | 0.50 | true | no |
+| Skill talent | unlocked | 1.00 | true | yes |
+
+Drag from TalentSlotUI → drop on SkillSlotUI in the hotbar to assign the skill.
+
+Closing TalentWindow always resets assign mode to OFF.
+
+### Upgrade Button
+
+Upgrade button lives in TalentInfoPanel (bottom of InfoContent). It is:
+- Visible whenever InfoContent is active (a talent is selected)
+- Interactable only when: `TalentSystem.CanUpgrade(talent)` → points > 0 AND level < MaxLevel
+- On click: calls `TalentSystem.Instance.Upgrade(_talent)` → fires `OnTalentChanged` → all slots + InfoPanel refresh
+
+### TalentSystem Stat Getters (used by PlayerStats.Recalculate)
+
+```csharp
+GetATKMinBonus()              // sum of ATKMinPerLevel × level across all talents
+GetATKMaxBonus()
+GetMaxHPBonus()
+GetMoveSpeedBonus()
+GetMaxMPBonus()
+GetCurrencyMultiplierBonus()
+GetFireballDamageBonus()      // reserved — Fireball casting not yet implemented
+```
+
+### Skill Hotbar
+
+`SkillHotbarUI` lives on `Canvas/MainHUD/SkillHotbar` (HLG, 3 slots, bottom-center, anchored above the button bar).
+
+Each `SkillSlotUI`:
+- `IDropHandler` — accepts drops where `DragHandler.Source == DragSource.SkillPanel`
+- On drop: calls `AssignSkill(skillId)` → updates `PlayerSaveData.HotbarSkillIds[slotIndex]` and icon
+- `IPointerClickHandler` — logs placeholder (skill casting not yet implemented)
+
+### DragHandler Changes
+
+`DragSource` enum gained a third value: `SkillPanel`.
+
+`DragHandler.BeginDrag(string id, Sprite icon, DragSource source)` overload — enables drag icon always (even if icon is null), sets source to SkillPanel.
+
+### Skill-to-Talent Link (data-driven)
+
+`SkillDefinition.RequiredTalentId` links a skill to the talent that unlocks it.
+Both `TalentSlotUI` and `TalentInfoPanel` search `GameDatabase.Instance.Skills` at initialize time to find the linked skill. No hardcoded IDs.
+
+Currently only `SkillDef_Fireball` is defined (`RequiredTalentId = "fireball_training"`, `RequiredTalentLevel = 1`).
+
+### Rules
+
+- `TalentSystem` IS a singleton. Access via `TalentSystem.Instance`.
+- `TalentDatabase` and `SkillDatabase` are both assigned to `GameDatabase` asset.
+- Do NOT add skill casting, MP spending, or projectile logic until Phase 2B.
+- `TalentDefinition.Icon` sprites are not yet assigned in the asset files — slots show grey placeholder. Assign sprites in the Inspector when art is ready.
+
+---
+
 ## Protected Systems — Do Not Modify Without Explicit Instruction
 
 These systems are complete and stable. Do not refactor, rename, or add to them unless directly asked:
@@ -696,9 +826,11 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - `CraftingSystem` — crafting logic
 - `VaultSystem` — vault upgrade logic
 - `PlayerProgression` — level-up logic and talent point grant
+- `TalentSystem` — talent upgrade logic and stat bonus getters
 - `MapSystem` — kill tracking, travel, objective completion
 - `PlayerStats.Recalculate()` — stat pipeline (only extend at the end with new bonuses)
 - `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `ObjectiveHelperUI` — window UI logic (buttons and events are wired)
+- `TalentWindow`, `TalentInfoPanel`, `SkillHotbarUI`, `SkillSlotUI` — talent and hotbar UI logic (wired and verified)
 
 ---
 
@@ -706,11 +838,12 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 
 - **MP bar** in MainHUD shows MaxMP/MaxMP (always full). No current-MP system exists yet. When MP spending is implemented, add `OnPlayerMPChanged(float current, float max)` to GameEvents and wire MainHUD.
 - **Player name** is hardcoded "Hero". Add a `PlayerName` field to PlayerSaveData when character creation is built.
-- **Debug keys** C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.
-- **Talent / Quest / Settings** buttons log placeholder messages. These systems are not implemented. Map button is now wired to MapWindow.
-- **TalentPoints** accumulate in `PlayerSaveData.TalentPoints` on every level-up (1 + NaturalTalent bonus). No TalentWindow or TalentSystem exists yet to spend them. Do not wire TalentPoints to anything until TalentSystem is built.
-- **NaturalTalent** vault upgrade is now wired: each level-up grants `1 + GetTalentPointBonus()` talent points. The points accumulate but cannot be spent until TalentSystem is implemented.
-- **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh — level and talent points reset on restart.
+- **Debug keys** T (Talent), C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.
+- **Quest / Settings** buttons still log placeholder messages. These systems are not implemented.
+- **Skill casting** (Fireball, Arcane Power) is not implemented. Hotbar slots are assigned via drag-and-drop but clicking them only logs a placeholder. Implement Phase 2B when ready: MP spending, cooldown, projectile.
+- **Talent / Skill icons** — `TalentDefinition.Icon` and `SkillDefinition.Icon` sprites are not assigned in the ScriptableObject assets. Slots show a grey placeholder. Assign sprites in the Inspector when art is ready.
+- **NaturalTalent** vault upgrade is wired: each level-up grants `1 + GetTalentPointBonus()` talent points. TalentSystem and TalentWindow are implemented and can now spend these points.
+- **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh — level, talent levels, hotbar assignments, and map progress reset on restart.
 - **Multiple windows** can be open simultaneously. No WindowManager exists. Add one only if needed.
 
 ---

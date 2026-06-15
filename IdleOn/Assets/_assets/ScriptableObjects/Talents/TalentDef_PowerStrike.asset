@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TalentId: power_strike
   DisplayName: Power Strike
-  Description: Increases attack damage.
+  Description: Increases ATK Min and Max.
   MaxLevel: 5
   ATKMinPerLevel: 1
   ATKMaxPerLevel: 2

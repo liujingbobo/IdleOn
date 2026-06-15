@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TalentDatabase
   m_EditorClassIdentifier: 
   talents:
-  - {fileID: 11400000, guid: 481437a80edd55542a7c18da28385ee6, type: 2}
-  - {fileID: 11400000, guid: 97284da05d8e8f447b41f0515ff1f18d, type: 2}
-  - {fileID: 11400000, guid: f75f4bf071349a749a7b50a9d6116ef1, type: 2}
+  - {fileID: 11400000, guid: c3342195642c4e643ad0b395085773a1, type: 2}
   - {fileID: 11400000, guid: e0f3e7744a3cd934f82ba299e9c6e3a3, type: 2}
   - {fileID: 11400000, guid: 11dd550069c1b6c468f753c692fd6cbe, type: 2}
-  - {fileID: 11400000, guid: c3342195642c4e643ad0b395085773a1, type: 2}
+  - {fileID: 11400000, guid: 481437a80edd55542a7c18da28385ee6, type: 2}
+  - {fileID: 11400000, guid: f75f4bf071349a749a7b50a9d6116ef1, type: 2}
+  - {fileID: 11400000, guid: 97284da05d8e8f447b41f0515ff1f18d, type: 2}

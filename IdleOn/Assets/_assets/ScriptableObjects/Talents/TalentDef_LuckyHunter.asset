@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TalentId: lucky_hunter
   DisplayName: Lucky Hunter
-  Description: Increases Silver coin gain.
+  Description: Increases Silver drop multiplier.
   MaxLevel: 5
   ATKMinPerLevel: 0
   ATKMaxPerLevel: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TalentId: mana_training
   DisplayName: Mana Training
-  Description: Increases maximum mana.
+  Description: Increases Max MP.
   MaxLevel: 5
   ATKMinPerLevel: 0
   ATKMaxPerLevel: 0

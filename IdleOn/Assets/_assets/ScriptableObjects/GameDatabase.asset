@@ -18,3 +18,4 @@ MonoBehaviour:
   vaultDatabase: {fileID: 11400000, guid: 67568882b50527a4ab32fb5a7f89ffed, type: 2}
   mapDatabase: {fileID: 11400000, guid: 16ab1982fcd3167448155e6bb1a43520, type: 2}
   talentDatabase: {fileID: 11400000, guid: 560775dff0a14904dbcc1953b47a79a3, type: 2}
+  skillDatabase: {fileID: 11400000, guid: 431f735f564378f49af68b103de61ac6, type: 2}
