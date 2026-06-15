@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2410571d8c9f3644f97c55fd04755daf, type: 3}
+  m_Name: TalentDef_SwiftFeet
+  m_EditorClassIdentifier: 
+  TalentId: swift_feet
+  DisplayName: Swift Feet
+  Description: Increases movement speed.
+  MaxLevel: 5
+  ATKMinPerLevel: 0
+  ATKMaxPerLevel: 0
+  MaxHPPerLevel: 0
+  MoveSpeedPerLevel: 0.1
+  MaxMPPerLevel: 0
+  CurrencyMultiplierPerLevel: 0
+  FireballDamagePerLevel: 0

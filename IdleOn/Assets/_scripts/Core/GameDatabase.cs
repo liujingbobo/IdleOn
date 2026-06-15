@@ -3,6 +3,7 @@ using IdleOn.Items;
 using IdleOn.Crafting;
 using IdleOn.Vault;
 using IdleOn.World;
+using IdleOn.Talents;
 
 namespace IdleOn.Core
 {
@@ -16,12 +17,14 @@ namespace IdleOn.Core
         [SerializeField] private CraftingDatabase craftingDatabase;
         [SerializeField] private VaultDatabase    vaultDatabase;
         [SerializeField] private MapDatabase     mapDatabase;
+        [SerializeField] private TalentDatabase  talentDatabase;
 
         public ItemDatabase     Items    => itemDatabase;
         public CurrencyDatabase Currency => currencyDatabase;
         public CraftingDatabase Crafting => craftingDatabase;
         public VaultDatabase    Vault    => vaultDatabase;
         public MapDatabase      Maps     => mapDatabase;
+        public TalentDatabase   Talents  => talentDatabase;
 
         public static void Register(GameDatabase db)
         {

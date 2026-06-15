@@ -27,6 +27,7 @@ namespace IdleOn.UI
         [SerializeField] private CraftingWindow craftingWindow;
         [SerializeField] private VaultWindow    vaultWindow;
         [SerializeField] private MapWindow      mapWindow;
+        [SerializeField] private TalentWindow   talentWindow;
 
         [Header("Combat")]
         [SerializeField] private PlayerCombatController combatController;
@@ -43,6 +44,7 @@ namespace IdleOn.UI
             GameEvents.OnAutoCombatChanged  += OnAutoCombatChanged;
             GameEvents.OnEquipmentChanged   += OnEquipmentChanged;
             GameEvents.OnPlayerLevelChanged += OnLevelChanged;
+            GameEvents.OnTalentChanged      += OnTalentChanged;
         }
 
         void OnDestroy()
@@ -53,6 +55,7 @@ namespace IdleOn.UI
             GameEvents.OnAutoCombatChanged  -= OnAutoCombatChanged;
             GameEvents.OnEquipmentChanged   -= OnEquipmentChanged;
             GameEvents.OnPlayerLevelChanged -= OnLevelChanged;
+            GameEvents.OnTalentChanged      -= OnTalentChanged;
         }
 
         void Start()
@@ -81,7 +84,7 @@ namespace IdleOn.UI
                 combatController.SetAutoCombat(!combatController.IsAutoCombatActive);
         }
 
-        public void OnTalentButtonClicked()   => Debug.Log("[MainHUD] Talent not implemented yet.");
+        public void OnTalentButtonClicked()   => talentWindow?.Toggle();
         public void OnQuestButtonClicked()    => Debug.Log("[MainHUD] Quest not implemented yet.");
         public void OnMapButtonClicked()      => mapWindow?.Toggle();
         public void OnSettingsButtonClicked() => Debug.Log("[MainHUD] Settings not implemented yet.");
@@ -112,6 +115,7 @@ namespace IdleOn.UI
         }
 
         private void OnEquipmentChanged() => RefreshMP();
+        private void OnTalentChanged()     => RefreshMP();
 
         // ── Refresh helpers ──────────────────────────────────────────────────
 

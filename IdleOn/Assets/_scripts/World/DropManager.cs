@@ -5,6 +5,7 @@ using IdleOn.Items;
 using IdleOn.Inventory;
 using IdleOn.Core;
 using IdleOn.Vault;
+using IdleOn.Talents;
 
 namespace IdleOn.World
 {
@@ -76,6 +77,8 @@ namespace IdleOn.World
                 long amount = entry.Quantity;
                 var vault = VaultSystem.Instance;
                 if (vault != null) amount = Mathf.RoundToInt(amount * vault.GetCurrencyMultiplier());
+                var talent = TalentSystem.Instance;
+                if (talent != null) amount = Mathf.RoundToInt(amount * (1f + talent.GetCurrencyMultiplierBonus()));
                 CurrencySystem.Instance.Add(entry.CurrencyType, amount);
             }
 

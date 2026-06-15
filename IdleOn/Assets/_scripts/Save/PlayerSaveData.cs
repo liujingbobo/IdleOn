@@ -4,6 +4,7 @@ using IdleOn.Items;
 using IdleOn.Equipment;
 using IdleOn.Vault;
 using IdleOn.World;
+using IdleOn.Talents;
 
 namespace IdleOn.Save
 {
@@ -34,6 +35,9 @@ namespace IdleOn.Save
 
         // Map progression
         public List<MapProgressData> MapProgress = new List<MapProgressData>();
+
+        // Talent levels
+        public List<TalentSaveData> TalentData = new List<TalentSaveData>();
 
         // Talent / Quest data added when those systems are implemented
     }

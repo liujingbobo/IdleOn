@@ -2,6 +2,7 @@ using UnityEngine;
 using IdleOn.Core;
 using IdleOn.Equipment;
 using IdleOn.Vault;
+using IdleOn.Talents;
 
 namespace IdleOn.Characters
 {
@@ -76,6 +77,17 @@ namespace IdleOn.Characters
             {
                 _finalStats.ATKMin += vault.GetATKMinBonus();
                 _finalStats.ATKMax += vault.GetATKMaxBonus();
+            }
+
+            // Apply talent bonuses
+            var talents = TalentSystem.Instance;
+            if (talents != null)
+            {
+                _finalStats.ATKMin    += talents.GetATKMinBonus();
+                _finalStats.ATKMax    += talents.GetATKMaxBonus();
+                _finalStats.MaxHP     += talents.GetMaxHPBonus();
+                _finalStats.MoveSpeed += talents.GetMoveSpeedBonus();
+                _finalStats.MaxMP     += talents.GetMaxMPBonus();
             }
 
             if (!_initialized)
