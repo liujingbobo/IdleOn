@@ -16,7 +16,7 @@
 | Save/Load (JSON to disk) | Scaffolded — not yet triggered automatically |
 | Talent system | Not implemented |
 | Quest system | Not implemented |
-| Map system / travel | Not implemented |
+| Map system / area progression (3 Grassland maps, ObjectiveHelper, MapWindow) | Implemented |
 | Offline progression | Not implemented |
 | Settings | Not implemented |
 
@@ -403,6 +403,67 @@ Talent points accumulate but cannot be spent yet — TalentSystem is not impleme
 
 ---
 
+# Map / Area Progression
+
+## Current Behavior
+
+Three Grassland areas provide the core progression ladder for the demo. Each area has a kill objective. Completing it grants Silver and unlocks the next area.
+
+### Area Loop
+
+```
+Spawn in Grassland 1
+  → Kill Slimes (auto combat)
+  → ObjectiveHelper tracks progress live at top of screen
+  → After 10 kills: +50 Silver, Grassland 2 unlocked
+  → Press M → MapWindow opens → click Travel to Grassland 2
+  → After 15 kills: +100 Silver, Grassland 3 unlocked
+  → Travel to Grassland 3
+  → After 20 kills: +150 Silver, "Demo Complete" message
+```
+
+### Maps
+
+| Map | Kill Objective | Silver Reward | Unlocks |
+|---|---|---|---|
+| Grassland 1 | 10 Slimes | 50 | Grassland 2 |
+| Grassland 2 | 15 Slimes | 100 | Grassland 3 |
+| Grassland 3 | 20 Slimes | 150 | — (Demo Complete) |
+
+All three maps reuse the same Slime enemy and the same spawner. Travel is data-only — no scene change.
+
+### ObjectiveHelper HUD
+
+A compact always-visible strip anchored to the top-center of the screen (640×58px).
+
+- **Line 1 (bold, white):** `Grassland 1  ·  Kill Slimes:  3 / 10`
+- **Line 2 (gold):** `Reward: 50 Silver + Grassland 2 Unlock`
+
+On completion: `✓ Grassland 1 — Complete!` / `Grassland 2 Unlocked!  +50 Silver`
+
+On Grassland 3 completion: `✓ Grassland 3 — All areas cleared!` / `Demo Complete — Thanks for playing!`
+
+### MapWindow
+
+Opened via M key or Map HUD button. Shows one row per area:
+
+- **Current area:** green tint, "Here" button (disabled)
+- **Unlocked & not current:** dark tint, "Travel" button enabled
+- **Locked:** shows `???`, no button
+
+### Reviewer Impact
+
+A reviewer can complete the full area loop (Grassland 1 → 2 → 3) in about 5 minutes without any explanation, demonstrating: kill-to-reward feedback, progression gating, and clear end state.
+
+## TODOs
+
+- Add a second enemy type for Grassland 2/3 (stronger variant) so each area feels distinct
+- Add a visual/audio effect on map completion (flash, fanfare)
+- Show silver reward popup on completion rather than just updating the wallet counter
+- Allow EnemySpawner to reconfigure enemy type per map (`MapDefinition.EnemyDefinition` field already exists)
+
+---
+
 # Quest System
 
 ## Quest 1
@@ -583,7 +644,7 @@ Temporary debug keys remain active:
 | Vault | Implemented | V key or Vault button |
 | Talents | Not implemented | Talent button (logs placeholder) |
 | Quests | Not implemented | Quest button (logs placeholder) |
-| Map | Not implemented | Map button (logs placeholder) |
+| Map | Implemented | M key or Map button |
 | Offline Rewards popup | Not implemented | — |
 
 ---
@@ -592,7 +653,7 @@ Temporary debug keys remain active:
 
 Priority order based on completeness of the core loop:
 
-1. **Save/Load Trigger** — call `SaveToDisk()` on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice). Without this, level and talent points reset every session.
+1. **Save/Load Trigger** — call `SaveToDisk()` on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice). Without this, level, talent points, and map progress reset every session.
 
 2. **Talent System** — add `TalentSystem`, `TalentDefinition` ScriptableObjects, and `TalentWindow` UI. Talent points already accumulate in `PlayerSaveData.TalentPoints` — the system just needs to read and spend from that pool.
 

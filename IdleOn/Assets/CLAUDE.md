@@ -272,6 +272,11 @@ OnEquipmentChanged    Action
 
 // Vault
 OnVaultChanged        Action
+
+// Map
+OnMapChanged              Action<string>       // newMapId — fires on travel and on Initialize
+OnMapObjectiveProgress    Action<int, int>     // current kills, required kills
+OnMapObjectiveCompleted   Action<string>       // completedMapId
 ```
 
 ---
@@ -310,6 +315,38 @@ Subscribes to `OnInventoryChanged` to refresh affordability dots.
 
 Add result item first before consuming ingredients. If inventory full, `RaiseInventoryFull()` fires and nothing is consumed.
 
+### Map Window
+
+`MapWindow` component lives on `Canvas/MapWindow` child. Inner `WindowPanel` is 490×260px, centered.
+
+Press **M** to open/close (debug key). Also opened via MainHUD Map button.
+
+Public API: `Open()`, `Close()`, `Toggle()`.
+
+Populated once in `Start()` via `PopulateRows()` — instantiates one `MapRowUI` prefab per MapDefinition.
+
+`RefreshRows()` is called on `Open()`, `OnMapChanged`, and `OnMapObjectiveCompleted` (only if window is active). Rows stay stale while the window is closed — this is intentional.
+
+`MapRowUI` prefab is at `Assets/_assets/Prefabs/UI/MapRowUI.prefab`.
+
+Each row shows: map name (bold, fixed 120px), objective text (flex), Travel button (76px, hidden when locked, disabled when current map).
+
+Row background tint: green = current map, blue = complete, dark = default, hidden = locked.
+
+### ObjectiveHelper
+
+`ObjectiveHelperUI` component lives on `Canvas/ObjectiveHelper`. **Always visible — no open/close.**
+
+Anchored top-center: 640×58px, 6px from top edge.
+
+Two TMP text fields:
+- `mainText` (bold, 15px): `"{MapName}  ·  {ObjectiveLabel}:  {kills} / {required}"`
+- `rewardText` (gold, 11.5px): `"Reward: {silver} Silver + {nextMap} Unlock"`
+
+On complete (no next map): shows `"✓ {MapName} — All areas cleared!"` / `"Demo Complete — Thanks for playing!"`
+
+Subscribes to: `OnMapChanged`, `OnMapObjectiveProgress`, `OnMapObjectiveCompleted`.
+
 ### Vault Window
 
 `VaultWindow` component lives on `Canvas/VaultWindow` child.
@@ -338,9 +375,11 @@ Reads from:
 
 Window buttons call `Toggle()` on their respective window components.
 
-Placeholder buttons (Talent, Quest, Map, Settings) call `Debug.Log(...)` only.
+**Map button** calls `mapWindow?.Toggle()`.
 
-Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `PlayerProgression`.
+Placeholder buttons (Talent, Quest, Settings) still call `Debug.Log(...)` only.
+
+Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `PlayerProgression`.
 
 **MP bar is a known placeholder** — shows MaxMP/MaxMP (always full) until a current-MP system is built.
 
@@ -587,6 +626,65 @@ Do NOT wire `TalentPoints` to anything else until TalentSystem is built.
 
 ---
 
+## Map System
+
+### Files
+
+| File | Location | Role |
+|---|---|---|
+| `MapDefinition.cs` | `_scripts/World/` | SO — MapId, DisplayName, ObjectiveEnemyId, KillObjective, ObjectiveLabel, SilverReward, UnlocksMapId |
+| `MapDatabase.cs` | `_scripts/World/` | SO list — exposes `Maps` (IReadOnlyList) and `GetMap(mapId)` |
+| `MapProgressData.cs` | `_scripts/World/` | `[Serializable]` — MapId, KillCount, IsComplete, IsUnlocked |
+| `MapSystem.cs` | `_scripts/World/` | Singleton MonoBehaviour — kill tracking, travel, reward grant |
+| `MapWindow.cs` | `_scripts/UI/` | Popup window — row population and refresh |
+| `MapRowUI.cs` | `_scripts/UI/` | Single row component — wired to MapSystem.Instance at refresh time |
+| `ObjectiveHelperUI.cs` | `_scripts/UI/` | Always-visible top-strip — live objective progress |
+
+### Assets
+
+| Asset | Path |
+|---|---|
+| `MapDatabase.asset` | `_assets/ScriptableObjects/Maps/` |
+| `MapDef_Grassland1.asset` | `_assets/ScriptableObjects/Maps/` |
+| `MapDef_Grassland2.asset` | `_assets/ScriptableObjects/Maps/` |
+| `MapDef_Grassland3.asset` | `_assets/ScriptableObjects/Maps/` |
+| `MapRowUI.prefab` | `_assets/Prefabs/UI/` |
+
+`MapDatabase` is assigned to `GameDatabase.mapDatabase` (field added this session).
+
+### PlayerSaveData additions
+
+```csharp
+public string              CurrentMapId = "grassland_1";   // was "town" — changed
+public List<MapProgressData> MapProgress = new List<MapProgressData>();
+```
+
+### MapSystem Init Pattern
+
+Same as PlayerProgression — checks `SaveManager.Instance.IsLoaded` in `Start()`, calls `Initialize()` directly if already loaded. `Initialize()` reads `save.MapProgress`, creates missing entries, forces `grassland_1.IsUnlocked = true`, fires `RaiseMapChanged`.
+
+### Kill Counting
+
+`MapSystem` subscribes to `OnEnemyKilled`. Counts kill if:
+1. Current map's progress is not `IsComplete`.
+2. `MapDefinition.ObjectiveEnemyId` is empty (any enemy) OR matches the fired `enemyId`.
+
+On objective complete: sets `IsComplete=true`, unlocks next map (if `UnlocksMapId` set), grants silver via `CurrencySystem.Instance.Add(Silver, reward)`, fires `OnMapObjectiveCompleted`.
+
+### Travel
+
+`MapSystem.TravelTo(mapId)` — validates unlocked + not current, updates `save.CurrentMapId`, fires `OnMapChanged`.
+
+### Rules
+
+- `MapSystem` IS a singleton. Access via `MapSystem.Instance`.
+- `MapRowUI.Refresh()` null-checks `MapSystem.Instance` — safe to call before initialization.
+- `ObjectiveEnemyId = "slime"` for all three Grassland maps (single enemy type for now).
+- When adding a new map: add a `MapDefinition` asset, add it to `MapDatabase`, set `UnlocksMapId` on the previous last map.
+- Do NOT add a WorldMap scene. Travel is data-only — same scene, same spawner.
+
+---
+
 ## Protected Systems — Do Not Modify Without Explicit Instruction
 
 These systems are complete and stable. Do not refactor, rename, or add to them unless directly asked:
@@ -598,8 +696,9 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - `CraftingSystem` — crafting logic
 - `VaultSystem` — vault upgrade logic
 - `PlayerProgression` — level-up logic and talent point grant
+- `MapSystem` — kill tracking, travel, objective completion
 - `PlayerStats.Recalculate()` — stat pipeline (only extend at the end with new bonuses)
-- `ItemWindow`, `CraftingWindow`, `VaultWindow` — window UI logic (buttons and events are wired)
+- `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `ObjectiveHelperUI` — window UI logic (buttons and events are wired)
 
 ---
 
@@ -608,7 +707,7 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - **MP bar** in MainHUD shows MaxMP/MaxMP (always full). No current-MP system exists yet. When MP spending is implemented, add `OnPlayerMPChanged(float current, float max)` to GameEvents and wire MainHUD.
 - **Player name** is hardcoded "Hero". Add a `PlayerName` field to PlayerSaveData when character creation is built.
 - **Debug keys** C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.
-- **Talent / Quest / Map / Settings** buttons log placeholder messages. These systems are not implemented.
+- **Talent / Quest / Settings** buttons log placeholder messages. These systems are not implemented. Map button is now wired to MapWindow.
 - **TalentPoints** accumulate in `PlayerSaveData.TalentPoints` on every level-up (1 + NaturalTalent bonus). No TalentWindow or TalentSystem exists yet to spend them. Do not wire TalentPoints to anything until TalentSystem is built.
 - **NaturalTalent** vault upgrade is now wired: each level-up grants `1 + GetTalentPointBonus()` talent points. The points accumulate but cannot be spent until TalentSystem is implemented.
 - **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh — level and talent points reset on restart.
