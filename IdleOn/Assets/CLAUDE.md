@@ -407,21 +407,48 @@ Monsters and the player stand on top of floor/platform tiles.
 
 ### Player Input
 
-1. Click floor tile → player moves to that position.
-2. Click monster → player moves to attack range next to that monster, then performs one attack.
-3. Auto combat ON → player repeatedly finds a monster, moves to attack range, attacks, and continues.
-4. Auto combat ON + click monster → interrupt current action, move to clicked monster, attack once, then resume auto combat.
-5. Auto combat ON + click floor → interrupt current action, move to that floor position, then resume auto combat.
+LMB hold over a WorldDrop (Drop layer) → collect drop. This check runs before all other input.
 
-LMB hold over a WorldDrop (Drop layer) → collect drop. This check runs before movement/attack.
+Single LMB click — priority order:
+1. `EventSystem.current.IsPointerOverGameObject()` → do nothing (UI absorbs click)
+2. `Physics2D.OverlapPointAll(worldPos)` — scan hits for `EnemyController` → ManualAttack
+3. `TryResolveMoveTarget(worldPos, out target)` — ground layer hit → ManualMove
+4. Otherwise → do nothing
+
+Auto combat behaviors:
+- Auto combat ON → player repeatedly seeks nearest monster, moves to attack range, attacks, continues.
+- Auto combat ON + click monster → interrupt current action, ManualAttack, then resume auto combat.
+- Auto combat ON + click floor → interrupt current action, ManualMove, then resume auto combat.
+
+### Ground Detection (TryResolveMoveTarget)
+
+`TryResolveMoveTarget(Vector2 clickWorldPos, out Vector2 targetWorldPos)` in `PlayerCombatController`:
+1. `Physics2D.OverlapPoint(clickWorldPos, groundLayerMask)` — direct collider hit → `targetWorldPos = (click.x, hit.bounds.max.y)`
+2. `Physics2D.Raycast(clickWorldPos, Vector2.down, maxGroundSearchDistance, groundLayerMask)` — downward cast → `targetWorldPos = hit.point`
+3. Both fail → return false → do nothing
+
+`maxGroundSearchDistance` defaults to 2.5 units (serialized, tweakable in Inspector).
+
+Current movement stores `_manualMoveTarget = new Vector2(groundTarget.x, transform.position.y)` — resolved X from ground, current player Y preserved. Future pathfinding replaces only this assignment.
+
+### Required Inspector Setup
+
+`PlayerCombatController` ground-detection fields:
+- `groundLayerMask` — **must be assigned** to the Ground physics layer. If left at 0 (Nothing), `TryResolveMoveTarget` always returns false and click-to-move silently fails for all floor clicks.
+- `maxGroundSearchDistance` — default 2.5 units; raise if ground collider is unusually far below typical click positions.
+
+Floor/platform Tilemap requirements:
+- `TilemapCollider2D` must be present on the Tilemap GameObject.
+- `CompositeCollider2D` geometry type must be **Polygons** (not Outlines). Outlines mode creates edge-only shapes with no interior — `Physics2D.OverlapPoint` never detects a point inside it.
+- The Tilemap GameObject **Layer** must match `groundLayerMask` (e.g. Layer "Ground").
+
+`dropLayerMask` on `PlayerCombatController` must remain set to the "Drop" layer (index 8, mask = 256).
 
 ### Movement Implementation
 
-Use simple direct 2D movement toward a target position on the floor/platform.
+`Vector2.MoveTowards` toward `_manualMoveTarget`. No A* pathfinding.
 
-Do not implement A* pathfinding.
-
-Direct Vector2.MoveTowards is sufficient for the first implementation.
+`TryResolveMoveTarget` is the only method to replace when pathfinding is added — the state machine and `UpdateManualMove` stay unchanged.
 
 ---
 
@@ -845,6 +872,9 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - **NaturalTalent** vault upgrade is wired: each level-up grants `1 + GetTalentPointBonus()` talent points. TalentSystem and TalentWindow are implemented and can now spend these points.
 - **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh — level, talent levels, hotbar assignments, and map progress reset on restart.
 - **Multiple windows** can be open simultaneously. No WindowManager exists. Add one only if needed.
+- **Click-to-move Y** — `_manualMoveTarget` uses `transform.position.y` (current player Y), not the resolved ground Y from `TryResolveMoveTarget`. The player never moves vertically. Replace the assignment inside `HandleClick` when vertical movement or pathfinding is needed.
+- **groundLayerMask** on `PlayerCombatController` must be assigned in the Inspector. If it is 0 (Nothing), all floor clicks silently do nothing. Floor Tilemap must also have `CompositeCollider2D` geometry set to **Polygons** — Outlines mode is incompatible with `Physics2D.OverlapPoint`.
+- **Player / Enemy animations** — no Animator components or animation clips exist yet. `PlayerCombatController.State` (CombatState enum) is the intended driver for player animation transitions when added.
 
 ---
 

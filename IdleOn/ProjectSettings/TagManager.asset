@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - Ground
   - Drop
   - 
   - 
@@ -52,6 +52,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 683316161
+    locked: 0
+  - name: FloatText
+    uniqueID: 1678023397
     locked: 0
   m_RenderingLayers:
   - Default

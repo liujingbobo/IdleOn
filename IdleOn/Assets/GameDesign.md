@@ -111,7 +111,15 @@ Floor tiles are arranged in a horizontal platform layout.
 
 ### Click to Move
 
-If the player clicks a floor tile, the player moves to that position.
+Click priority order per LMB click:
+
+1. UI element → do nothing (EventSystem absorbs the click)
+2. Enemy collider hit → attack that enemy (see Click to Attack)
+3. Direct hit on a ground collider → move to that X position on the floor
+4. Empty space within 2.5 units above a ground collider → move (downward raycast finds the floor surface)
+5. Sky, background, or empty space with no ground below within 2.5 units → do nothing
+
+Clicking just above the floor surface works. Clicking the sky or background does nothing.
 
 ### Click to Attack
 
@@ -683,3 +691,5 @@ Priority order based on completeness of the core loop:
 4. **Offline Progression** — save logout time on quit. On next load, calculate EXP/coins/materials earned while away and display a popup.
 
 5. **Talent / Skill Icons** — assign `Icon` sprites to all six `TalentDefinition` assets and `SkillDef_Fireball` in the Inspector. The slot grid already renders them; they just show grey until sprites are set.
+
+6. **Player / Enemy Animations** — add Animator components with idle, walk, and attack clips. `PlayerCombatController` exposes a `CombatState` enum (`Idle`, `Seeking`, `Moving`, `Attacking`, `ManualMove`, `ManualAttack`) that directly drives player animator transitions. Enemy states are `Patrol`, `Combat`, `Dead`.

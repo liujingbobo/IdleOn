@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using IdleOn.Core;
 using IdleOn.Characters;
 using IdleOn.Enemies;
@@ -21,6 +22,10 @@ namespace IdleOn.Combat
 
         [Header("Drop Pickup")]
         [SerializeField] private LayerMask dropLayerMask;
+
+        [Header("Ground Detection")]
+        [SerializeField] private LayerMask groundLayerMask;
+        [SerializeField] private float     maxGroundSearchDistance = 2.5f;
 
         private PlayerStats    _stats;
         private EnemyController _currentTarget;
@@ -109,10 +114,12 @@ namespace IdleOn.Combat
             if (Camera.main == null) return;
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            var hit = Physics2D.OverlapPoint(worldPos);
-            if (hit != null)
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                return;
+
+            foreach (var col in Physics2D.OverlapPointAll(worldPos))
             {
-                var enemy = hit.GetComponent<EnemyController>();
+                var enemy = col.GetComponent<EnemyController>();
                 if (enemy != null && enemy.IsAlive)
                 {
                     _resumeAutoCombat   = IsAutoCombatActive;
@@ -122,9 +129,32 @@ namespace IdleOn.Combat
                 }
             }
 
-            _resumeAutoCombat = IsAutoCombatActive;
-            _manualMoveTarget = new Vector2(worldPos.x, transform.position.y);
-            State             = CombatState.ManualMove;
+            if (TryResolveMoveTarget(worldPos, out Vector2 groundTarget))
+            {
+                _resumeAutoCombat = IsAutoCombatActive;
+                _manualMoveTarget = new Vector2(groundTarget.x, transform.position.y);
+                State             = CombatState.ManualMove;
+            }
+        }
+
+        private bool TryResolveMoveTarget(Vector2 clickWorldPos, out Vector2 targetWorldPos)
+        {
+            var hit = Physics2D.OverlapPoint(clickWorldPos, groundLayerMask);
+            if (hit != null)
+            {
+                targetWorldPos = new Vector2(clickWorldPos.x, hit.bounds.max.y);
+                return true;
+            }
+
+            var hit2D = Physics2D.Raycast(clickWorldPos, Vector2.down, maxGroundSearchDistance, groundLayerMask);
+            if (hit2D.collider != null)
+            {
+                targetWorldPos = new Vector2(clickWorldPos.x, hit2D.point.y);
+                return true;
+            }
+
+            targetWorldPos = default;
+            return false;
         }
 
         // ── States ───────────────────────────────────────────────────────────
