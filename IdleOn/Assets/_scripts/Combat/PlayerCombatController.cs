@@ -120,7 +120,7 @@ namespace IdleOn.Combat
             foreach (var col in Physics2D.OverlapPointAll(worldPos))
             {
                 var enemy = col.GetComponent<EnemyController>();
-                if (enemy != null && enemy.IsAlive)
+                if (IsValidTarget(enemy))
                 {
                     _resumeAutoCombat   = IsAutoCombatActive;
                     _manualAttackTarget = enemy;
@@ -173,7 +173,7 @@ namespace IdleOn.Combat
 
         private void UpdateManualAttack()
         {
-            if (_manualAttackTarget == null || !_manualAttackTarget.IsAlive)
+            if (!IsValidTarget(_manualAttackTarget))
             {
                 _manualAttackTarget = null;
                 State = _resumeAutoCombat ? CombatState.Seeking : CombatState.Idle;
@@ -200,12 +200,23 @@ namespace IdleOn.Combat
         {
             if (enemySpawner == null) return;
             _currentTarget = enemySpawner.GetNearestEnemy(transform.position);
+            if (!IsValidTarget(_currentTarget)) _currentTarget = null;
             State = _currentTarget != null ? CombatState.Moving : CombatState.Idle;
+        }
+
+        // A target is only valid while it is non-null, active, alive, and not in its death state.
+        // Prevents the player from chasing/attacking/facing a dead enemy during its death-clip delay.
+        private static bool IsValidTarget(EnemyController enemy)
+        {
+            return enemy != null
+                && enemy.gameObject.activeInHierarchy
+                && enemy.IsAlive
+                && enemy.State != EnemyState.Dead;
         }
 
         private void MoveToTarget()
         {
-            if (_currentTarget == null || !_currentTarget.IsAlive) { State = CombatState.Seeking; return; }
+            if (!IsValidTarget(_currentTarget)) { _currentTarget = null; State = CombatState.Seeking; return; }
 
             Vector2 myPos     = transform.position;
             Vector2 targetPos = _currentTarget.transform.position;
@@ -218,7 +229,7 @@ namespace IdleOn.Combat
 
         private void TryAttack()
         {
-            if (_currentTarget == null || !_currentTarget.IsAlive) { State = CombatState.Seeking; return; }
+            if (!IsValidTarget(_currentTarget)) { _currentTarget = null; State = CombatState.Seeking; return; }
 
             Vector2 myPos     = transform.position;
             Vector2 targetPos = _currentTarget.transform.position;

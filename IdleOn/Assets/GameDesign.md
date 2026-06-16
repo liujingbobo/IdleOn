@@ -15,6 +15,9 @@
 | Player level-up (XP curve, HUD update, talent point grant) | Implemented |
 | Save/Load (JSON to disk) | Scaffolded — not yet triggered automatically |
 | Talent system (grid UI, upgrades, skill hotbar assignment) | Implemented |
+| Player / Enemy animations (Animator + sprite-swap clips, driver components) | Implemented |
+| Player/Enemy physical collision separation (Physics2D layer matrix) | Implemented |
+| Click-to-move ground filtering (groundLayerMask) | Implemented |
 | Skill casting (Fireball — MP cost, damage, cooldown) | Not implemented |
 | Quest system | Not implemented |
 | Map system / area progression (3 Grassland maps, ObjectiveHelper, MapWindow) | Implemented |
@@ -692,4 +695,47 @@ Priority order based on completeness of the core loop:
 
 5. **Talent / Skill Icons** — assign `Icon` sprites to all six `TalentDefinition` assets and `SkillDef_Fireball` in the Inspector. The slot grid already renders them; they just show grey until sprites are set.
 
-6. **Player / Enemy Animations** — add Animator components with idle, walk, and attack clips. `PlayerCombatController` exposes a `CombatState` enum (`Idle`, `Seeking`, `Moving`, `Attacking`, `ManualMove`, `ManualAttack`) that directly drives player animator transitions. Enemy states are `Patrol`, `Combat`, `Dead`.
+6. **Player / Enemy Animations** — ✅ Done (see Session Update 2026-06-16 below).
+
+---
+
+# Session Update — 2026-06-16
+
+## Completed this session
+
+- **Player / Enemy animations** — Animator + AnimationClips that animate `SpriteRenderer.sprite`.
+  - Player: Idle / Run / Attack. Slime: Idle / Move / Attack / Dead.
+  - `PlayerAnimatorDriver` (reads `PlayerCombatController.State` + position delta) and `EnemyAnimatorDriver` (reads `EnemyController.State` + position delta) drive the Animator and **own visual facing**.
+- **Facing bug fixed** — current player/slime art faces **left** by default. Drivers added an inspector `invertFacing` bool with XOR flip logic. Player scene instance and Slime prefab use `invertFacing = true`. `EnemyController` no longer flips the sprite.
+- **Slime death animation** — visible because `EnemyController` delays the pooled `SetActive(false)` briefly (`deathDisableDelay`, ~0.5s).
+- **Dynamic Rigidbody2D** — Player and Slime switched to Dynamic (for future vertical platforms / gravity / stairs). Freeze Rotation Z stays on. Movement still uses simple `transform.position` for now (temporary).
+- **Kill jitter — fixed** — root cause was Player↔Enemy physical collision while both are Dynamic.
+  - `PlayerCombatController.IsValidTarget()` rejects null / inactive / not-alive / `EnemyState.Dead` targets and reacquires a live one.
+  - `EnemyController` freezes `Rigidbody2D.simulated=false` during the death delay, restored on pooled respawn.
+  - **Physics2D layer separation** (the real fix): Player and Enemy on dedicated layers with collision disabled (see CLAUDE.md "Physics Layers & Collision Matrix").
+
+## Implementation status (delta)
+- Player/Enemy animations: **implemented**
+- Talent grid + skill hotbar assignment: implemented
+- Skill casting: **not implemented**
+- Click-to-move ground filtering: implemented (layer collision now configured)
+- Player/Enemy physical collision separation: **implemented** (Physics2D layers)
+- Save/Load trigger: later / final
+- Quest system: later
+- Offline progression: later
+
+## Next Task
+
+**Move Dynamic Rigidbody2D movement off direct `transform.position`** — convert `PlayerCombatController` and `EnemyController` movement to `Rigidbody2D.MovePosition` (or velocity) in `FixedUpdate`. Direct transform writes on a Dynamic body fight the physics solver; the layer-collision fix removes the player↔enemy jitter, but this is the proper long-term fix. **Do not refactor movement unless explicitly requested.**
+
+> Note: the previously-planned "Fix Player/Enemy physical collision via Physics2D layers" was **completed this session**. The checklist below is kept as its regression test.
+
+### Regression / verification checklist (collision separation)
+- [ ] Player stands on ground.
+- [ ] Slime stands on ground.
+- [ ] Player and slime do not physically push each other.
+- [ ] Enemy click still attacks (`Physics2D.OverlapPointAll` still detects enemies).
+- [ ] Ground click still moves.
+- [ ] Killing a slime does not cause stuck / flipping jitter.
+- [ ] Slime respawns and moves normally.
+- [ ] Console has no errors.

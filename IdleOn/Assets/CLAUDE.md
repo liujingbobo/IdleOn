@@ -889,3 +889,68 @@ Before implementing any feature:
 5. Keep implementations simple and maintainable.
 
 When unsure, choose the simpler solution.
+
+---
+
+# Session Update — 2026-06-16
+
+## Animation System
+
+Player and Slime use **Animator + AnimationClips that animate `SpriteRenderer.sprite`** (frame-by-frame sprite swap). No code swaps sprites.
+
+- Assets: `_assets/Animations/Player/` (`Player_Idle`, `Player_Run`, `Player_Attack`, `PlayerAnimator.controller`) and `_assets/Animations/Enemies/` (`Slime_Idle`, `Slime_Move`, `Slime_Attack`, `Slime_Dead`, `SlimeAnimator.controller`).
+- The **Animator lives on the `Sprite` child** (same GameObject as the SpriteRenderer); the driver lives on the root.
+- `PlayerAnimatorDriver` (`_scripts/Characters/`) reads `PlayerCombatController.State` + per-frame position delta → sets `IsMoving` / `IsAttacking`. States: **Idle / Run / Attack**.
+- `EnemyAnimatorDriver` (`_scripts/Enemies/`) reads `EnemyController.State` + position delta → sets `IsMoving` / `IsAttacking` / `IsDead`. States: **Idle / Move / Attack / Dead**.
+- Movement detection is velocity-based (`moveSpeedThreshold`, units/sec) so it is frame-rate independent.
+- **Animation drivers own visual facing.** `EnemyController` no longer flips the sprite (its old `FlipSprite` was removed).
+- **`invertFacing` (bool, inspector)** on both drivers: current player/slime art faces **left** by default, so the Player scene instance and the Slime prefab use `invertFacing = true`. Facing = `flipX = (movingLeft) ^ invertFacing`. Do **not** rotate/scale sprites to fix facing.
+- **Slime death clip** is visible because `EnemyController.HandleDied()` delays the pooled `SetActive(false)` by `deathDisableDelay` (~0.5s, matches the 6-frame Dead clip). Loot/XP/`OnKilled` timing is unchanged.
+
+## Dynamic Rigidbody2D
+
+- Player and Slime are now **Dynamic** Rigidbody2D (changed this session) to support future maps with vertical platforms / gravity / stairs. **Keep Freeze Rotation Z enabled.**
+- Movement is still the original simple `transform.position` writes (`PlayerCombatController`: `MoveToTarget`/`UpdateManualMove`/`UpdateManualAttack`; `EnemyController`: `UpdatePatrol`/`MoveTowardPlayer`). This is acceptable **temporarily**.
+- **Future task:** move Dynamic-body movement to `Rigidbody2D.MovePosition` (or velocity) in `FixedUpdate`. Direct transform writes fight the physics solver. **Do not refactor movement unless explicitly requested.**
+
+## Stale / Dead Target Handling (kill-jitter fix)
+
+`PlayerCombatController.IsValidTarget(enemy)` = non-null **and** `activeInHierarchy` **and** `IsAlive` **and** `State != EnemyState.Dead`. Used in `HandleClick`, `MoveToTarget`, `TryAttack`, `UpdateManualAttack`, and after `SeekTarget`. The player clears `_currentTarget` / `_manualAttackTarget` on death, auto-combat reacquires a live target, manual returns to Idle/Auto. `EnemyController` sets `Rigidbody2D.simulated = false` during the death delay and restores it in `OnEnable` (pooled respawn).
+
+## Physics Layers & Collision Matrix
+
+Goal: Player/Enemy colliders stay **solid and query-detectable** (clicking/targeting) but do **not** physically collide with each other (prevents Dynamic-body depenetration jitter).
+
+- Physics layers (`TagManager.asset`): **`Player` = 6**, **`Ground` = 7**, **`Drop` = 8**, **`Enemy` = 9** (Player/Enemy added this session; Ground/Drop pre-existing).
+- Assignments: Player GameObject (scene) → layer **Player**; `Slime.prefab` root → layer **Enemy** (colliders are on the roots); Ground Tilemap → **Ground** (already was); WorldDrop → **Drop** (unchanged).
+- `Physics2DSettings.asset` layer collision matrix:
+  - Player ↔ Ground: **enabled**
+  - Enemy ↔ Ground: **enabled**
+  - Player ↔ Enemy: **disabled**
+  - Enemy ↔ Enemy: **disabled**
+  - Enemy ↔ Drop: **disabled**
+  - Player ↔ Drop: **enabled** (unchanged — pickup uses an `OverlapPoint` query, not physical contact)
+- Colliders remain **non-trigger**. `Physics2D.OverlapPointAll` / `OverlapPoint` are queries and ignore the collision matrix, so click-targeting and drop pickup are unaffected (`m_QueriesHitTriggers` / `m_QueriesStartInColliders` are on).
+
+> ⚠️ Editing `ProjectSettings/*.asset` (TagManager, Physics2DSettings) needs care: do it in **edit mode** only, and prefer a single mechanism (SerializedObject or direct file edit, not both interleaved). `TagManager.asset` holds **both** physics `layers:` and `m_SortingLayers:` — never overwrite one and lose the other. `uniqueID` in `m_SortingLayers` is **unsigned** (use SerializedProperty `longValue`, not `intValue`). Sorting layers in use: Default, Background, Floor, Enemy, Player, FloatText.
+
+## Ground / Tilemap & Click-to-Move (still current)
+
+- Ground Tilemap: `TilemapCollider2D` + `CompositeCollider2D`; geometry should stay **Polygons** (Outlines mode breaks `OverlapPoint`).
+- `PlayerCombatController.groundLayerMask` must be the Ground layer; if left Nothing/0, all floor clicks silently do nothing.
+- Click priority: UI → does nothing; enemy collider → attack; direct ground hit → move; empty space within `maxGroundSearchDistance` above ground → downward raycast finds surface → move; sky/background with no ground below → does nothing.
+
+## Known Limitations (still open — do not lose these)
+
+- **Save/Load** is still not auto-triggered; every play session starts fresh.
+- **Skill casting** not implemented; hotbar assignment exists but clicking a slot is a placeholder.
+- **MP / current-MP** system is still a placeholder (MP bar shows MaxMP/MaxMP).
+- **Talent / Skill icon sprites** still unassigned on some SO assets (grey placeholder).
+- **Quest system** not implemented.
+- **Offline progression** not implemented.
+- **No WindowManager** — multiple windows can be open at once.
+- **Dynamic Rigidbody2D movement** should eventually move off direct `transform.position` (see above).
+
+## Next Task
+
+**Move Dynamic Rigidbody2D movement to `Rigidbody2D.MovePosition` / velocity in `FixedUpdate`** (player + enemy). The Physics2D layer separation already removed the player↔enemy jitter; this is the long-term correctness fix. The previously-planned "Player/Enemy physical collision via layers" task is **complete this session**.

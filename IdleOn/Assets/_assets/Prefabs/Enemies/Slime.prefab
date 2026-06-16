@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 7469066762492372741}
   - component: {fileID: 3561420208683750709}
   - component: {fileID: 6818550457646559133}
-  m_Layer: 0
+  - component: {fileID: 3008055235090678842}
+  m_Layer: 9
   m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +45,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162796231340955796}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -97,8 +98,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Offset: {x: 0, y: 0.04}
+  m_Radius: 0.2
 --- !u!114 &3561420208683750709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +133,23 @@ MonoBehaviour:
   attackDamageMin: 5
   attackDamageMax: 10
   combatForgetTime: 4
+  deathDisableDelay: 0.5
+--- !u!114 &3008055235090678842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162796231340955796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46ffcd1a263bbdd4c88f4279f741bf3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 3533551970228931053}
+  spriteRenderer: {fileID: 0}
+  moveSpeedThreshold: 0.05
+  invertFacing: 1
 --- !u!1 &3962173887181344524
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,6 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6879139969614162357}
   - component: {fileID: 4351376112163173547}
+  - component: {fileID: 3533551970228931053}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -206,10 +225,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1115869363
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -2057770614295048843, guid: 4c9bca1933a297c4ba57233ec097a4f8, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -219,3 +238,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3533551970228931053
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3962173887181344524}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7a4d22ae1ba220a419c85a4e8029a465, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

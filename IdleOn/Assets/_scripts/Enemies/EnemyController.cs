@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using IdleOn.Core;
 using IdleOn.Characters;
@@ -28,10 +29,14 @@ namespace IdleOn.Enemies
         [SerializeField] private float attackDamageMax  = 10f;
         [SerializeField] private float combatForgetTime = 4f;
 
+        [Header("Death")]
+        [Tooltip("Seconds the dead enemy stays visible (to play its Dead clip) before being pooled.")]
+        [SerializeField] private float deathDisableDelay = 0.5f;
+
         private HealthComponent _health;
         private HealthComponent _playerHealth;
         private Transform       _playerTransform;
-        private SpriteRenderer  _spriteRenderer;
+        private Rigidbody2D     _rb;
 
         private EnemyState _state;
         private float      _patrolDir;
@@ -47,10 +52,7 @@ namespace IdleOn.Enemies
         void Awake()
         {
             _health = GetComponent<HealthComponent>();
-
-            var spriteChild = transform.Find("Sprite");
-            if (spriteChild != null)
-                _spriteRenderer = spriteChild.GetComponent<SpriteRenderer>();
+            _rb     = GetComponent<Rigidbody2D>();
         }
 
         void Start()
@@ -71,6 +73,9 @@ namespace IdleOn.Enemies
 
         void OnEnable()
         {
+            // Re-enable physics in case this is a pooled respawn that was frozen on death.
+            if (_rb != null) _rb.simulated = true;
+
             if (_health == null) return;
             _health.Initialize(definition != null ? definition.MaxHP : 1f);
             _health.OnDied += HandleDied;
@@ -103,8 +108,6 @@ namespace IdleOn.Enemies
         {
             float newX = transform.position.x + _patrolDir * patrolSpeed * Time.deltaTime;
             transform.position = new Vector3(newX, transform.position.y, transform.position.z);
-
-            FlipSprite(_patrolDir);
 
             if (_patrolDir > 0f && transform.position.x >= patrolRightX)
                 _patrolDir = -1f;
@@ -153,16 +156,9 @@ namespace IdleOn.Enemies
             float dir  = _playerTransform.position.x > transform.position.x ? 1f : -1f;
             float newX = transform.position.x + dir * patrolSpeed * Time.deltaTime;
             transform.position = new Vector3(newX, transform.position.y, transform.position.z);
-            FlipSprite(dir);
         }
 
         // ── Shared ───────────────────────────────────────────────────────────
-
-        private void FlipSprite(float dir)
-        {
-            if (_spriteRenderer != null)
-                _spriteRenderer.flipX = dir < 0f;
-        }
 
         public void TakeDamage(float amount, bool isCritical = false)
         {
@@ -185,6 +181,11 @@ namespace IdleOn.Enemies
         private void HandleDied()
         {
             _state = EnemyState.Dead;
+
+            // Freeze the dead body so it stops colliding with / pushing the player while its
+            // death clip plays out (re-enabled on pooled respawn in OnEnable). Loot/XP/OnKilled
+            // timing below is unchanged.
+            if (_rb != null) _rb.simulated = false;
 
             float xp = definition != null ? definition.XPReward : 0f;
             GameEvents.RaiseEnemyKilled(definition != null ? definition.EnemyId : string.Empty, xp);
@@ -211,6 +212,16 @@ namespace IdleOn.Enemies
             // ─────────────────────────────────────────────────────────────────
 
             OnKilled?.Invoke(this);
+            StartCoroutine(DisableAfterDeath());
+        }
+
+        // Keep the GameObject active briefly so the Dead clip can play before it returns to
+        // the pool. Loot, XP and OnKilled already fired above — this only delays deactivation.
+        private IEnumerator DisableAfterDeath()
+        {
+            if (deathDisableDelay > 0f)
+                yield return new WaitForSeconds(deathDisableDelay);
+
             gameObject.SetActive(false);
         }
     }
