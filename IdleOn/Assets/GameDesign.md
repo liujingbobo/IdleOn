@@ -13,7 +13,8 @@
 | Vault upgrades (Bigger Damage, Monster Tax, Natural Talent) | Implemented |
 | Main HUD (HP/MP/XP bars, currency, window buttons) | Implemented |
 | Player level-up (XP curve, HUD update, talent point grant) | Implemented |
-| Save/Load (JSON to disk) | Scaffolded — not yet triggered automatically |
+| Save/Load (Account save: Vault + multi-character, JSON to disk) | Implemented |
+| Character Select / Startup Menu (programmer-art) | Implemented |
 | Talent system (grid UI, upgrades, skill hotbar assignment) | Implemented |
 | Player / Enemy animations (Animator + sprite-swap clips, driver components) | Implemented |
 | Player/Enemy physical collision separation (Physics2D layer matrix) | Implemented |
@@ -587,28 +588,50 @@ Display rewards in a popup.
 
 # Save System
 
-## What is Saved
+## Account Save Architecture
 
-* Level
-* EXP
-* Silver Coins
-* Gold Coins
+`AccountSaveData` is the top-level save file — one file per account, holding account-shared data and all characters as siblings:
+
+* `Version` (int)
+* `Vault` (VaultSaveData) — account-shared, used by all characters
+* `Players` (List<PlayerSaveData>) — one entry per character
+* `CurrentPlayerId` (string)
+
+Vault upgrades are shared account-wide; per-character progress is isolated.
+
+## What is Saved per Character (PlayerSaveData)
+
+* PlayerId, PlayerName
+* Level, EXP, Talent Points
+* Silver Coins, Gold Coins
 * Inventory (slot list)
-* Equipped items (slot name → item id pairs)
+* Equipped items
 * Talent Levels
-* Vault Levels
-* Quest Progress
+* Hotbar skill assignments
+* Map Progress / Current Map Id
 * Last Logout Time
-* Current Map Id
+
+Vault Levels are **not** per-character — they live on `AccountSaveData.Vault` and apply to every character on the account.
+
+Quest Progress is not yet implemented (no Quest system).
 
 ## Implementation Notes
 
 * `SaveManager` singleton with `DontDestroyOnLoad`
 * JSON serialization via `JsonUtility`
-* Save file at `Application.persistentDataPath/player_save.json`
-* Each Play session starts with `CreateNewSave()` (fresh in-memory data)
-* `SaveToDisk()` and `LoadFromDisk()` are implemented but not yet auto-called
+* Save file at `Application.persistentDataPath/account_save.json` (old `player_save.json` ignored, no migration)
+* `SaveManager` exposes `CurrentAccount`, `CurrentSave` (selected character), `CurrentVault` (shared vault)
+* Account/character flow: create or load account → create or select character → `OnSaveLoaded` fires → systems initialize
+* Save-on-quit via `OnApplicationQuit` / `OnApplicationPause`
 * Systems initialize only after `SaveManager.OnSaveLoaded` fires
+
+## Startup / Character Select UI
+
+Programmer-art `StartupMenu` freezes gameplay until a character is selected.
+
+* Main Menu: New Save, Load Save (disabled without an existing save file)
+* Character Select: lists existing characters, Create New Character (auto-named Hero 1 / Hero 2 / ...)
+* Not yet implemented: character deletion, rename/text input, multiple account save slots, UI polish
 
 ---
 
@@ -685,9 +708,9 @@ Temporary debug keys remain active:
 
 Priority order based on completeness of the core loop:
 
-1. **Save/Load Trigger** — call `SaveToDisk()` on application quit. Call `LoadFromDisk()` at startup if a save file exists (add a "Continue" vs "New Game" choice). Without this, level, talent levels, hotbar assignments, and map progress reset every session.
+1. **Save/Load Trigger** — ✅ Done. Account-based save/load with character select is implemented (see Save System above).
 
-2. **Skill Casting (Phase 2B)** — Fireball is assigned to the hotbar but does nothing when clicked. Implement: MP spending, `OnPlayerMPChanged` event, cooldown timer on `SkillSlotUI`, projectile or area damage via `FloatTextManager`. Arcane Power can follow the same pattern.
+2. **Skill Casting (Phase 2B)** — Fireball is assigned to the hotbar but does nothing when clicked. Implement: MP spending, `OnPlayerMPChanged` event, cooldown timer on `SkillSlotUI`, projectile or area damage via `FloatTextManager`. Arcane Power can follow the same pattern. **This is the current next task.**
 
 3. **Quest System** — add `QuestSystem`, `QuestDefinition` ScriptableObjects (Kill 10 Slimes, Kill 20 Slimes), and `QuestWindow` UI with progress tracking.
 
@@ -724,7 +747,7 @@ Priority order based on completeness of the core loop:
 - Quest system: later
 - Offline progression: later
 
-## Next Task
+## Next Task (superseded — see below)
 
 **Move Dynamic Rigidbody2D movement off direct `transform.position`** — convert `PlayerCombatController` and `EnemyController` movement to `Rigidbody2D.MovePosition` (or velocity) in `FixedUpdate`. Direct transform writes on a Dynamic body fight the physics solver; the layer-collision fix removes the player↔enemy jitter, but this is the proper long-term fix. **Do not refactor movement unless explicitly requested.**
 
@@ -739,3 +762,36 @@ Priority order based on completeness of the core loop:
 - [ ] Killing a slime does not cause stuck / flipping jitter.
 - [ ] Slime respawns and moves normally.
 - [ ] Console has no errors.
+
+---
+
+# Session Update — Account Save + Character Select (2026-06-16)
+
+## Completed this session
+
+- **Account Save** — `AccountSaveData` is now the top-level save file: `Version`, `Vault` (shared), `Players` (per-character list), `CurrentPlayerId`.
+- **PlayerSaveData** — `VaultData` removed (vault is account-shared now); `PlayerId` and `PlayerName` added.
+- **SaveManager** — account-based: `CurrentAccount`, `CurrentSave` (selected character), `CurrentVault`. File renamed to `account_save.json`; old `player_save.json` ignored.
+- **VaultSystem** — reads `CurrentVault` instead of `CurrentSave.VaultData`. Verified shared across characters (Hero 2 sees Hero 1's vault upgrades).
+- **StartupMenu** — programmer-art Main Menu (New Save / Load Save) + Character Select (existing characters + Create New Character, auto-named Hero N). Gameplay frozen until selection.
+
+## Verified
+
+Fresh Play → Main Menu; New Save creates `account_save.json`; create/select character enters gameplay; restart enables Load Save; load restores characters as separate `PlayerSaveData` entries; Hero 1 progress persists and is not overwritten by Hero 2; vault upgrades shared; no console errors.
+
+## Known limitations
+
+No character deletion, no rename/text input, no multiple account save slots, no offline progression, no cloud save, no startup UI polish, minimal save migration (old `player_save.json` ignored).
+
+## Next Task
+
+**Implement minimal Fireball skill casting from assigned hotbar slot.**
+
+- Click hotbar Fireball slot to cast.
+- Require Fireball assigned through Talent assign mode.
+- Consume MP if current MP exists, or implement minimal current MP if needed.
+- Apply cooldown.
+- Damage current/nearest valid enemy.
+- Use `TalentSystem.GetFireballDamageBonus()`.
+- No projectile art/VFX yet unless trivial.
+- Do not implement complex projectile collisions unless explicitly approved.

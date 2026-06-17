@@ -126,13 +126,28 @@ Assets/_scripts/
 
 ---
 
-## Save System
+## Save System (Account-based — updated 2026-06-16)
 
-`GameBootstrap` runs at [DefaultExecutionOrder(-100)] and calls `SaveManager.CreateNewSave()` in Awake.
+`AccountSaveData` is now the top-level save file (`account_save.json` at `Application.persistentDataPath`). Old `player_save.json` is ignored.
 
-Every Play session starts with a fresh in-memory save. No auto-load from disk on startup yet.
+```csharp
+public class AccountSaveData
+{
+    public int Version;
+    public VaultSaveData Vault;            // account-shared, sibling of Players
+    public List<PlayerSaveData> Players;   // one per character, sibling of Vault
+    public string CurrentPlayerId;
+}
+```
 
-`SaveManager.SaveToDisk()` and `LoadFromDisk()` are implemented but NOT called automatically.
+`VaultSaveData` does NOT contain the player list — vault and players are siblings under the account.
+
+`SaveManager` exposes:
+- `CurrentAccount` (AccountSaveData)
+- `CurrentSave` (PlayerSaveData) — the selected/current character. **Name preserved intentionally** so existing systems (PlayerProgression, TalentSystem, MapSystem, etc.) keep working unchanged.
+- `CurrentVault` (VaultSaveData) → `CurrentAccount.Vault`
+
+Account/character lifecycle: `CreateNewAccount()`, `LoadAccountFromDisk()`, `SaveAccountToDisk()`, `CreateNewCharacter(name)`, `SelectCharacter(playerId)`. Save-on-quit via `OnApplicationQuit`/`OnApplicationPause`.
 
 Systems that need save data must use this pattern in Start():
 
@@ -146,16 +161,26 @@ void Start()
 }
 ```
 
-`PlayerSaveData` owns:
-- Level, Exp
+`PlayerSaveData` owns (per-character):
+- PlayerId, PlayerName
+- Level, Exp, TalentPoints
 - SilverCoins, GoldCoins (long)
 - InventoryData (20 slots default)
-- EquippedItems (List<EquipmentSlotEntry>)
-- VaultData (VaultSaveData — upgrade levels by upgradeId string)
+- EquipmentData
 - CurrentMapId, LastLogoutTime
+- MapProgress (List<MapProgressData>)
 - TalentData (List<TalentSaveData> — talentId + level pairs)
-- TalentPoints (int — unspent points available to spend)
 - HotbarSkillIds (List<string> — 3 entries, skillId per slot, empty string = unassigned)
+
+`VaultData` was **removed** from `PlayerSaveData` — vault now lives only on `AccountSaveData.Vault` and is shared across all characters on the account. `VaultSystem` reads `SaveManager.Instance.CurrentVault`, not `CurrentSave.VaultData`. Verified: Hero 2 sees vault upgrades created on Hero 1.
+
+### Startup UI
+
+Simple programmer-art `StartupMenu` freezes gameplay on Play until menu/character selection completes.
+
+- Main Menu: **New Save**, **Load Save** (disabled if `account_save.json` doesn't exist).
+- Character Select: lists existing characters + **Create New Character**. Names auto-generated (Hero 1, Hero 2, ...).
+- No character deletion, no text input, no multiple account save slots, no UI polish yet.
 
 ---
 
@@ -870,7 +895,7 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - **Skill casting** (Fireball, Arcane Power) is not implemented. Hotbar slots are assigned via drag-and-drop but clicking them only logs a placeholder. Implement Phase 2B when ready: MP spending, cooldown, projectile.
 - **Talent / Skill icons** — `TalentDefinition.Icon` and `SkillDefinition.Icon` sprites are not assigned in the ScriptableObject assets. Slots show a grey placeholder. Assign sprites in the Inspector when art is ready.
 - **NaturalTalent** vault upgrade is wired: each level-up grants `1 + GetTalentPointBonus()` talent points. TalentSystem and TalentWindow are implemented and can now spend these points.
-- **Save/Load** is not triggered automatically. `SaveToDisk()` and `LoadFromDisk()` exist but are never called. Every Play session starts fresh — level, talent levels, hotbar assignments, and map progress reset on restart.
+- **Save/Load** ✅ implemented (Account-based, see "Save System" above). `account_save.json` persists Vault (shared) + Players (per-character) + CurrentPlayerId. Old `player_save.json` ignored — no migration. Save-on-quit only (no autosave timer).
 - **Multiple windows** can be open simultaneously. No WindowManager exists. Add one only if needed.
 - **Click-to-move Y** — `_manualMoveTarget` uses `transform.position.y` (current player Y), not the resolved ground Y from `TryResolveMoveTarget`. The player never moves vertically. Replace the assignment inside `HandleClick` when vertical movement or pathfinding is needed.
 - **groundLayerMask** on `PlayerCombatController` must be assigned in the Inspector. If it is 0 (Nothing), all floor clicks silently do nothing. Floor Tilemap must also have `CompositeCollider2D` geometry set to **Polygons** — Outlines mode is incompatible with `Physics2D.OverlapPoint`.
@@ -951,6 +976,54 @@ Goal: Player/Enemy colliders stay **solid and query-detectable** (clicking/targe
 - **No WindowManager** — multiple windows can be open at once.
 - **Dynamic Rigidbody2D movement** should eventually move off direct `transform.position` (see above).
 
-## Next Task
+## Next Task (superseded — see below)
 
 **Move Dynamic Rigidbody2D movement to `Rigidbody2D.MovePosition` / velocity in `FixedUpdate`** (player + enemy). The Physics2D layer separation already removed the player↔enemy jitter; this is the long-term correctness fix. The previously-planned "Player/Enemy physical collision via layers" task is **complete this session**.
+
+---
+
+# Session Update — Account Save + Character Select (2026-06-16)
+
+## Completed this session
+
+- **Account save architecture**: `AccountSaveData` is the new top-level save file. Contains `Version`, `Vault` (VaultSaveData, account-shared), `Players` (List<PlayerSaveData>), `CurrentPlayerId`. Vault and Players are siblings.
+- **PlayerSaveData**: `VaultData` removed; `PlayerId` and `PlayerName` added. All other per-character data (level/exp/talents/hotbar/inventory/equipment/currency/map progress) unchanged.
+- **SaveManager**: rewritten to be account-based. Exposes `CurrentAccount`, `CurrentSave` (name kept for compatibility), `CurrentVault`. New save file `account_save.json`; old `player_save.json` ignored. Supports account load/create/save, character create/select, save-on-quit.
+- **VaultSystem**: now reads `SaveManager.Instance.CurrentVault` instead of `CurrentSave.VaultData`. Vault upgrades are shared across all characters — verified Hero 2 sees Hero 1's vault upgrades.
+- **StartupMenu**: new programmer-art UI. Freezes gameplay until menu/character selection. Main Menu (New Save / Load Save, Load disabled if no save file), Character Select (existing characters + Create New Character, auto-named Hero N). No deletion, no text input, no multiple save slots, no polish yet.
+
+## Verified behavior
+
+- Fresh Play → Main Menu shown.
+- New Save → creates `account_save.json`.
+- Create/select character → enters gameplay.
+- Restart Play → Load Save enabled.
+- Load → restores characters; Hero 1 and Hero 2 are separate `PlayerSaveData` entries.
+- Hero 1 progress persists; Hero 2 does not overwrite Hero 1.
+- Vault upgrades persist as shared account data.
+- Console has no project errors.
+
+## Known limitations / later work
+
+- Save/load migration is minimal; old `player_save.json` ignored.
+- Character deletion not implemented.
+- Character rename / text input not implemented.
+- Multiple account save slots not implemented.
+- Offline progression not implemented.
+- Cloud save not implemented.
+- Startup UI is programmer-art only; MainMenu/CharacterSelect polish later.
+- Skill casting still not implemented.
+
+## Next Task
+
+**Implement minimal Fireball skill casting from assigned hotbar slot.**
+
+Scope:
+- Click hotbar Fireball slot to cast.
+- Require Fireball assigned through Talent assign mode.
+- Consume MP if current MP exists, or implement minimal current MP if needed.
+- Apply cooldown.
+- Damage current/nearest valid enemy.
+- Use `TalentSystem.GetFireballDamageBonus()`.
+- No projectile art/VFX yet unless trivial.
+- Do not implement complex projectile collisions unless explicitly approved.
