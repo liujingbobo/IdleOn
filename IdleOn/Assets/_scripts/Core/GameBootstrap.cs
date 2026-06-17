@@ -12,7 +12,9 @@ namespace IdleOn.Core
         void Awake()
         {
             GameDatabase.Register(gameDatabase);
-            saveManager.CreateNewSave();
+            // Save/character creation is now driven by the StartupMenu UI flow.
+            // Gameplay systems stay uninitialised until a character is selected
+            // (they wait on SaveManager.OnSaveLoaded).
         }
     }
 }

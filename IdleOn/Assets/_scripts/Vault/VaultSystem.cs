@@ -18,7 +18,7 @@ namespace IdleOn.Vault
         }
 
         private VaultDatabase DB   => GameDatabase.Instance?.Vault;
-        private VaultSaveData Save => SaveManager.Instance?.CurrentSave?.VaultData;
+        private VaultSaveData Save => SaveManager.Instance?.CurrentVault;
 
         public int GetLevel(VaultUpgradeDefinition def)
         {

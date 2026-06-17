@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using IdleOn.Items;
 using IdleOn.Equipment;
-using IdleOn.Vault;
 using IdleOn.World;
 using IdleOn.Talents;
 
@@ -11,6 +10,10 @@ namespace IdleOn.Save
     [Serializable]
     public class PlayerSaveData
     {
+        // Identity (per-character)
+        public string PlayerId   = string.Empty;
+        public string PlayerName = "Hero";
+
         // Progression
         public int   Level        = 1;
         public float Exp          = 0f;
@@ -26,8 +29,7 @@ namespace IdleOn.Save
         // Equipment: one entry per occupied slot
         public EquipmentData  Equipment  = new EquipmentData();
 
-        // Vault upgrades
-        public VaultSaveData VaultData = new VaultSaveData();
+        // (Vault upgrades moved to AccountSaveData.Vault — vault is account-shared.)
 
         // Location — used for offline progression (implemented later)
         public string CurrentMapId   = "grassland_1";
