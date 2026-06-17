@@ -11,6 +11,9 @@ namespace IdleOn.Enemies
         [SerializeField] private Transform[] spawnPoints;
         [SerializeField] private float respawnDelay = 3f;
 
+        [Header("Debug")]
+        [SerializeField] private bool debugRespawn;
+
         private class SpawnSlot
         {
             public Transform SpawnPoint;
@@ -45,9 +48,37 @@ namespace IdleOn.Enemies
             return nearest;
         }
 
+        public EnemyController GetNearestValidEnemy(Vector2 position)
+        {
+            EnemyController nearest = null;
+            float minDist = float.MaxValue;
+
+            foreach (var slot in _slots)
+            {
+                var enemy = slot.Enemy;
+                if (enemy == null || !enemy.gameObject.activeInHierarchy || !enemy.IsAlive || enemy.State == EnemyState.Dead)
+                    continue;
+
+                float dist = Vector2.Distance(position, enemy.transform.position);
+                if (dist < minDist) { minDist = dist; nearest = enemy; }
+            }
+
+            return nearest;
+        }
+
         private IEnumerator Respawn(SpawnSlot slot)
         {
             yield return new WaitForSeconds(respawnDelay);
+            Vector3 oldPos = slot.Enemy.transform.position;
+            Vector3 newPos = slot.SpawnPoint.position;
+            if (debugRespawn)
+            {
+                var rb = slot.Enemy.GetComponent<Rigidbody2D>();
+                Vector2 velocity = rb != null ? rb.linearVelocity : Vector2.zero;
+                Debug.Log($"[EnemySpawner] Respawn {slot.Enemy.name} old={oldPos} new={newPos} rbVel={velocity} state={slot.Enemy.State}", this);
+            }
+            // Temporary. Dynamic Rigidbody2D + direct transform.position can fight physics.
+            // Future fix: MovePosition/velocity in FixedUpdate.
             slot.Enemy.transform.position = slot.SpawnPoint.position;
             slot.Enemy.gameObject.SetActive(true);
         }

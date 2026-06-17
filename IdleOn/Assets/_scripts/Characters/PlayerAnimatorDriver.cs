@@ -21,6 +21,9 @@ namespace IdleOn.Characters
         [Tooltip("Enable if the sprite art faces LEFT by default (flips the facing logic). No rotate/scale.")]
         [SerializeField] private bool invertFacing = false;
 
+        [Header("Debug")]
+        [SerializeField] private bool debugFacing;
+
         private PlayerCombatController _controller;
         private Vector3 _lastPosition;
 
@@ -56,10 +59,25 @@ namespace IdleOn.Characters
             animator.SetBool(IsMovingHash, moving);
             animator.SetBool(IsAttackingHash, attacking);
 
-            // Face the direction of travel (presentation only; clips animate the sprite, not flipX).
-            // invertFacing supports art whose default orientation faces left.
-            if (spriteRenderer != null && moving && Mathf.Abs(dx) > 0.0001f)
-                spriteRenderer.flipX = (dx < 0f) ^ invertFacing;
+            // During attacks, face the target even while stationary. Otherwise face travel direction.
+            Transform facingTarget = _controller.FacingTarget;
+            if (facingTarget != null)
+                ApplyFacing(facingTarget.position.x - transform.position.x, speed, state, "target");
+            else if (moving)
+                ApplyFacing(dx, speed, state, "movement");
+        }
+
+        private void ApplyFacing(float dx, float speed, CombatState state, string source)
+        {
+            if (spriteRenderer == null || Mathf.Abs(dx) <= 0.0001f) return;
+
+            bool oldFlip = spriteRenderer.flipX;
+            bool newFlip = (dx < 0f) ^ invertFacing;
+            if (oldFlip == newFlip) return;
+
+            if (debugFacing)
+                Debug.Log($"[PlayerAnimatorDriver] flipX {oldFlip}->{newFlip} source={source} dx={dx:0.####} speed={speed:0.###} state={state}", this);
+            spriteRenderer.flipX = newFlip;
         }
     }
 }

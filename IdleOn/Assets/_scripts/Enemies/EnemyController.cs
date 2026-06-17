@@ -33,6 +33,10 @@ namespace IdleOn.Enemies
         [Tooltip("Seconds the dead enemy stays visible (to play its Dead clip) before being pooled.")]
         [SerializeField] private float deathDisableDelay = 0.5f;
 
+        [Header("Debug")]
+        [SerializeField] private bool debugLifecycle;
+        [SerializeField] private bool debugMovement;
+
         private HealthComponent _health;
         private HealthComponent _playerHealth;
         private Transform       _playerTransform;
@@ -42,10 +46,12 @@ namespace IdleOn.Enemies
         private float      _patrolDir;
         private float      _attackTimer;
         private float      _timeSinceLastHit;
+        private float      _desiredVelocityX;
 
         public bool           IsAlive    => _health != null && _health.IsAlive;
         public EnemyState     State      => _state;
         public EnemyDefinition Definition => definition;
+        public Transform      PlayerTarget => _playerTransform;
 
         public event Action<EnemyController> OnKilled;
 
@@ -74,7 +80,9 @@ namespace IdleOn.Enemies
         void OnEnable()
         {
             // Re-enable physics in case this is a pooled respawn that was frozen on death.
+            bool simulatedBefore = _rb != null && _rb.simulated;
             if (_rb != null) _rb.simulated = true;
+            SetDesiredVelocityX(0f, "OnEnable");
 
             if (_health == null) return;
             _health.Initialize(definition != null ? definition.MaxHP : 1f);
@@ -84,12 +92,26 @@ namespace IdleOn.Enemies
             _patrolDir        = 1f;
             _attackTimer      = attackCooldown;
             _timeSinceLastHit = 0f;
+
+            LogLifecycle($"OnEnable id={EnemyIdForLog()} stateReset={_state} pos={transform.position} rbSimBefore={simulatedBefore} rbSimAfter={(_rb != null && _rb.simulated)}");
         }
 
         void OnDisable()
         {
+            SetDesiredVelocityX(0f, "OnDisable");
             if (_health != null)
                 _health.OnDied -= HandleDied;
+        }
+
+        void FixedUpdate()
+        {
+            if (_rb == null || !_rb.simulated) return;
+
+            // Dynamic Rigidbody2D movement must use Rigidbody2D movement APIs.
+            // Only drive horizontal AI movement; gravity and ground contacts own Y.
+            Vector2 velocity = _rb.linearVelocity;
+            velocity.x = _state == EnemyState.Dead ? 0f : _desiredVelocityX;
+            _rb.linearVelocity = velocity;
         }
 
         void Update()
@@ -106,8 +128,7 @@ namespace IdleOn.Enemies
 
         private void UpdatePatrol()
         {
-            float newX = transform.position.x + _patrolDir * patrolSpeed * Time.deltaTime;
-            transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+            SetDesiredVelocityX(_patrolDir * patrolSpeed, "UpdatePatrol");
 
             if (_patrolDir > 0f && transform.position.x >= patrolRightX)
                 _patrolDir = -1f;
@@ -133,7 +154,10 @@ namespace IdleOn.Enemies
             float dist = Vector2.Distance(transform.position, _playerTransform.position);
 
             if (dist <= attackRange)
+            {
+                SetDesiredVelocityX(0f, "attack range");
                 TryAttackPlayer();
+            }
             else
                 MoveTowardPlayer();
         }
@@ -154,8 +178,7 @@ namespace IdleOn.Enemies
         private void MoveTowardPlayer()
         {
             float dir  = _playerTransform.position.x > transform.position.x ? 1f : -1f;
-            float newX = transform.position.x + dir * patrolSpeed * Time.deltaTime;
-            transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+            SetDesiredVelocityX(dir * patrolSpeed, "MoveTowardPlayer");
         }
 
         // ── Shared ───────────────────────────────────────────────────────────
@@ -178,14 +201,35 @@ namespace IdleOn.Enemies
             }
         }
 
+        public void TakeMagicDamage(float amount, bool isCritical = false)
+        {
+            if (!IsAlive) return;
+
+            _health?.TakeDamage(amount);
+            FloatTextManager.Show(
+                Mathf.RoundToInt(amount).ToString(),
+                transform.position + Vector3.up * 0.8f,
+                FloatTextType.Magic,
+                isCritical);
+
+            if (_state != EnemyState.Dead)
+            {
+                _state            = EnemyState.Combat;
+                _timeSinceLastHit = 0f;
+            }
+        }
+
         private void HandleDied()
         {
             _state = EnemyState.Dead;
+            bool simulatedBefore = _rb != null && _rb.simulated;
 
             // Freeze the dead body so it stops colliding with / pushing the player while its
             // death clip plays out (re-enabled on pooled respawn in OnEnable). Loot/XP/OnKilled
             // timing below is unchanged.
+            SetDesiredVelocityX(0f, "HandleDied");
             if (_rb != null) _rb.simulated = false;
+            LogLifecycle($"HandleDied id={EnemyIdForLog()} state={_state} pos={transform.position} rbSimBefore={simulatedBefore} rbSimAfter={(_rb != null && _rb.simulated)} deathDelay={deathDisableDelay:0.###}");
 
             float xp = definition != null ? definition.XPReward : 0f;
             GameEvents.RaiseEnemyKilled(definition != null ? definition.EnemyId : string.Empty, xp);
@@ -223,6 +267,31 @@ namespace IdleOn.Enemies
                 yield return new WaitForSeconds(deathDisableDelay);
 
             gameObject.SetActive(false);
+        }
+
+        private void LogLifecycle(string message)
+        {
+            if (debugLifecycle)
+                Debug.Log($"[EnemyController] {name}: {message}", this);
+        }
+
+        private string EnemyIdForLog()
+        {
+            return definition != null ? definition.EnemyId : "null";
+        }
+
+        private void SetDesiredVelocityX(float velocityX, string context)
+        {
+            if (Mathf.Approximately(_desiredVelocityX, velocityX)) return;
+
+            float oldVelocityX = _desiredVelocityX;
+            _desiredVelocityX = velocityX;
+
+            if (debugMovement)
+            {
+                Vector2 rbVelocity = _rb != null ? _rb.linearVelocity : Vector2.zero;
+                Debug.Log($"[EnemyController] {name}: {context} desiredVelocityX {oldVelocityX:0.###}->{velocityX:0.###} rbVel={rbVelocity} state={_state}", this);
+            }
         }
     }
 }

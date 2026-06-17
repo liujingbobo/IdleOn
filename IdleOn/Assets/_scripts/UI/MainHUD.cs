@@ -39,6 +39,7 @@ namespace IdleOn.UI
         void Awake()
         {
             GameEvents.OnPlayerHPChanged    += OnHPChanged;
+            GameEvents.OnPlayerMPChanged    += OnMPChanged;
             GameEvents.OnCurrencyChanged    += OnCurrencyChanged;
             GameEvents.OnPlayerExpGained    += OnExpGained;
             GameEvents.OnAutoCombatChanged  += OnAutoCombatChanged;
@@ -50,6 +51,7 @@ namespace IdleOn.UI
         void OnDestroy()
         {
             GameEvents.OnPlayerHPChanged    -= OnHPChanged;
+            GameEvents.OnPlayerMPChanged    -= OnMPChanged;
             GameEvents.OnCurrencyChanged    -= OnCurrencyChanged;
             GameEvents.OnPlayerExpGained    -= OnExpGained;
             GameEvents.OnAutoCombatChanged  -= OnAutoCombatChanged;
@@ -97,6 +99,12 @@ namespace IdleOn.UI
             hpText.text    = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
         }
 
+        private void OnMPChanged(float current, float max)
+        {
+            mpSlider.value = max > 0f ? current / max : 0f;
+            mpText.text    = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+        }
+
         private void OnCurrencyChanged(CurrencyType type, long newTotal)
         {
             if (type == CurrencyType.Silver)
@@ -127,9 +135,11 @@ namespace IdleOn.UI
 
         private void RefreshMP()
         {
-            float maxMP = PlayerStats.Instance != null ? PlayerStats.Instance.FinalStats.MaxMP : 0f;
-            mpSlider.value = 1f;
-            mpText.text    = $"{Mathf.CeilToInt(maxMP)}/{Mathf.CeilToInt(maxMP)}";
+            var stats = PlayerStats.Instance;
+            float currentMP = stats != null ? stats.CurrentMP : 0f;
+            float maxMP     = stats != null ? stats.FinalStats.MaxMP : 0f;
+            mpSlider.value = maxMP > 0f ? currentMP / maxMP : 0f;
+            mpText.text    = $"{Mathf.CeilToInt(currentMP)}/{Mathf.CeilToInt(maxMP)}";
         }
 
         private void RefreshXP()

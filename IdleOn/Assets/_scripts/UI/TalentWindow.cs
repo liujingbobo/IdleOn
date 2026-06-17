@@ -98,7 +98,7 @@ namespace IdleOn.UI
             if (pointsText != null)
             {
                 int pts = SaveManager.Instance?.CurrentSave?.TalentPoints ?? 0;
-                pointsText.text = $"Points: {pts}";
+                pointsText.text = pts.ToString();
             }
 
             foreach (var slot in _slots) slot.Refresh();

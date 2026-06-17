@@ -17,8 +17,10 @@ namespace IdleOn.Characters
         private StatSheet       _finalStats  = new StatSheet();
         private HealthComponent _health;
         private bool            _initialized;
+        private float           _currentMP;
 
         public StatSheet FinalStats => _finalStats;
+        public float     CurrentMP  => _currentMP;
 
         void Awake()
         {
@@ -29,6 +31,8 @@ namespace IdleOn.Characters
 
         public void Recalculate()
         {
+            float oldMaxMP = _finalStats.MaxMP;
+
             _finalStats = new StatSheet
             {
                 STR        = baseStats.STR,
@@ -93,17 +97,26 @@ namespace IdleOn.Characters
             if (!_initialized)
             {
                 _health?.Initialize(_finalStats.MaxHP);
+                _currentMP = _finalStats.MaxMP;
                 _initialized = true;
             }
             else
             {
                 _health?.UpdateMaxHP(_finalStats.MaxHP);
+                float ratio = oldMaxMP > 0f ? _currentMP / oldMaxMP : 1f;
+                _currentMP = Mathf.Clamp(_finalStats.MaxMP * ratio, 0f, _finalStats.MaxMP);
             }
+
+            GameEvents.RaisePlayerMPChanged(_currentMP, _finalStats.MaxMP);
         }
 
         public bool SpendMP(float amount)
         {
-            // TODO: track current MP
+            if (amount <= 0f) return true;
+            if (_currentMP < amount) return false;
+
+            _currentMP = Mathf.Max(0f, _currentMP - amount);
+            GameEvents.RaisePlayerMPChanged(_currentMP, _finalStats.MaxMP);
             return true;
         }
     }

@@ -1,4 +1,6 @@
 using UnityEngine;
+using IdleOn.Characters;
+using IdleOn.Combat;
 using IdleOn.Save;
 
 namespace IdleOn.UI
@@ -7,6 +9,7 @@ namespace IdleOn.UI
     {
         [SerializeField] private SkillSlotUI[] slots;
         [SerializeField] private DragHandler   dragHandler;
+        [SerializeField] private PlayerCombatController combatController;
 
         void Start()
         {
@@ -20,6 +23,9 @@ namespace IdleOn.UI
 
         private void Initialize()
         {
+            if (combatController == null && PlayerStats.Instance != null)
+                combatController = PlayerStats.Instance.GetComponent<PlayerCombatController>();
+
             var save = SaveManager.Instance?.CurrentSave;
             if (save != null)
             {
@@ -28,7 +34,7 @@ namespace IdleOn.UI
             }
 
             for (int i = 0; i < slots.Length; i++)
-                slots[i]?.Initialize(i, dragHandler);
+                slots[i]?.Initialize(i, dragHandler, combatController);
         }
     }
 }

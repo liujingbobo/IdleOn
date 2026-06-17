@@ -11,6 +11,7 @@ namespace IdleOn.Core
 
         // Player HP
         public static event Action<float, float>  OnPlayerHPChanged;   // current, max
+        public static event Action<float, float>  OnPlayerMPChanged;   // current, max
 
         // Progression
         public static event Action<float>         OnPlayerExpGained;    // amount gained this kill
@@ -40,6 +41,7 @@ namespace IdleOn.Core
         public static void RaiseAutoCombatChanged(bool active)                          => OnAutoCombatChanged?.Invoke(active);
         public static void RaiseEnemyKilled(string enemyId, float xp)                  => OnEnemyKilled?.Invoke(enemyId, xp);
         public static void RaisePlayerHPChanged(float current, float max)              => OnPlayerHPChanged?.Invoke(current, max);
+        public static void RaisePlayerMPChanged(float current, float max)              => OnPlayerMPChanged?.Invoke(current, max);
         public static void RaisePlayerExpGained(float amount)                          => OnPlayerExpGained?.Invoke(amount);
         public static void RaisePlayerLevelChanged(int newLevel)                       => OnPlayerLevelChanged?.Invoke(newLevel);
         public static void RaiseInventoryChanged()                                     => OnInventoryChanged?.Invoke();

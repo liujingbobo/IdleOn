@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using IdleOn.Combat;
 using IdleOn.Core;
 using IdleOn.Save;
 using IdleOn.Skills;
@@ -15,13 +16,15 @@ namespace IdleOn.UI
         [SerializeField] private TMP_Text slotLabel;
 
         private DragHandler _dragHandler;
+        private PlayerCombatController _combatController;
         private int         _slotIndex;
         private string      _assignedSkillId;
 
-        public void Initialize(int slotIndex, DragHandler dragHandler)
+        public void Initialize(int slotIndex, DragHandler dragHandler, PlayerCombatController combatController)
         {
-            _slotIndex   = slotIndex;
-            _dragHandler = dragHandler;
+            _slotIndex        = slotIndex;
+            _dragHandler      = dragHandler;
+            _combatController = combatController;
 
             if (slotLabel != null)
                 slotLabel.text = (slotIndex + 1).ToString();
@@ -44,7 +47,13 @@ namespace IdleOn.UI
         public void OnPointerClick(PointerEventData eventData)
         {
             if (string.IsNullOrEmpty(_assignedSkillId)) return;
-            Debug.Log($"[SkillSlotUI] Slot {_slotIndex + 1}: Skill cast not implemented yet.");
+            if (_combatController == null)
+            {
+                Debug.LogWarning($"[SkillSlotUI] Slot {_slotIndex + 1}: no PlayerCombatController assigned.");
+                return;
+            }
+
+            _combatController.TryCastSkill(_assignedSkillId);
         }
 
         private void AssignSkill(string skillId)
