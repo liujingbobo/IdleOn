@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using IdleOn.Core;
 using IdleOn.Save;
@@ -17,17 +16,13 @@ namespace IdleOn.UI
         [SerializeField] private TMP_Text        pointsText;
         [SerializeField] private TalentInfoPanel infoPanel;
 
-        [Header("Assign Mode")]
-        [SerializeField] private Button      assignModeButton;
-        [SerializeField] private TMP_Text    assignModeButtonText;
-        [SerializeField] private DragHandler dragHandler;
-
         [Header("Debug")]
         [SerializeField] private bool    enableDebugKey = true;
         [SerializeField] private KeyCode debugOpenKey   = KeyCode.T;
 
         private readonly List<TalentSlotUI> _slots = new List<TalentSlotUI>();
-        private bool _assignMode;
+        private readonly Dictionary<TalentDefinition, TalentSlotUI> _slotsByDef = new Dictionary<TalentDefinition, TalentSlotUI>();
+        private TalentSlotUI _selectedSlot;
 
         void Awake()
         {
@@ -48,14 +43,14 @@ namespace IdleOn.UI
         public void Open()
         {
             windowPanel.SetActive(true);
+            ClearSelection();
             RefreshAll();
         }
 
         public void Close()
         {
-            SetAssignMode(false);
             windowPanel.SetActive(false);
-            infoPanel?.Hide();
+            ClearSelection();
         }
 
         public void Toggle()
@@ -64,15 +59,11 @@ namespace IdleOn.UI
             else Open();
         }
 
-        public void ToggleAssignMode() => SetAssignMode(!_assignMode);
-
-        private void SetAssignMode(bool on)
+        private void ClearSelection()
         {
-            _assignMode = on;
-            if (assignModeButtonText != null)
-                assignModeButtonText.text = on ? "Assign: ON" : "Assign Skills";
-            foreach (var slot in _slots)
-                slot.SetAssignMode(on);
+            _selectedSlot?.SetSelected(false);
+            _selectedSlot = null;
+            infoPanel?.Hide();
         }
 
         private void PopulateSlots()
@@ -84,12 +75,20 @@ namespace IdleOn.UI
             {
                 if (def == null) continue;
                 var slot = Instantiate(slotPrefab, slotContainer);
-                slot.Initialize(def, OnSlotClicked, dragHandler);
+                slot.Initialize(def, OnSlotClicked);
                 _slots.Add(slot);
+                _slotsByDef[def] = slot;
             }
         }
 
-        private void OnSlotClicked(TalentDefinition def) => infoPanel?.Show(def);
+        private void OnSlotClicked(TalentDefinition def)
+        {
+            _selectedSlot?.SetSelected(false);
+            _selectedSlot = _slotsByDef.TryGetValue(def, out var slot) ? slot : null;
+            _selectedSlot?.SetSelected(true);
+
+            infoPanel?.Show(def);
+        }
 
         private void RefreshAll()
         {

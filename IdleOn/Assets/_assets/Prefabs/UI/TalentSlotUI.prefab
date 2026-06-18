@@ -93,6 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconImage: {fileID: 2857074222860086727}
   levelText: {fileID: 5386916329496047987}
+  selectedIndicator: {fileID: 7262409271026135422}
 --- !u!1 &2806289975587878180
 GameObject:
   m_ObjectHideFlags: 0

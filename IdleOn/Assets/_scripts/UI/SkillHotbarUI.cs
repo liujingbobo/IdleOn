@@ -1,6 +1,7 @@
 using UnityEngine;
 using IdleOn.Characters;
 using IdleOn.Combat;
+using IdleOn.Core;
 using IdleOn.Save;
 
 namespace IdleOn.UI
@@ -8,7 +9,6 @@ namespace IdleOn.UI
     public class SkillHotbarUI : MonoBehaviour
     {
         [SerializeField] private SkillSlotUI[] slots;
-        [SerializeField] private DragHandler   dragHandler;
         [SerializeField] private PlayerCombatController combatController;
 
         void Start()
@@ -17,9 +17,15 @@ namespace IdleOn.UI
                 Initialize();
             else
                 SaveManager.OnSaveLoaded += Initialize;
+
+            GameEvents.OnHotbarChanged += RefreshSlots;
         }
 
-        void OnDestroy() => SaveManager.OnSaveLoaded -= Initialize;
+        void OnDestroy()
+        {
+            SaveManager.OnSaveLoaded -= Initialize;
+            GameEvents.OnHotbarChanged -= RefreshSlots;
+        }
 
         private void Initialize()
         {
@@ -34,7 +40,13 @@ namespace IdleOn.UI
             }
 
             for (int i = 0; i < slots.Length; i++)
-                slots[i]?.Initialize(i, dragHandler, combatController);
+                slots[i]?.Initialize(i, combatController);
+        }
+
+        private void RefreshSlots()
+        {
+            foreach (var slot in slots)
+                slot?.SyncFromSave();
         }
     }
 }

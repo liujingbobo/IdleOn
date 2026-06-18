@@ -9,39 +9,35 @@ using IdleOn.Skills;
 
 namespace IdleOn.UI
 {
-    public class SkillSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
+    public class SkillSlotUI : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private Image    iconImage;
         [SerializeField] private Image    emptyOverlay;
         [SerializeField] private TMP_Text slotLabel;
 
-        private DragHandler _dragHandler;
         private PlayerCombatController _combatController;
         private int         _slotIndex;
         private string      _assignedSkillId;
 
-        public void Initialize(int slotIndex, DragHandler dragHandler, PlayerCombatController combatController)
+        public void Initialize(int slotIndex, PlayerCombatController combatController)
         {
             _slotIndex        = slotIndex;
-            _dragHandler      = dragHandler;
             _combatController = combatController;
 
             if (slotLabel != null)
                 slotLabel.text = (slotIndex + 1).ToString();
 
-            var save = SaveManager.Instance?.CurrentSave;
-            if (save != null && slotIndex < save.HotbarSkillIds.Count)
-                _assignedSkillId = save.HotbarSkillIds[slotIndex];
-
-            Refresh();
+            SyncFromSave();
         }
 
-        public void OnDrop(PointerEventData eventData)
+        // Re-reads this slot's assigned skill from save data (e.g. after auto-equip).
+        public void SyncFromSave()
         {
-            if (_dragHandler == null || !_dragHandler.IsDragging) return;
-            if (_dragHandler.Source != DragSource.SkillPanel) return;
+            var save = SaveManager.Instance?.CurrentSave;
+            if (save != null && _slotIndex < save.HotbarSkillIds.Count)
+                _assignedSkillId = save.HotbarSkillIds[_slotIndex];
 
-            AssignSkill(_dragHandler.CurrentItemId);
+            Refresh();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -54,17 +50,6 @@ namespace IdleOn.UI
             }
 
             _combatController.TryCastSkill(_assignedSkillId);
-        }
-
-        private void AssignSkill(string skillId)
-        {
-            _assignedSkillId = skillId;
-
-            var save = SaveManager.Instance?.CurrentSave;
-            if (save != null && _slotIndex < save.HotbarSkillIds.Count)
-                save.HotbarSkillIds[_slotIndex] = skillId;
-
-            Refresh();
         }
 
         private void Refresh()

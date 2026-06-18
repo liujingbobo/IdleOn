@@ -4,6 +4,7 @@ using UnityEngine;
 using IdleOn.Core;
 using IdleOn.Save;
 using IdleOn.Characters;
+using IdleOn.Skills;
 
 namespace IdleOn.Talents
 {
@@ -72,8 +73,47 @@ namespace IdleOn.Talents
             if (affectsStats)
                 PlayerStats.Instance?.Recalculate();
 
+            AutoEquipUnlockedSkill(def, entry.Level);
+
             GameEvents.RaiseTalentChanged();
             Debug.Log($"[TalentSystem] {def.DisplayName} → Lv.{entry.Level} | Points left: {save.TalentPoints}");
+        }
+
+        // ── Auto-equip skills unlocked by this talent ───────────────────────
+
+        private void AutoEquipUnlockedSkill(TalentDefinition def, int newLevel)
+        {
+            var skillDb = GameDatabase.Instance?.Skills;
+            if (skillDb == null) return;
+
+            foreach (var skill in skillDb.Skills)
+            {
+                if (skill == null || skill.RequiredTalentId != def.TalentId) continue;
+                if (newLevel < skill.RequiredTalentLevel) continue;
+
+                EquipSkillToHotbar(skill.SkillId);
+            }
+        }
+
+        private void EquipSkillToHotbar(string skillId)
+        {
+            var save = SaveManager.Instance?.CurrentSave;
+            if (save == null) return;
+
+            while (save.HotbarSkillIds.Count < 3)
+                save.HotbarSkillIds.Add(string.Empty);
+
+            if (save.HotbarSkillIds.Contains(skillId)) return;
+
+            int emptyIndex = save.HotbarSkillIds.IndexOf(string.Empty);
+            if (emptyIndex < 0)
+            {
+                Debug.LogWarning($"[TalentSystem] No empty hotbar slot to auto-equip skill '{skillId}'.");
+                return;
+            }
+
+            save.HotbarSkillIds[emptyIndex] = skillId;
+            GameEvents.RaiseHotbarChanged();
         }
 
         // ── Stat bonus getters (used by PlayerStats.Recalculate) ────────────
