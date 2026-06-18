@@ -12,6 +12,7 @@ namespace IdleOn.UI
     {
         [SerializeField] public EquipmentSlot targetSlot;
         [SerializeField] private Image        iconImage;
+        [SerializeField] private GameObject   placeholder;
 
         private ItemInfoPanel _itemInfoPanel;
         private DragHandler   _dragHandler;
@@ -27,7 +28,9 @@ namespace IdleOn.UI
             string itemId = EquipmentSystem.Instance?.GetEquipped(targetSlot);
             var    def    = itemId != null ? GameDatabase.Instance?.Items?.GetItem(itemId) : null;
 
-            if (def?.Icon != null)
+            bool hasIcon = def?.Icon != null;
+
+            if (hasIcon)
             {
                 iconImage.sprite  = def.Icon;
                 iconImage.enabled = true;
@@ -36,6 +39,8 @@ namespace IdleOn.UI
             {
                 iconImage.enabled = false;
             }
+
+            placeholder?.SetActive(!hasIcon);
         }
 
         // ── Click → ItemInfo ─────────────────────────────────────────────────

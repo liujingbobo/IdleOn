@@ -16,11 +16,17 @@ namespace IdleOn.UI
         [Header("Inventory")]
         [SerializeField] private Transform inventoryPanel;
 
+        [Header("Pagination")]
+        [SerializeField] private GameObject nextPageButton;
+        [SerializeField] private GameObject prevPageButton;
+        private const int SlotsPerPage = 20;
+
         [Header("Shared")]
         [SerializeField] private ItemInfoPanel itemInfoPanel;
         [SerializeField] private DragHandler   dragHandler;
 
         private InventorySlotUI[] _inventorySlots;
+        private int _currentPage;
 
         void Awake()
         {
@@ -57,9 +63,13 @@ namespace IdleOn.UI
         }
 
         // Called by MainHUD buttons.
-        public void Open()   { windowPanel.SetActive(true);  RefreshInventory(); RefreshEquipment(); }
+        public void Open()   { windowPanel.SetActive(true);  _currentPage = 0; RefreshInventory(); RefreshEquipment(); }
         public void Close()  { windowPanel.SetActive(false); itemInfoPanel.Hide(); dragHandler.Cancel(); }
         public void Toggle() { if (windowPanel.activeSelf) Close(); else Open(); }
+
+        // Called by NextPageBtn/PrevPageBtn onClick.
+        public void NextPage() { _currentPage++; RefreshInventory(); }
+        public void PrevPage() { _currentPage--; RefreshInventory(); }
 
         private void ToggleWindow()
         {
@@ -68,6 +78,7 @@ namespace IdleOn.UI
 
             if (open)
             {
+                _currentPage = 0;
                 RefreshInventory();
                 RefreshEquipment();
             }
@@ -86,14 +97,21 @@ namespace IdleOn.UI
             if (inv == null) return;
 
             var items    = GameDatabase.Instance?.Items;
-            var occupied = inv.GetSlots();
-            int total    = Mathf.Min(_inventorySlots.Length, inv.GetCapacity());
+            var allSlots = inv.GetSlots();
+            int capacity = inv.GetCapacity();
 
-            for (int i = 0; i < total; i++)
+            int totalPages = Mathf.Max(1, Mathf.CeilToInt(capacity / (float)SlotsPerPage));
+            _currentPage = Mathf.Clamp(_currentPage, 0, totalPages - 1);
+
+            int pageOffset = _currentPage * SlotsPerPage;
+
+            for (int i = 0; i < _inventorySlots.Length; i++)
             {
-                if (i < occupied.Count)
+                int globalIndex = pageOffset + i;
+
+                if (globalIndex < capacity && globalIndex < allSlots.Count && !allSlots[globalIndex].IsEmpty)
                 {
-                    var slotData = occupied[i];
+                    var slotData = allSlots[globalIndex];
                     _inventorySlots[i].Populate(slotData, items?.GetItem(slotData.ItemId)?.Icon);
                 }
                 else
@@ -102,8 +120,8 @@ namespace IdleOn.UI
                 }
             }
 
-            for (int i = total; i < _inventorySlots.Length; i++)
-                _inventorySlots[i].SetEmpty();
+            if (prevPageButton != null) prevPageButton.SetActive(_currentPage > 0);
+            if (nextPageButton != null) nextPageButton.SetActive(_currentPage < totalPages - 1);
         }
 
         private void RefreshEquipment()

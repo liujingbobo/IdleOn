@@ -11,15 +11,25 @@ namespace IdleOn.Items
         [SerializeField] private List<InventorySlotData> slots = new List<InventorySlotData>();
 
         public int Capacity  => capacity;
-        public int UsedSlots => slots.Count;
         public IReadOnlyList<InventorySlotData> Slots => slots;
 
         public InventoryData() { }
         public InventoryData(int capacity) { this.capacity = capacity; }
 
-        // Returns false if inventory is full and item has no existing slot.
+        // Fixed-slot model: appends empty slots until Slots.Count >= capacity.
+        // Never removes/shrinks — old dense saves keep existing items at their
+        // current indices (slot 0..N-1) and just get empty slots appended.
+        public void EnsureSlots(int requiredCount)
+        {
+            while (slots.Count < requiredCount)
+                slots.Add(new InventorySlotData(null, 0));
+        }
+
+        // Returns false if inventory is full and item has no existing matching slot.
         public bool AddItem(string itemId, int quantity = 1)
         {
+            EnsureSlots(capacity);
+
             var slot = FindSlot(itemId);
             if (slot != null)
             {
@@ -27,20 +37,26 @@ namespace IdleOn.Items
                 return true;
             }
 
-            if (slots.Count >= capacity) return false;
+            for (int i = 0; i < capacity && i < slots.Count; i++)
+            {
+                if (!slots[i].IsEmpty) continue;
+                slots[i].ItemId   = itemId;
+                slots[i].Quantity = quantity;
+                return true;
+            }
 
-            slots.Add(new InventorySlotData(itemId, quantity));
-            return true;
+            return false;
         }
 
-        // Returns false if slot not found or quantity insufficient.
+        // Removes from the first matching slot. itemId-based, not source-slot-index-based —
+        // TODO: callers (e.g. Equip) cannot yet target a specific slot when an item exists in multiple stacks.
         public bool RemoveItem(string itemId, int quantity = 1)
         {
             var slot = FindSlot(itemId);
             if (slot == null || slot.Quantity < quantity) return false;
 
             slot.Quantity -= quantity;
-            if (slot.Quantity <= 0) slots.Remove(slot);
+            if (slot.Quantity <= 0) slot.Clear();
             return true;
         }
 
@@ -51,7 +67,7 @@ namespace IdleOn.Items
         private InventorySlotData FindSlot(string itemId)
         {
             foreach (var slot in slots)
-                if (slot.ItemId == itemId) return slot;
+                if (!slot.IsEmpty && slot.ItemId == itemId) return slot;
             return null;
         }
     }

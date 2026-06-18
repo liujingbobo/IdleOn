@@ -16,7 +16,15 @@ namespace IdleOn.Inventory
             Instance = this;
         }
 
-        private InventoryData Data => SaveManager.Instance?.CurrentSave?.Inventory;
+        private InventoryData Data
+        {
+            get
+            {
+                var data = SaveManager.Instance?.CurrentSave?.Inventory;
+                data?.EnsureSlots(data.Capacity);
+                return data;
+            }
+        }
 
         public bool TryAddItem(string itemId, int quantity = 1)
         {

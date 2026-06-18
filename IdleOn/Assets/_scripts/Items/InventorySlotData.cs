@@ -13,5 +13,13 @@ namespace IdleOn.Items
             ItemId   = itemId;
             Quantity = quantity;
         }
+
+        public bool IsEmpty => string.IsNullOrEmpty(ItemId) || Quantity <= 0;
+
+        public void Clear()
+        {
+            ItemId   = null;
+            Quantity = 0;
+        }
     }
 }
