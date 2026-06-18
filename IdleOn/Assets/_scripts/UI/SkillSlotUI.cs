@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -9,15 +10,20 @@ using IdleOn.Skills;
 
 namespace IdleOn.UI
 {
-    public class SkillSlotUI : MonoBehaviour, IPointerClickHandler
+    public class SkillSlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        private const float TooltipHoverDelay = 1f;
+
         [SerializeField] private Image    iconImage;
+        [SerializeField] private Image    iconFrontImage;
         [SerializeField] private Image    emptyOverlay;
         [SerializeField] private TMP_Text slotLabel;
 
         private PlayerCombatController _combatController;
-        private int         _slotIndex;
-        private string      _assignedSkillId;
+        private SkillDefinition        _assignedSkill;
+        private int                    _slotIndex;
+        private string                 _assignedSkillId;
+        private Coroutine              _hoverCoroutine;
 
         public void Initialize(int slotIndex, PlayerCombatController combatController)
         {
@@ -40,6 +46,12 @@ namespace IdleOn.UI
             Refresh();
         }
 
+        void Update()
+        {
+            if (_assignedSkill == null || iconFrontImage == null || _combatController == null) return;
+            iconFrontImage.fillAmount = _combatController.GetSkillCooldownProgress01(_assignedSkillId);
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (string.IsNullOrEmpty(_assignedSkillId)) return;
@@ -52,19 +64,50 @@ namespace IdleOn.UI
             _combatController.TryCastSkill(_assignedSkillId);
         }
 
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (_assignedSkill == null) return;
+            if (_hoverCoroutine != null) StopCoroutine(_hoverCoroutine);
+            _hoverCoroutine = StartCoroutine(HoverAndShowTooltip());
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (_hoverCoroutine != null)
+            {
+                StopCoroutine(_hoverCoroutine);
+                _hoverCoroutine = null;
+            }
+            SkillTooltipUI.Instance?.Hide();
+        }
+
+        private IEnumerator HoverAndShowTooltip()
+        {
+            yield return new WaitForSeconds(TooltipHoverDelay);
+            SkillTooltipUI.Instance?.Show(_assignedSkill);
+            _hoverCoroutine = null;
+        }
+
         private void Refresh()
         {
-            var def = GameDatabase.Instance?.Skills?.GetSkill(_assignedSkillId);
-            bool hasSkill = def != null;
+            _assignedSkill = GameDatabase.Instance?.Skills?.GetSkill(_assignedSkillId);
+            bool hasIcon = _assignedSkill != null && _assignedSkill.Icon != null;
 
             if (iconImage != null)
             {
-                iconImage.sprite  = hasSkill ? def.Icon : null;
-                iconImage.enabled = hasSkill;
+                iconImage.sprite  = hasIcon ? _assignedSkill.Icon : null;
+                iconImage.enabled = hasIcon;
+            }
+
+            if (iconFrontImage != null)
+            {
+                iconFrontImage.sprite     = hasIcon ? _assignedSkill.Icon : null;
+                iconFrontImage.enabled    = hasIcon;
+                iconFrontImage.fillAmount = 1f;
             }
 
             if (emptyOverlay != null)
-                emptyOverlay.gameObject.SetActive(!hasSkill);
+                emptyOverlay.gameObject.SetActive(_assignedSkill == null);
         }
     }
 }

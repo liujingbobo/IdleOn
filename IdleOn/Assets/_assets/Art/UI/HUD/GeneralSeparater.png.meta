@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 76c9aed3d80f9f0449524040880dd696
+guid: ab09c7d2145fdd248875f46cc0c935d8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -278010210157008157
-    second: BarFiller_0
+      213: 8566964741083023898
+    second: GeneralSeparater_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BarFiller_0
+      name: GeneralSeparater_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 6
-        height: 6
+        width: 20
+        height: 1
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 1, y: 1, z: 1, w: 2}
+      border: {x: 9, y: 0, z: 9, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3eae8a3df2f442cf0800000000000000
-      internalID: -278010210157008157
+      spriteID: a1acc83da09f3e670800000000000000
+      internalID: 8566964741083023898
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 492f3034ee2c41f4eab97cbf314023af
+    spriteID: f4fed4e0cee9b1b43bc676037e0081de
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BarFiller_0: -278010210157008157
+      GeneralSeparater_0: 8566964741083023898
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

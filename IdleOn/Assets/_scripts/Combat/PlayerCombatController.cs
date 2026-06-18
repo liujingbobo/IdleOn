@@ -85,6 +85,17 @@ namespace IdleOn.Combat
             GameEvents.RaiseAutoCombatChanged(active);
         }
 
+        // Read-only cooldown progress for UI: 0 = just cast, 1 = ready. Never written to by UI.
+        public float GetSkillCooldownProgress01(string skillId)
+        {
+            var skill = GameDatabase.Instance?.Skills?.GetSkill(skillId);
+            if (skill == null) return 1f;
+            if (!_skillReadyTimes.TryGetValue(skill.SkillId, out float readyAt)) return 1f;
+            float remaining = readyAt - Time.time;
+            if (remaining <= 0f) return 1f;
+            return Mathf.Clamp01(1f - remaining / Mathf.Max(0.0001f, skill.Cooldown));
+        }
+
         public bool TryCastSkill(string skillId)
         {
             if (string.IsNullOrEmpty(skillId)) return false;
