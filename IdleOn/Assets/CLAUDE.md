@@ -424,31 +424,30 @@ Subscribes to `OnVaultChanged` and `OnCurrencyChanged` (Silver only).
 
 Persistent HUD — always visible. No open/close.
 
-**Character panel** (bottom-left): Name/Level, HP bar, MP bar, XP bar, Silver, Gold.
-**Button bar** (bottom strip): Auto Combat toggle, Inv, Craft, Vault, Talent, Quest, Map, Settings.
+**Character panel** (bottom-left, manually laid out — see `CharacterPanel/StatusGroup`, `/Name`, `/LevelGroup`): Name text (static, MainHUD never writes it), Level text (`"Lv. {level}"`), HP/MP/EXP sliders+text (`"cur/max"` format, no suffix).
+**Button bar** (bottom strip): Auto Combat toggle, Inv, Craft, Vault, Talent, Quest, Map, Settings — all real `Button` components.
 
 Reads from:
-- `GameEvents.OnPlayerHPChanged` → HP bar
+- `GameEvents.OnPlayerHPChanged` → HP slider+text
+- `GameEvents.OnPlayerMPChanged` → MP slider+text (real current-MP, not a placeholder)
 - `GameEvents.OnCurrencyChanged` → Silver/Gold text
-- `GameEvents.OnPlayerExpGained` → XP bar (reads `PlayerProgression.CurrentExp`)
+- `GameEvents.OnPlayerExpGained` / `OnPlayerLevelChanged` → EXP slider+text + Level text
 - `GameEvents.OnAutoCombatChanged` → Auto button label
-- `GameEvents.OnEquipmentChanged` → refresh MP bar (MaxMP only — no current-MP tracking yet)
-- `GameEvents.OnTalentChanged` → refresh MP bar (Mana Training talent changes MaxMP)
+- `GameEvents.OnEquipmentChanged` / `OnTalentChanged` → refresh MP bar (MaxMP changes)
 
-Window buttons call `Toggle()` on their respective window components.
+Window buttons call `MainHUD.OnXButtonClicked()` → internal `ToggleWindow(WindowType)`, which calls `Open()`/`Close()` on the window components directly (not `window.Toggle()`).
 
-**Map button** calls `mapWindow?.Toggle()`.
-**Talent button** calls `talentWindow?.Toggle()`.
+**Button interactable state mirrors window open state** — `RefreshButtonStates()` sets `button.interactable = !window.IsOpen` for Inv/Craft/Vault/Talent/Map, called after every open/close/switch and polled every `Update()` (so closing a window via its own CloseButton — bypassing MainHUD — still un-sticks its ButtonBar button next frame). Reads the window's real `IsOpen`, not just the cached `_currentWindow`.
 
-Placeholder buttons (Quest, Settings) still call `Debug.Log(...)` only.
+Placeholder buttons (Quest, Settings) still call `Debug.Log(...)` only — inactive in scene, no icon assets yet.
 
-Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `TalentWindow`, `PlayerProgression`.
+Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `TalentWindow`, `PlayerProgression`, plus `invButton/craftButton/vaultButton/talentButtonRef/mapButton` (Button refs for interactable sync).
 
-**MP bar is a known placeholder** — shows MaxMP/MaxMP (always full) until a current-MP system is built.
+**MP bar shows real current MP** — `PlayerStats.CurrentMP` / `FinalStats.MaxMP`. No longer a placeholder.
 
-**XP bar** uses a serialized `xpPerLevel` float (default 100) as cap — not tied to a real level-up formula yet.
+**XP bar** uses `PlayerProgression.ExpForNextLevel(Level)` as cap — tied to the real level-up formula.
 
-Player name is hardcoded as "Hero" — no Name field in SaveData yet.
+Player name is still hardcoded as "Hero" in save data — the Name text object in the scene is static/manual, MainHUD does not write to it.
 
 ---
 
@@ -919,11 +918,11 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 
 ## Known Limitations / TODOs
 
-- **MP bar** in MainHUD shows MaxMP/MaxMP (always full). No current-MP system exists yet. When MP spending is implemented, add `OnPlayerMPChanged(float current, float max)` to GameEvents and wire MainHUD.
-- **Player name** is hardcoded "Hero". Add a `PlayerName` field to PlayerSaveData when character creation is built.
+- **MP bar** in MainHUD now shows real current MP (`OnPlayerMPChanged` wired). No longer a placeholder.
+- **Player name** is hardcoded "Hero" in save data; the Name text object in MainHUD's CharacterPanel is static/manual, not script-driven. Add a `PlayerName` field to PlayerSaveData when character creation is built.
 - **Debug keys** T (Talent), C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.
 - **Quest / Settings** buttons still log placeholder messages. These systems are not implemented.
-- **Skill casting** (Fireball, Arcane Power) is not implemented. Hotbar slots are assigned via drag-and-drop but clicking them only logs a placeholder. Implement Phase 2B when ready: MP spending, cooldown, projectile.
+- **Skill casting** (Fireball) is implemented — click hotbar slot → `PlayerCombatController.TryCastSkill`, MP cost, cooldown (`GetSkillCooldownProgress01` drives the radial fill on `SkillSlotUI`), hover tooltip. Arcane Power and other skills still not implemented.
 - **Talent / Skill icons** — `TalentDefinition.Icon` and `SkillDefinition.Icon` sprites are not assigned in the ScriptableObject assets. Slots show a grey placeholder. Assign sprites in the Inspector when art is ready.
 - **NaturalTalent** vault upgrade is wired: each level-up grants `1 + GetTalentPointBonus()` talent points. TalentSystem and TalentWindow are implemented and can now spend these points.
 - **Save/Load** ✅ implemented (Account-based, see "Save System" above). `account_save.json` persists Vault (shared) + Players (per-character) + CurrentPlayerId. Old `player_save.json` ignored — no migration. Save-on-quit only (no autosave timer).
@@ -1098,6 +1097,25 @@ Scope:
 - Compile clean (console: 0 errors/warnings).
 - Reflection test in Play mode against live `TalentSystem`/`InventoryData` instances (no save data touched): bonus at level 0/1/2 = 0/20/40; effective capacity 20→60 at level 2; `AddItem` placed an item into slot 21+ (beyond base 20) only once the bonus made it available; `EnsureSlots(60)` grew `Slots.Count` to exactly 60 with no item movement.
 
-## Next Task
+---
 
-**Implement minimal Fireball skill casting from assigned hotbar slot** (unchanged — see task above).
+# Session Update — Fireball Casting, Hotbar Wiring, MainHUD Rewire (2026-06-18)
+
+## Completed this session
+
+- **Fireball skill casting** — `PlayerCombatController.GetSkillCooldownProgress01(skillId)` added (read-only cooldown progress, 0=just cast, 1=ready). `TryCastSkill` and `_skillReadyTimes` unchanged/untouched.
+- **SkillSlotUI rewritten** — IconBG/IconFront show/hide based on whether the assigned skill has an icon, radial cooldown fill via `GetSkillCooldownProgress01`, click-to-cast, hover (1s delay) shows new `SkillTooltipUI` (`Canvas/MainHUD/SkillTooltip`) with name/description/MP/cooldown/talent requirement.
+- **SkillHotbarUI.slots[] scene wiring fixed** — `slots[1]`/`slots[2]` were `null` in the scene (only slot 0 ever initialized). Wired to `"SkillSlot1 (1)"`/`"SkillSlot1 (2)"`. No script change.
+- **MainHUD rewired to match manually-redesigned CharacterPanel/ButtonBar** — old inactive CharacterPanel rows (NameLevelText/HPBarRow/MPBarRow/XPBarRow/CurrencyRow) were dead; real display is now `StatusGroup/HPBarRow|MPBarRow|EXPBarRow`, `LevelGroup/Text (TMP)`, `Name`. Rewired `MainHUD.cs` serialized fields to the new objects. Level text now `"Lv. {level}"` (was `"Hero  Lv.{level}"` — Name object is separate/static now). HP/MP/EXP text now exact `"cur/max"` (dropped `" XP"` suffix). Added `invButton/craftButton/vaultButton/talentButtonRef/mapButton` + `RefreshButtonStates()` so ButtonBar button `interactable` mirrors real window `IsOpen` state (closed=true/open=false), polled in `Update()` so a window closed via its own CloseButton still un-sticks its button. Fixed copy-paste label bug: MP/EXP rows in StatusGroup both said "HP" — corrected to "MP"/"EXP".
+
+## Verified
+
+- Compile clean throughout.
+- Play-mode reflection tests: all 3 hotbar slots now `Initialize()` correctly (previously slots 1/2 silently never ran); cooldown fill, empty-slot icon hiding, tooltip show/hide all confirmed.
+- MainHUD: `Lv. 1`, `50/50` (MP), `10/100` (EXP) — exact format confirmed. Button interactable correctly reflects real `.IsOpen` (including windows that started open from a prior scene state) and self-corrects when a window is closed via its own CloseButton (not through MainHUD).
+
+## Known gaps / next task
+
+- Quest and Settings systems still unimplemented (placeholder log only, buttons inactive in scene — no icon assets).
+- Skill casting only exists for Fireball; no other skills defined yet.
+- No task explicitly queued — pick from "Known Limitations / TODOs" above (e.g. Arcane Power skill, slot-index-based inventory ops, Rigidbody2D MovePosition migration) when ready.

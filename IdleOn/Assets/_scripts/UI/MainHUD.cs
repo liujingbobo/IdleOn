@@ -36,6 +36,13 @@ namespace IdleOn.UI
         [Header("Progression")]
         [SerializeField] private PlayerProgression playerProgression;
 
+        [Header("Button Bar")]
+        [SerializeField] private Button invButton;
+        [SerializeField] private Button craftButton;
+        [SerializeField] private Button vaultButton;
+        [SerializeField] private Button talentButtonRef;
+        [SerializeField] private Button mapButton;
+
         private enum WindowType { None, Inventory, Crafting, Vault, Talent, Map }
         private WindowType _currentWindow = WindowType.None;
 
@@ -68,6 +75,11 @@ namespace IdleOn.UI
             RefreshAll();
         }
 
+        void Update()
+        {
+            RefreshButtonStates();
+        }
+
         public void RefreshAll()
         {
             RefreshNameLevel();
@@ -75,6 +87,7 @@ namespace IdleOn.UI
             RefreshXP();
             RefreshCurrency();
             RefreshAutoCombat();
+            RefreshButtonStates();
         }
 
         // ── Button callbacks (wired in Inspector via Button.onClick) ─────────
@@ -102,6 +115,7 @@ namespace IdleOn.UI
             {
                 CloseWindow(target);
                 _currentWindow = WindowType.None;
+                RefreshButtonStates();
                 return;
             }
 
@@ -110,6 +124,7 @@ namespace IdleOn.UI
 
             OpenWindow(target);
             _currentWindow = target;
+            RefreshButtonStates();
         }
 
         private bool IsWindowOpen(WindowType type)
@@ -188,7 +203,7 @@ namespace IdleOn.UI
         private void RefreshNameLevel()
         {
             int level = playerProgression != null ? playerProgression.Level : 1;
-            nameLevelText.text = $"Hero  Lv.{level}";
+            nameLevelText.text = $"Lv. {level}";
         }
 
         private void RefreshMP()
@@ -206,7 +221,7 @@ namespace IdleOn.UI
             float current = playerProgression.CurrentExp;
             float cap     = playerProgression.ExpForNextLevel(playerProgression.Level);
             xpSlider.value = cap > 0f ? Mathf.Clamp01(current / cap) : 0f;
-            xpText.text    = $"{Mathf.FloorToInt(current)}/{cap} XP";
+            xpText.text    = $"{Mathf.FloorToInt(current)}/{cap}";
         }
 
         private void RefreshCurrency()
@@ -222,6 +237,15 @@ namespace IdleOn.UI
             bool active = combatController != null && combatController.IsAutoCombatActive;
             if (autoCombatButtonText != null)
                 autoCombatButtonText.text = active ? "Auto: ON" : "Auto: OFF";
+        }
+
+        private void RefreshButtonStates()
+        {
+            if (invButton != null)        invButton.interactable        = !IsWindowOpen(WindowType.Inventory);
+            if (craftButton != null)      craftButton.interactable      = !IsWindowOpen(WindowType.Crafting);
+            if (vaultButton != null)      vaultButton.interactable      = !IsWindowOpen(WindowType.Vault);
+            if (talentButtonRef != null)  talentButtonRef.interactable  = !IsWindowOpen(WindowType.Talent);
+            if (mapButton != null)        mapButton.interactable        = !IsWindowOpen(WindowType.Map);
         }
     }
 }

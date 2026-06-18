@@ -19392,7 +19392,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HP
+  m_text: EXP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3981f8199b83c264d99cf4b195809b63, type: 2}
   m_sharedMaterial: {fileID: 6819189494416923116, guid: 3981f8199b83c264d99cf4b195809b63, type: 2}
@@ -23884,6 +23884,11 @@ MonoBehaviour:
   combatController: {fileID: 709275784}
   autoCombatButtonText: {fileID: 0}
   playerProgression: {fileID: 709275791}
+  invButton: {fileID: 0}
+  craftButton: {fileID: 0}
+  vaultButton: {fileID: 0}
+  talentButtonRef: {fileID: 0}
+  mapButton: {fileID: 0}
 --- !u!1 &1682463994
 GameObject:
   m_ObjectHideFlags: 0
@@ -27384,7 +27389,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HP
+  m_text: MP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3981f8199b83c264d99cf4b195809b63, type: 2}
   m_sharedMaterial: {fileID: 6819189494416923116, guid: 3981f8199b83c264d99cf4b195809b63, type: 2}
