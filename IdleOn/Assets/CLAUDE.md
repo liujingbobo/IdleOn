@@ -245,6 +245,17 @@ Key methods:
 - `GetSlots() → IReadOnlyList<InventorySlotData>`
 - `GetCapacity() → int`
 
+### Fixed-slot model (updated 2026-06-17)
+
+`InventoryData.Slots` is a **fixed-size list**, not a dense occupied-only list. Every index in `Slots` is a real slot position, including empty ones.
+
+- `InventorySlotData.IsEmpty` (`string.IsNullOrEmpty(ItemId) || Quantity <= 0`) and `Clear()` (`ItemId = null`, `Quantity = 0`) mark/clear a slot without removing its list entry.
+- `InventoryData.EnsureSlots(capacity)` appends empty slots until `Slots.Count >= capacity`. Never removes/shrinks the list — if capacity ever decreases, extra slots are left in place and simply ignored by display/index bounds checks.
+- `AddItem`: stacks into the first existing non-empty slot with a matching `ItemId`; otherwise scans for the first empty slot within `capacity` and places the item there. Existing items are never moved.
+- `RemoveItem`: still **itemId-based** (finds the first matching non-empty slot), decrements, and calls `Clear()` on that slot when quantity hits 0. The slot stays in the list — later slots never shift.
+- `InventorySystem.Data` getter calls `EnsureSlots(capacity)` on every access. This both pads old dense saves (existing items keep their list position starting at slot 0; empty slots are appended after them) and grows the list whenever capacity increases.
+- **Known limitation:** `RemoveItem`/`Equip` operate on itemId, not a specific slot index. If the same item ever exists in more than one slot, only the first match is affected. See "Known Limitations" below for the planned `RemoveItemAt`/`EquipFromSlot`/`MoveItem` follow-up.
+
 `CurrencySystem` is the only entry point for reading and writing currency.
 
 Key methods:
@@ -331,6 +342,15 @@ FloatTextManager uses an object pool — do not instantiate FloatText directly.
 Press **Tab** to open/close (debug key in ItemWindow.Update).
 
 Public API: `Open()`, `Close()`, `Toggle()` — call these from MainHUD buttons.
+
+**Pagination (added 2026-06-17):** 20 fixed `InventorySlotUI` slots are reused across pages — no slots are created/destroyed. Visible slot `i` on page `p` maps to global slot index `p * 20 + i`, read directly from `InventorySystem.GetSlots()` (the fixed-slot list) — empty global indices show an empty slot UI.
+
+- `NextPage()` / `PrevPage()` increment/decrement `_currentPage`, clamp against `totalPages = Ceil(capacity / 20)`, then refresh — page switching never moves or mutates inventory data, only changes which slice is displayed.
+- Page button visibility: 1 page → both hidden; first page → Next only; middle page → Prev + Next; last page → Prev only.
+- `_currentPage` resets to 0 on `Open()`/`ToggleWindow()` open branch, and is re-clamped every refresh in case capacity shrinks/grows.
+- `CloseButton` wired to `ItemWindow.Close()`.
+
+**Equipment placeholders (added 2026-06-17):** each `EquipmentSlotUI` has a `[SerializeField] GameObject placeholder` child. `Refresh()` shows the placeholder and hides the icon when the slot has no equipped item with an icon; shows the icon and hides the placeholder when equipped. Unequipping restores the placeholder automatically (same `Refresh()` call, driven by `OnEquipmentChanged`). New nested equipment slot UI (`Left`/`Middle`/`Right` groups) is wired into `ItemWindow.equipmentSlots`; old inactive flat equipment slots were left in place, untouched.
 
 ### Crafting Window
 
@@ -900,6 +920,8 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - **Click-to-move Y** — `_manualMoveTarget` uses `transform.position.y` (current player Y), not the resolved ground Y from `TryResolveMoveTarget`. The player never moves vertically. Replace the assignment inside `HandleClick` when vertical movement or pathfinding is needed.
 - **groundLayerMask** on `PlayerCombatController` must be assigned in the Inspector. If it is 0 (Nothing), all floor clicks silently do nothing. Floor Tilemap must also have `CompositeCollider2D` geometry set to **Polygons** — Outlines mode is incompatible with `Physics2D.OverlapPoint`.
 - **Player / Enemy animations** — no Animator components or animation clips exist yet. `PlayerCombatController.State` (CombatState enum) is the intended driver for player animation transitions when added.
+- **RemoveItem/Equip are itemId-based, not slot-index-based** (since the 2026-06-17 fixed-slot refactor). If the same item exists in multiple slots, only the first match is affected. Future task: add `RemoveItemAt(slotIndex)`, `EquipFromSlot(slotIndex)`, `MoveItem(fromSlot, toSlot)` for exact-slot drag/drop and equip.
+- **Inventory Expansion talent is NOT implemented.** No talent currently increases inventory capacity — capacity only grows via the "Inventory Expansion" consumable. Future task: add a talent that grants +20 capacity (one page) per level.
 
 ---
 
@@ -1027,3 +1049,28 @@ Scope:
 - Use `TalentSystem.GetFireballDamageBonus()`.
 - No projectile art/VFX yet unless trivial.
 - Do not implement complex projectile collisions unless explicitly approved.
+
+---
+
+# Session Update — Inventory Pagination, Equipment Placeholders, Fixed-Slot Refactor (2026-06-17)
+
+## Completed this session
+
+- **InventoryPanel pagination** — `ItemWindow` reuses its existing 20 `InventorySlotUI` slots across pages instead of creating more. `NextPageBtn`/`PrevPageBtn` wired to `NextPage()`/`PrevPage()`. Button visibility: 1 page → both hidden; first page → Next only; middle → both; last page → Prev only. `CloseButton` wired to `Close()`. See "Inventory UI (ItemWindow)" above.
+- **Equipment placeholder icons** — `EquipmentSlotUI.placeholder` shows when a slot has no equipped item, hides when equipped; restored on unequip. New nested equipment slot UI wired into `ItemWindow.equipmentSlots`; old inactive flat slots left alone. See "Equipment placeholders" above.
+- **Fixed-slot inventory refactor** — `InventoryData.Slots` changed from a dense occupied-only list to a fixed-size list where every index is a real slot (including empty ones). Removing/equipping an item clears that slot in place; later items never shift. `AddItem` stacks into a matching slot first, then fills the first empty slot. `EnsureSlots(capacity)` pads old dense saves and any future capacity increase without reordering or losing items. See "Fixed-slot model" above.
+
+## Verified
+
+- Compile clean (console: 0 errors/warnings) after each change.
+- Play-mode smoke test: `ItemWindow.Open()/NextPage()/PrevPage()/Close()` run without exceptions; panel opens/closes correctly.
+- Reflection test against a live `InventoryData` instance: simulated old dense save (5 items, no padding) → `EnsureSlots(20)` padded slots 5–19 empty, items stayed at original indices; `RemoveItem` on a middle slot cleared only that slot, later items did not shift; `AddItem` of a new item landed exactly in the freed slot; `AddItem` of an existing item stacked instead of using a new slot; filling to capacity then adding one more correctly returned `false` with no data loss.
+
+## Known limitations / next task
+
+- `RemoveItem`/`Equip` are itemId-based, not slot-index-based (see "Known Limitations / TODOs" above for the planned `RemoveItemAt`/`EquipFromSlot`/`MoveItem` follow-up).
+- Inventory Expansion talent (+20 capacity per level) is **not implemented** — flagged as a gap, not built, per explicit scope instruction this session.
+
+## Next Task
+
+**Implement minimal Fireball skill casting from assigned hotbar slot** (unchanged from previous session — see task above). Alternatively, implement the Inventory Expansion talent (+20 capacity/level) if prioritized ahead of Fireball casting.

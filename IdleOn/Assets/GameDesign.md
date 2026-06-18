@@ -6,7 +6,7 @@
 |---|---|
 | Combat (click-to-move, auto-combat, enemy AI) | Implemented |
 | Loot drop pipeline (WorldDrop, DropManager, LootEvaluator) | Implemented |
-| Inventory (slot-based, 20 slots, drag-and-drop UI) | Implemented |
+| Inventory (fixed-slot, 20 slots/page, pagination, drag-and-drop UI) | Implemented |
 | Equipment (8 slots, stat bonuses, drag-and-drop) | Implemented |
 | Currency (Silver, Gold, wallet system) | Implemented |
 | Crafting (recipes, ingredient check, crafting window) | Implemented |
@@ -248,27 +248,32 @@ Critical Chance
 
 # Inventory
 
-Inventory is slot-based. Each slot holds one item type and stacks indefinitely.
+Inventory is **fixed-slot** (implemented 2026-06-17). Each slot is a real, stable position — including empty ones. Same item stacks into its existing slot indefinitely; new items take the first empty slot. Removing/equipping an item clears that slot in place — later items never shift to fill the gap.
 
 Default capacity: 20 slots.
 
-Capacity can be increased by using an Inventory Expansion consumable item.
+Capacity can be increased by using an Inventory Expansion consumable item. Increasing capacity only appends empty slots — existing items keep their slot positions.
 
-Inventory data is saved as part of the player save file.
+Inventory data is saved as part of the player save file. Old saves (pre-fixed-slot, dense occupied-only lists) load safely: existing items keep their slot order starting at slot 0, then empty slots are appended up to capacity — no items are lost or reordered.
 
 ## Inventory UI
 
 Press Tab to open/close the inventory panel.
 
-Displays 20 slots in a 4×5 grid.
+**Pagination (implemented 2026-06-17):** 20 fixed slots per page. Visible slot `i` on page `p` maps to global (real) slot index `p * 20 + i` — paging never moves data, only changes which 20-slot window is displayed.
+
+- 1 page total → page buttons hidden.
+- First page (more pages exist) → Next button only.
+- Middle page → Prev and Next both shown.
+- Last page → Prev button only.
 
 Each slot shows:
 * Item icon (or grey placeholder if no icon assigned)
 * Stack count when quantity > 1
 
-Empty slots show an empty dark frame.
+Empty slots (including empty slots within capacity, and slots beyond capacity) show an empty dark frame.
 
-No drag and drop yet. No item interaction yet.
+Drag-and-drop is implemented for equipping/unequipping. No drag-and-drop slot-to-slot item move yet — see Recommended Next Features.
 
 ---
 
@@ -719,6 +724,10 @@ Priority order based on completeness of the core loop:
 5. **Talent / Skill Icons** — assign `Icon` sprites to all six `TalentDefinition` assets and `SkillDef_Fireball` in the Inspector. The slot grid already renders them; they just show grey until sprites are set.
 
 6. **Player / Enemy Animations** — ✅ Done (see Session Update 2026-06-16 below).
+
+7. **Inventory Expansion talent (recommended, not implemented)** — no talent currently increases inventory capacity. Add a new talent that grants **+20 capacity (one page) per level**, mirroring the existing Inventory Expansion consumable. Requires a new `TalentDefinition` field and a new `InventorySystem`/`TalentSystem` hookup — out of scope until explicitly requested.
+
+8. **Exact-slot inventory operations (recommended, not implemented)** — `RemoveItem`/`Equip` are itemId-based, not slot-index-based. Add `RemoveItemAt(slotIndex)`, `EquipFromSlot(slotIndex)`, `MoveItem(fromSlot, toSlot)` to support slot-to-slot drag/drop and equip-from-a-specific-stack.
 
 ---
 
