@@ -19,6 +19,8 @@ namespace IdleOn.UI
 
         private readonly List<VaultUpgradeRowUI> _rows = new List<VaultUpgradeRowUI>();
 
+        public bool IsOpen => windowPanel.activeSelf;
+
         void Awake()
         {
             windowPanel.SetActive(false);

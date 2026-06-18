@@ -36,6 +36,9 @@ namespace IdleOn.UI
         [Header("Progression")]
         [SerializeField] private PlayerProgression playerProgression;
 
+        private enum WindowType { None, Inventory, Crafting, Vault, Talent, Map }
+        private WindowType _currentWindow = WindowType.None;
+
         void Awake()
         {
             GameEvents.OnPlayerHPChanged    += OnHPChanged;
@@ -76,9 +79,9 @@ namespace IdleOn.UI
 
         // ── Button callbacks (wired in Inspector via Button.onClick) ─────────
 
-        public void OnInventoryButtonClicked()   => itemWindow?.Toggle();
-        public void OnCraftButtonClicked()        => craftingWindow?.Toggle();
-        public void OnVaultButtonClicked()        => vaultWindow?.Toggle();
+        public void OnInventoryButtonClicked()   => ToggleWindow(WindowType.Inventory);
+        public void OnCraftButtonClicked()        => ToggleWindow(WindowType.Crafting);
+        public void OnVaultButtonClicked()        => ToggleWindow(WindowType.Vault);
 
         public void OnAutoCombatButtonClicked()
         {
@@ -86,10 +89,65 @@ namespace IdleOn.UI
                 combatController.SetAutoCombat(!combatController.IsAutoCombatActive);
         }
 
-        public void OnTalentButtonClicked()   => talentWindow?.Toggle();
+        public void OnTalentButtonClicked()   => ToggleWindow(WindowType.Talent);
         public void OnQuestButtonClicked()    => Debug.Log("[MainHUD] Quest not implemented yet.");
-        public void OnMapButtonClicked()      => mapWindow?.Toggle();
+        public void OnMapButtonClicked()      => ToggleWindow(WindowType.Map);
         public void OnSettingsButtonClicked() => Debug.Log("[MainHUD] Settings not implemented yet.");
+
+        // ── Window switching ─────────────────────────────────────────────────
+
+        private void ToggleWindow(WindowType target)
+        {
+            if (IsWindowOpen(target))
+            {
+                CloseWindow(target);
+                _currentWindow = WindowType.None;
+                return;
+            }
+
+            if (_currentWindow != WindowType.None)
+                CloseWindow(_currentWindow);
+
+            OpenWindow(target);
+            _currentWindow = target;
+        }
+
+        private bool IsWindowOpen(WindowType type)
+        {
+            switch (type)
+            {
+                case WindowType.Inventory: return itemWindow != null && itemWindow.IsOpen;
+                case WindowType.Crafting:  return craftingWindow != null && craftingWindow.IsOpen;
+                case WindowType.Vault:     return vaultWindow != null && vaultWindow.IsOpen;
+                case WindowType.Talent:    return talentWindow != null && talentWindow.IsOpen;
+                case WindowType.Map:       return mapWindow != null && mapWindow.IsOpen;
+                default:                   return false;
+            }
+        }
+
+        private void OpenWindow(WindowType type)
+        {
+            switch (type)
+            {
+                case WindowType.Inventory: itemWindow?.Open();     break;
+                case WindowType.Crafting:  craftingWindow?.Open();  break;
+                case WindowType.Vault:     vaultWindow?.Open();     break;
+                case WindowType.Talent:    talentWindow?.Open();    break;
+                case WindowType.Map:       mapWindow?.Open();       break;
+            }
+        }
+
+        private void CloseWindow(WindowType type)
+        {
+            switch (type)
+            {
+                case WindowType.Inventory: itemWindow?.Close();     break;
+                case WindowType.Crafting:  craftingWindow?.Close();  break;
+                case WindowType.Vault:     vaultWindow?.Close();     break;
+                case WindowType.Talent:    talentWindow?.Close();    break;
+                case WindowType.Map:       mapWindow?.Close();       break;
+            }
+        }
 
         // ── Event handlers ───────────────────────────────────────────────────
 

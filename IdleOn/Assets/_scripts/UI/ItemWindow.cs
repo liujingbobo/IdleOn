@@ -28,6 +28,8 @@ namespace IdleOn.UI
         private InventorySlotUI[] _inventorySlots;
         private int _currentPage;
 
+        public bool IsOpen => windowPanel.activeSelf;
+
         void Awake()
         {
             windowPanel.SetActive(false);

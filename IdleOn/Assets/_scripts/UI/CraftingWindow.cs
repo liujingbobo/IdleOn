@@ -22,6 +22,8 @@ namespace IdleOn.UI
         private readonly List<CraftingRecipeSlotUI> _slots = new List<CraftingRecipeSlotUI>();
         private CraftRecipeDefinition _selectedRecipe;
 
+        public bool IsOpen => windowPanel.activeSelf;
+
         void Awake()
         {
             windowPanel.SetActive(false);

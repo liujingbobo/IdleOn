@@ -17,6 +17,8 @@ namespace IdleOn.UI
 
         private readonly List<MapRowUI> _rows = new List<MapRowUI>();
 
+        public bool IsOpen => windowPanel.activeSelf;
+
         void Awake()
         {
             windowPanel.SetActive(false);

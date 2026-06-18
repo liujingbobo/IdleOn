@@ -24,6 +24,8 @@ namespace IdleOn.UI
         private readonly Dictionary<TalentDefinition, TalentSlotUI> _slotsByDef = new Dictionary<TalentDefinition, TalentSlotUI>();
         private TalentSlotUI _selectedSlot;
 
+        public bool IsOpen => windowPanel.activeSelf;
+
         void Awake()
         {
             windowPanel.SetActive(false);
