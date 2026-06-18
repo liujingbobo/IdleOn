@@ -3,6 +3,7 @@ using UnityEngine;
 using IdleOn.Save;
 using IdleOn.Core;
 using IdleOn.Items;
+using IdleOn.Talents;
 
 namespace IdleOn.Inventory
 {
@@ -21,7 +22,7 @@ namespace IdleOn.Inventory
             get
             {
                 var data = SaveManager.Instance?.CurrentSave?.Inventory;
-                data?.EnsureSlots(data.Capacity);
+                data?.EnsureSlots(GetCapacity());
                 return data;
             }
         }
@@ -31,7 +32,7 @@ namespace IdleOn.Inventory
             var data = Data;
             if (data == null) return false;
 
-            bool success = data.AddItem(itemId, quantity);
+            bool success = data.AddItem(itemId, GetCapacity(), quantity);
             if (success)
                 GameEvents.RaiseInventoryChanged();
             return success;
@@ -52,6 +53,12 @@ namespace IdleOn.Inventory
         public bool HasItem(string itemId, int quantity = 1) => Data?.HasItem(itemId, quantity) ?? false;
 
         public IReadOnlyList<InventorySlotData> GetSlots()   => Data?.Slots ?? System.Array.Empty<InventorySlotData>();
-        public int GetCapacity()                             => Data?.Capacity ?? 0;
+
+        public int GetCapacity()
+        {
+            int baseCapacity = SaveManager.Instance?.CurrentSave?.Inventory?.Capacity ?? 0;
+            int talentBonus  = TalentSystem.Instance?.GetInventorySlotBonus() ?? 0;
+            return baseCapacity + talentBonus;
+        }
     }
 }

@@ -252,7 +252,7 @@ Inventory is **fixed-slot** (implemented 2026-06-17). Each slot is a real, stabl
 
 Default capacity: 20 slots.
 
-Capacity can be increased by using an Inventory Expansion consumable item. Increasing capacity only appends empty slots — existing items keep their slot positions.
+Capacity can be increased by using an Inventory Expansion consumable item, or by leveling the **Inventory Expansion talent** (implemented 2026-06-17, +20 slots per level, max level 5). Both sources only append empty slots — existing items keep their slot positions. Total capacity = base capacity (consumable-driven, persisted) + talent bonus (computed live from talent level, not persisted separately).
 
 Inventory data is saved as part of the player save file. Old saves (pre-fixed-slot, dense occupied-only lists) load safely: existing items keep their slot order starting at slot 0, then empty slots are appended up to capacity — no items are lost or reordered.
 
@@ -524,6 +524,7 @@ The Talent Window shows a grid of square talent slots (72×72px, 3-column grid).
 | Lucky Hunter | Silver drop +5% | Passive |
 | Mana Training | Max MP +5 | Passive |
 | Fireball Training | Fireball damage +1 | Skill unlock |
+| Inventory Expansion | Inventory capacity +20 slots | Passive |
 
 ## Skill Hotbar
 
@@ -534,7 +535,7 @@ The Talent Window shows a grid of square talent slots (72×72px, 3-column grid).
 - Implement Fireball casting: MP cost, cooldown timer, projectile/area damage
 - Add MP spending and `OnPlayerMPChanged` event to drain and refill the MP bar
 - Add Arcane Power skill
-- Assign icon sprites to TalentDefinition and SkillDefinition ScriptableObject assets
+- Assign icon sprites to TalentDefinition and SkillDefinition ScriptableObject assets (now 7 assets, including Inventory Expansion)
 
 ## Mage Talents I (planned)
 
@@ -725,7 +726,7 @@ Priority order based on completeness of the core loop:
 
 6. **Player / Enemy Animations** — ✅ Done (see Session Update 2026-06-16 below).
 
-7. **Inventory Expansion talent (recommended, not implemented)** — no talent currently increases inventory capacity. Add a new talent that grants **+20 capacity (one page) per level**, mirroring the existing Inventory Expansion consumable. Requires a new `TalentDefinition` field and a new `InventorySystem`/`TalentSystem` hookup — out of scope until explicitly requested.
+7. **Inventory Expansion talent** — ✅ Implemented 2026-06-17. Grants +20 capacity (one page) per level, max level 5, stacks additively with the Inventory Expansion consumable.
 
 8. **Exact-slot inventory operations (recommended, not implemented)** — `RemoveItem`/`Equip` are itemId-based, not slot-index-based. Add `RemoveItemAt(slotIndex)`, `EquipFromSlot(slotIndex)`, `MoveItem(fromSlot, toSlot)` to support slot-to-slot drag/drop and equip-from-a-specific-stack.
 

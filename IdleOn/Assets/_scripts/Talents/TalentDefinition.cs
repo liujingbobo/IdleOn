@@ -25,6 +25,7 @@ namespace IdleOn.Talents
         [Header("Non-Stat Bonuses per Level")]
         public float CurrencyMultiplierPerLevel; // e.g. 0.05 = +5% per level
         public float FireballDamagePerLevel;     // reserved for Phase 2
+        public float InventorySlotsPerLevel;     // e.g. 20 = +20 inventory slots per level
 
         // Returns cumulative effect at given level. If level=0, shows per-level preview.
         public string GetEffectText(int level)
@@ -46,6 +47,8 @@ namespace IdleOn.Talents
                 sb.Append($"Silver +{Mathf.RoundToInt(lv * CurrencyMultiplierPerLevel * 100)}%  ");
             if (FireballDamagePerLevel != 0)
                 sb.Append($"Fireball +{Mathf.RoundToInt(lv * FireballDamagePerLevel)}  ");
+            if (InventorySlotsPerLevel != 0)
+                sb.Append($"Inventory +{Mathf.RoundToInt(lv * InventorySlotsPerLevel)} slots  ");
 
             string result = sb.Length > 0 ? sb.ToString().TrimEnd() : "—";
             return preview ? result + " /lv" : result;

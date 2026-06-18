@@ -256,6 +256,16 @@ Key methods:
 - `InventorySystem.Data` getter calls `EnsureSlots(capacity)` on every access. This both pads old dense saves (existing items keep their list position starting at slot 0; empty slots are appended after them) and grows the list whenever capacity increases.
 - **Known limitation:** `RemoveItem`/`Equip` operate on itemId, not a specific slot index. If the same item ever exists in more than one slot, only the first match is affected. See "Known Limitations" below for the planned `RemoveItemAt`/`EquipFromSlot`/`MoveItem` follow-up.
 
+### Inventory Expansion talent (implemented 2026-06-17)
+
+`TalentDefinition.InventorySlotsPerLevel` (new field, mirrors the other PerLevel fields) — set to `20` on `TalentDef_InventoryExpansion.asset` (`TalentId = "inventory_expansion"`, `MaxLevel = 5`). `TalentSystem.GetInventorySlotBonus() → int` sums `level × InventorySlotsPerLevel` across all talents.
+
+`InventorySystem.GetCapacity()` = `InventoryData.Capacity` (base, persisted — grows only via the Inventory Expansion **consumable**) **+** `TalentSystem.GetInventorySlotBonus()`. The talent bonus is computed live every call and is never written into `InventoryData.Capacity` — keeps persisted base capacity and derived talent bonus separate.
+
+`InventoryData.AddItem(itemId, totalCapacity, quantity=1)` takes the effective capacity as a parameter (instead of reading its own field) so the talent bonus actually unlocks placeable/empty slots, not just page display. `InventorySystem.TryAddItem`/`Data` getter pass `GetCapacity()` (base+bonus) into `AddItem`/`EnsureSlots`.
+
+`TalentSystem.Upgrade()` fires `GameEvents.RaiseInventoryChanged()` (in addition to `OnTalentChanged`) whenever the upgraded talent has `InventorySlotsPerLevel != 0` — `ItemWindow` is already subscribed to `OnInventoryChanged` and only acts if the panel is open, so pagination/page-buttons refresh live if `InventoryPanel` is open during the upgrade, and pick up the new capacity next time it's opened otherwise. No new event was added.
+
 `CurrencySystem` is the only entry point for reading and writing currency.
 
 Key methods:
@@ -788,7 +798,7 @@ On objective complete: sets `IsComplete=true`, unlocks next map (if `UnlocksMapI
 | Asset | Path |
 |---|---|
 | `TalentDatabase.asset` | `_assets/ScriptableObjects/Talents/` |
-| `TalentDef_*.asset` (×6) | `_assets/ScriptableObjects/Talents/` |
+| `TalentDef_*.asset` (×7) | `_assets/ScriptableObjects/Talents/` |
 | `SkillDatabase.asset` | `_assets/ScriptableObjects/Skills/` |
 | `SkillDef_Fireball.asset` | `_assets/ScriptableObjects/Skills/` |
 | `TalentSlotUI.prefab` | `_assets/Prefabs/UI/` |
@@ -854,6 +864,7 @@ GetMoveSpeedBonus()
 GetMaxMPBonus()
 GetCurrencyMultiplierBonus()
 GetFireballDamageBonus()      // reserved — Fireball casting not yet implemented
+GetInventorySlotBonus()       // int — used by InventorySystem.GetCapacity(), not a PlayerStats field
 ```
 
 ### Skill Hotbar
@@ -921,7 +932,6 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - **groundLayerMask** on `PlayerCombatController` must be assigned in the Inspector. If it is 0 (Nothing), all floor clicks silently do nothing. Floor Tilemap must also have `CompositeCollider2D` geometry set to **Polygons** — Outlines mode is incompatible with `Physics2D.OverlapPoint`.
 - **Player / Enemy animations** — no Animator components or animation clips exist yet. `PlayerCombatController.State` (CombatState enum) is the intended driver for player animation transitions when added.
 - **RemoveItem/Equip are itemId-based, not slot-index-based** (since the 2026-06-17 fixed-slot refactor). If the same item exists in multiple slots, only the first match is affected. Future task: add `RemoveItemAt(slotIndex)`, `EquipFromSlot(slotIndex)`, `MoveItem(fromSlot, toSlot)` for exact-slot drag/drop and equip.
-- **Inventory Expansion talent is NOT implemented.** No talent currently increases inventory capacity — capacity only grows via the "Inventory Expansion" consumable. Future task: add a talent that grants +20 capacity (one page) per level.
 
 ---
 
@@ -1073,4 +1083,21 @@ Scope:
 
 ## Next Task
 
-**Implement minimal Fireball skill casting from assigned hotbar slot** (unchanged from previous session — see task above). Alternatively, implement the Inventory Expansion talent (+20 capacity/level) if prioritized ahead of Fireball casting.
+**Implement minimal Fireball skill casting from assigned hotbar slot** (unchanged from previous session — see task above).
+
+---
+
+# Session Update — Inventory Expansion Talent (2026-06-17)
+
+## Completed this session
+
+- **Inventory Expansion talent** — new `TalentDefinition.InventorySlotsPerLevel` field; `TalentDef_InventoryExpansion.asset` (`TalentId = "inventory_expansion"`, MaxLevel 5, +20/level) created and registered in `TalentDatabase.asset` (7th entry). `TalentSystem.GetInventorySlotBonus()` added. `InventorySystem.GetCapacity()` now returns base persisted capacity + live talent bonus. `InventoryData.AddItem` takes an explicit `totalCapacity` param so the bonus actually unlocks placeable slots (not just page display). `TalentSystem.Upgrade()` fires `OnInventoryChanged` when the upgraded talent affects capacity, so `ItemWindow` (already subscribed) refreshes pagination live if open. See "Inventory Expansion talent" above.
+
+## Verified
+
+- Compile clean (console: 0 errors/warnings).
+- Reflection test in Play mode against live `TalentSystem`/`InventoryData` instances (no save data touched): bonus at level 0/1/2 = 0/20/40; effective capacity 20→60 at level 2; `AddItem` placed an item into slot 21+ (beyond base 20) only once the bonus made it available; `EnsureSlots(60)` grew `Slots.Count` to exactly 60 with no item movement.
+
+## Next Task
+
+**Implement minimal Fireball skill casting from assigned hotbar slot** (unchanged — see task above).

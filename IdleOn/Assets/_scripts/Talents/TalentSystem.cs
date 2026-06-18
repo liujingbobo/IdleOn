@@ -75,6 +75,9 @@ namespace IdleOn.Talents
 
             AutoEquipUnlockedSkill(def, entry.Level);
 
+            if (def.InventorySlotsPerLevel != 0)
+                GameEvents.RaiseInventoryChanged();
+
             GameEvents.RaiseTalentChanged();
             Debug.Log($"[TalentSystem] {def.DisplayName} → Lv.{entry.Level} | Points left: {save.TalentPoints}");
         }
@@ -125,6 +128,7 @@ namespace IdleOn.Talents
         public float GetMaxMPBonus()              => SumBonus(d => d.MaxMPPerLevel);
         public float GetCurrencyMultiplierBonus() => SumBonus(d => d.CurrencyMultiplierPerLevel);
         public float GetFireballDamageBonus()     => SumBonus(d => d.FireballDamagePerLevel);
+        public int   GetInventorySlotBonus()      => Mathf.RoundToInt(SumBonus(d => d.InventorySlotsPerLevel));
 
         private float SumBonus(Func<TalentDefinition, float> selector)
         {

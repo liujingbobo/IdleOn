@@ -25,10 +25,12 @@ namespace IdleOn.Items
                 slots.Add(new InventorySlotData(null, 0));
         }
 
+        // totalCapacity is the effective capacity (base Capacity + any external bonus,
+        // e.g. talent-driven) — callers that have no bonus to apply should pass Capacity.
         // Returns false if inventory is full and item has no existing matching slot.
-        public bool AddItem(string itemId, int quantity = 1)
+        public bool AddItem(string itemId, int totalCapacity, int quantity = 1)
         {
-            EnsureSlots(capacity);
+            EnsureSlots(totalCapacity);
 
             var slot = FindSlot(itemId);
             if (slot != null)
@@ -37,7 +39,7 @@ namespace IdleOn.Items
                 return true;
             }
 
-            for (int i = 0; i < capacity && i < slots.Count; i++)
+            for (int i = 0; i < totalCapacity && i < slots.Count; i++)
             {
                 if (!slots[i].IsEmpty) continue;
                 slots[i].ItemId   = itemId;
