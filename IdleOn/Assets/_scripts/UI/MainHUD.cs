@@ -155,6 +155,21 @@ namespace IdleOn.UI
             RefreshButtonStates();
         }
 
+        // Open-only entry for external callers (e.g. a walked-up CraftingStation). Reuses the central
+        // switching: closes whatever MainHUD-managed window is open, opens Crafting, refreshes button
+        // sprites. NOT a toggle — if Crafting is already open it stays open.
+        public void OpenCraftingWindow()
+        {
+            if (IsWindowOpen(WindowType.Crafting)) { RefreshButtonStates(); return; }
+
+            if (_currentWindow != WindowType.None)
+                CloseWindow(_currentWindow);
+
+            OpenWindow(WindowType.Crafting);
+            _currentWindow = WindowType.Crafting;
+            RefreshButtonStates();
+        }
+
         private bool IsWindowOpen(WindowType type)
         {
             switch (type)

@@ -49,6 +49,7 @@ namespace IdleOn.Combat
         private float          _attackTimer;
         private readonly Dictionary<string, float> _skillReadyTimes = new Dictionary<string, float>();
         private Vector2        _manualMoveTarget;
+        private WorldInteractable _pendingInteractable;
         private EnemyController _manualAttackTarget;
         private bool           _resumeAutoCombat;
         private float          _desiredVelocityX;
@@ -256,8 +257,9 @@ namespace IdleOn.Combat
                 var enemy = col.GetComponent<EnemyController>();
                 if (IsValidTarget(enemy))
                 {
-                    _resumeAutoCombat   = IsAutoCombatActive;
-                    _manualAttackTarget = enemy;
+                    _pendingInteractable = null;          // starting a manual attack cancels pending interaction
+                    _resumeAutoCombat    = IsAutoCombatActive;
+                    _manualAttackTarget  = enemy;
                     LogTarget("Manual target assigned from click", enemy);
                     SetState(CombatState.ManualAttack, "clicked enemy");
                     return;
@@ -265,14 +267,31 @@ namespace IdleOn.Combat
                 LogTarget("Clicked collider rejected as target", enemy);
             }
 
-            // Phase 1: click resolves to an X on the current lane only — clicked Y is ignored,
-            // X is clamped to the lane bounds. (Old ground raycast resolve kept below, unused.)
+            // Phase 2: WorldInteractable — checked AFTER enemies (enemy click wins) and BEFORE plain
+            // ground move. Walk to it on the lane; Interact fires on arrival (see UpdateManualMove).
             var lane = GroundLane.Current;
+            foreach (var col in Physics2D.OverlapPointAll(worldPos))
+            {
+                var interactable = col.GetComponentInParent<WorldInteractable>();
+                if (interactable != null && interactable.CanInteract(gameObject))
+                {
+                    _pendingInteractable = interactable;
+                    _resumeAutoCombat    = IsAutoCombatActive;
+                    float ix = lane != null ? lane.ClampX(interactable.InteractionX) : interactable.InteractionX;
+                    _manualMoveTarget = new Vector2(ix, lane != null ? lane.GroundY : transform.position.y);
+                    SetState(CombatState.ManualMove, "clicked interactable");
+                    return;
+                }
+            }
+
+            // Phase 1: plain ground click resolves to an X on the current lane only — clicked Y is
+            // ignored, X is clamped to the lane bounds. Cancels any pending interaction.
             if (lane != null)
             {
-                _resumeAutoCombat = IsAutoCombatActive;
-                float targetX     = lane.ClampX(worldPos.x);
-                _manualMoveTarget = new Vector2(targetX, lane.GroundY);
+                _pendingInteractable = null;
+                _resumeAutoCombat    = IsAutoCombatActive;
+                float targetX        = lane.ClampX(worldPos.x);
+                _manualMoveTarget    = new Vector2(targetX, lane.GroundY);
                 SetState(CombatState.ManualMove, "clicked lane");
             }
         }
@@ -306,6 +325,28 @@ namespace IdleOn.Combat
 
         private void UpdateManualMove()
         {
+            // Phase 2: when heading to a WorldInteractable, trigger Interact within its (forgiving)
+            // range — checked before the tight arrival threshold so it fires reliably.
+            if (_pendingInteractable != null)
+            {
+                if (!_pendingInteractable.isActiveAndEnabled || !_pendingInteractable.CanInteract(gameObject))
+                {
+                    _pendingInteractable = null;          // destroyed/disabled before arrival → cancel safely
+                    ResumeAutoCombatOrIdle("pending interactable invalid");
+                    return;
+                }
+
+                if (Mathf.Abs(transform.position.x - _pendingInteractable.InteractionX) <= _pendingInteractable.InteractionRange)
+                {
+                    SetDesiredVelocityX(0f, "reached interactable");
+                    var target = _pendingInteractable;
+                    _pendingInteractable = null;          // clear before Interact so re-entry can't double-fire
+                    target.Interact(gameObject);
+                    ResumeAutoCombatOrIdle("interacted");
+                    return;
+                }
+            }
+
             float distX = Mathf.Abs(transform.position.x - _manualMoveTarget.x);
             if (distX < 0.05f)
             {

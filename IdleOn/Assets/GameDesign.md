@@ -160,6 +160,19 @@ Hold left mouse button over a world drop to collect it.
 
 Drop pickup input takes priority over movement and attack.
 
+### Interactables (walk-to-interact, Phase 2 — 2026-06-19)
+
+Same-lane interactable objects (e.g. crafting stations, portals; later NPCs, chests, gathering nodes). Click one → the player walks to it along the current lane → it activates when the player is close enough.
+
+- **Click priority:** drop pickup → UI → enemy → **interactable** → ground move. Interactables are checked *after* enemies (clicking an enemy still attacks) and *before* plain ground movement.
+- Clicking an interactable walks the player to its interaction point on the current lane, then triggers it once the player is within its interaction range (small, ~0.4). It never triggers instantly unless the player is already in range.
+- Clicking the ground cancels a pending interaction; clicking a different interactable replaces it; starting a manual attack on an enemy cancels it; an interactable that is removed before arrival cancels safely.
+- Interactable objects use trigger/click colliders — they never physically block the player, enemies, projectiles, drops, or movement.
+- **Crafting station:** walk up → opens the Crafting window through the HUD (open-only; closes any other open HUD window, stays open if Crafting is already open).
+- **Portal:** walk up → travels to its destination map if that map is valid/unlocked; otherwise logs a warning. (Same-lane interaction only — portals are not yet lane connectors.)
+
+**Not implemented yet:** multi-lane interactions, ladders/portals as lane connections, pathfinding between platforms.
+
 ## Movement
 
 > **Updated 2026-06-19 (Phase 1).** Replaces the earlier gravity/`Vector2.MoveTowards` description.

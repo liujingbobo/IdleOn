@@ -487,6 +487,25 @@ Player name is still hardcoded as "Hero" in save data — the Name text object i
 
 ---
 
+## WorldInteractable — Phase 2 (same-lane walk-to-interact, 2026-06-19)
+
+Same-lane interactable system: click a world object → player walks to it on the current lane → `Interact()` fires when in range. Same-lane only — no multi-lane pathfinding, ladders, portals-as-lane-connections, BFS, or jumping yet.
+
+- **Contract (`_scripts/World/`):**
+  - `IWorldInteractable` — `float InteractionX`, `float InteractionRange`, `bool CanInteract(GameObject player)`, `void Interact(GameObject player)`.
+  - `WorldInteractable` — abstract `MonoBehaviour` base. `InteractionX => transform.position.x` (lane feet-root), `interactionRange = 0.4` (small but forgiving, serialized), `CanInteract => isActiveAndEnabled`, abstract `Interact`.
+- **Click priority (in `PlayerCombatController.HandleClick`):** drop pickup → UI → **enemy** → **WorldInteractable** → plain ground move. Interactable is checked **after** enemy (enemy click always wins) and **before** ground movement.
+  - Clicking an interactable stores `_pendingInteractable`, sets the manual-move target to `GroundLane.Current.ClampX(InteractionX)` on the lane, enters `ManualMove`.
+  - On each `UpdateManualMove` frame: if within `InteractionRange` of `InteractionX`, calls `Interact(gameObject)` once (pending cleared **before** the call → no double-fire), then resumes auto-combat/idle. Never triggers immediately on click unless already in range.
+  - **Plain ground click cancels** pending interactable. **Clicking another interactable replaces** it. **Starting a manual enemy attack cancels** it.
+  - **Disabled/destroyed interactable cancels safely** (Unity-null + `isActiveAndEnabled` guard in `UpdateManualMove`).
+- **Colliders:** interactables use **trigger / click colliders** — they must NOT physically block player, enemies, Fireball, drops, or ground movement. (Fireball still only damages `EnemyController`; it passes through interactable triggers.)
+- **`CraftingStationInteractable`** — opens crafting via **`MainHUD.OpenCraftingWindow()`**, NOT `CraftingWindow.Open()` (avoids bypassing MainHUD window switching / desyncing HUD button sprites). Holds a serialized `MainHUD` reference; warns if unset.
+- **`MainHUD.OpenCraftingWindow()`** — public, **open-only**: reuses central switching (closes the current MainHUD-managed window, opens Crafting, refreshes button sprites). It is **not** a toggle — if Crafting is already open it stays open. (Do not call `OnCraftButtonClicked()` from a station; that toggles and could close Crafting.)
+- **`PortalInteractable`** — calls `MapSystem.Instance.TravelTo(destinationMapId)` when valid; logs a safe warning if `destinationMapId` is empty or `MapSystem.Instance` is null. Does not rewrite the map system. (`TravelTo` itself ignores locked/current destinations.)
+
+---
+
 ## Combat Rules
 
 ### Map Visual
@@ -1213,3 +1232,29 @@ Compile clean (0 errors). Player feet rest at `-2.0` (no fall, no visual jump); 
 ## Not implemented yet
 
 Multi-lane, ladders, portals, jumping, BFS/pathfinding, lane graph. Future interactables should use same-lane walk-to-interact first.
+
+---
+
+# Session Update — Phase 2 WorldInteractable (same-lane walk-to-interact, 2026-06-19)
+
+## Completed & verified
+
+- **Same-lane WorldInteractable system** implemented and play-verified. Full spec in "WorldInteractable — Phase 2" near the top of this file.
+- New `_scripts/World/`: `IWorldInteractable`, `WorldInteractable` (abstract base), `CraftingStationInteractable`, `PortalInteractable`.
+- `MainHUD.OpenCraftingWindow()` added — public **open-only** entry reusing central window switching (no toggle, keeps button sprites synced). No MainHUD redesign.
+- `PlayerCombatController` click handling extended: WorldInteractable checked after enemy / before ground move; `_pendingInteractable` with walk-to-interact, range trigger, and cancel rules (ground click, other interactable, manual attack, destroyed/disabled).
+- **Scene placeholders added to `TestCombat`:** `CraftingStation` (x=5, trigger collider, wired to MainHUD) and `Portal` (x=-5, trigger collider, `destinationMapId = grassland_2`). Both collider-only (invisible) for now.
+
+## Verified (play-mode)
+
+Compile clean (0 errors). Walked player 4.0→4.66 (within 0.4 of station x=5) → `Interact` fired once, pending cleared. With Inventory open, station interact **closed Inventory and opened Crafting** via MainHUD; second interact left Crafting **open** (open-only, no toggle); craft button sprite = on-sprite. Portal `Interact` with locked dest → safe no-op; after unlocking `grassland_2` → `CurrentMapId = grassland_2`. Both interactable colliders `isTrigger = true` (no physical block). Enemy melee/combat and lane Y-lock still intact.
+
+## Scope
+
+- **No changes** to UI layouts, inventory/talent/crafting data, save/load, combat damage, Fireball, SkillHotbar, or player/enemy prefab layout. Edited only `MainHUD.cs` (one new public method) + `PlayerCombatController.cs` (click/pending logic) + 4 new World scripts + 2 new scene objects.
+
+## Known next steps
+
+- Add **visuals** for interactables (currently invisible collider-only placeholders).
+- Add `NPCDialogueInteractable` once a dialogue system exists.
+- Later: support **multi-lane** interactions (walk to a lane connector / ladder / portal first, then to the interactable on the target lane).

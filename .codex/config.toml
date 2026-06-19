@@ -5,3 +5,6 @@ args = [
     "mcpforunityserver==9.7.1",
     "mcp-for-unity",
 ]
+
+[mcp_servers.UnityMCP.tools.read_console]
+approval_mode = "approve"
