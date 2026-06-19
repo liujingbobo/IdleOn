@@ -115,15 +115,15 @@ Floor tiles are arranged in a horizontal platform layout.
 
 ### Click to Move
 
+> **Updated 2026-06-19 (Phase 1 movement refactor).** Movement is now single-lane, no-gravity, feet-root. Clicking resolves to an X on the current lane only — the clicked Y is ignored.
+
 Click priority order per LMB click:
 
 1. UI element → do nothing (EventSystem absorbs the click)
 2. Enemy collider hit → attack that enemy (see Click to Attack)
-3. Direct hit on a ground collider → move to that X position on the floor
-4. Empty space within 2.5 units above a ground collider → move (downward raycast finds the floor surface)
-5. Sky, background, or empty space with no ground below within 2.5 units → do nothing
+3. Otherwise → move to the clicked X on the current lane. The clicked Y is ignored; X is clamped to the lane's `MinX`/`MaxX`. The player walks along the lane at `GroundLane.GroundY`.
 
-Clicking just above the floor surface works. Clicking the sky or background does nothing.
+There is no vertical movement on a single lane (no jump). Clicking anywhere horizontally walks the player to that X within the lane bounds.
 
 ### Click to Attack
 
@@ -162,9 +162,18 @@ Drop pickup input takes priority over movement and attack.
 
 ## Movement
 
-Use simple direct 2D movement toward the target position.
+> **Updated 2026-06-19 (Phase 1).** Replaces the earlier gravity/`Vector2.MoveTowards` description.
 
-Use Vector2.MoveTowards — no A* pathfinding required.
+Single-lane, no-gravity, feet-root model:
+
+- **`GroundLane`** defines the current scene's lane: `GroundY`, `MinX`, `MaxX` (accessed via static `GroundLane.Current`). Current scene: `GroundY = -2.0`, `MinX = -9.5`, `MaxX = 10.5`.
+- **Player and enemies use a Kinematic Rigidbody2D with `gravityScale = 0`** — they never fall. Movement is deterministic, driven by `Rigidbody2D.MovePosition` in `FixedUpdate` (X only; Y is forced to `GroundLane.GroundY`).
+- **Root position = feet / ground-contact point.** The visible sprite is a child offset upward (imported sprite pivots are not changed).
+- **Click-to-move** ignores the clicked Y and clamps the clicked X to `[MinX, MaxX]`.
+- **Enemies** patrol and chase within the lane bounds, always at `GroundY`. Enemy hitboxes are at least 1 tile tall from the feet upward. The spawner places enemies on `GroundY`.
+- **Projectiles (Fireball)** travel horizontally on the lane at `GroundY + projectileHeight` (default `0.6`, kept ≤ 1 tile so low shots still hit 1-tile-high enemies).
+
+**Not implemented yet:** multiple platforms/lanes, ladders, portals, jumping, A*/BFS pathfinding. Future cross-platform travel uses explicit ladder/portal transitions (a same-lane walk-to-interact step first), never physics jumping.
 
 ## Enemy Behavior
 

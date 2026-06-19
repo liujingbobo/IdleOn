@@ -468,6 +468,25 @@ Player name is still hardcoded as "Hero" in save data — the Name text object i
 
 ---
 
+## Movement Model — Phase 1 (single-lane, no-gravity, feet-root, 2026-06-19)
+
+**This supersedes the old Dynamic-Rigidbody / gravity / `transform.position`-write movement described in the older "Movement Implementation", "Ground Detection", and 2026-06-16 physics session notes below.** Those sections are kept for history but no longer describe runtime behavior.
+
+- **Single lane, no gravity.** The current scene has exactly one ground lane. Player and enemies do **not** fall — they are driven deterministically.
+- **`GroundLane` (`_scripts/World/GroundLane.cs`)** is the single source of truth for the lane. `GroundLane.Current` (static) exposes `GroundY`, `MinX`, `MaxX`, and `ClampX(x)`. One instance per scene; it registers in `OnEnable` and clears `Current` in `OnDisable` (covers both disable and destroy). Current scene values: `GroundY = -2.0`, `MinX = -9.5`, `MaxX = 10.5` (Tilemap worldX [-10, 11], 0.5 inset).
+- **Rigidbody2D = Kinematic, `gravityScale = 0`** on both Player (scene instance) and `Slime.prefab`. Movement uses `Rigidbody2D.MovePosition` in `FixedUpdate` only — **no velocity writes, no `transform.position` writes for movement** (don't mix paradigms).
+- **Root = feet / ground-contact point.** Player root.y = `-2.0` (was center; relocated to feet). `Slime.prefab` root was already feet. Each `FixedUpdate` forces `position.y = GroundLane.GroundY` and X-only horizontal motion; X is clamped to `[MinX, MaxX]`.
+- **Pivots:** do **not** change imported sprite pivots. Use the `Sprite` child `localPosition` offset to keep the visual where it was (Player Sprite child localY = `+0.41` to preserve world position after the root moved down 0.5; Slime Sprite child localY `+0.152` unchanged).
+- **Click-to-move:** ignores clicked Y entirely; resolves to `GroundLane.ClampX(clickWorldPos.x)` on the lane. (The old `TryResolveMoveTarget` / `groundLayerMask` / `maxGroundSearchDistance` path is no longer used for movement; fields left in place, harmless.)
+- **Enemy patrol/chase** stays on the lane: patrol bounds are clamped to `[MinX, MaxX]` in `Start`; Y is forced to `GroundY` every `FixedUpdate`.
+- **Enemy hitbox** must be **at least 1 tile tall measured from the feet upward** (Slime BoxCollider2D: offset.y `0.5`, size.y `1` → feet → +1 tile). This guarantees low projectiles connect.
+- **`EnemySpawner`** spawns and respawns enemies on `GroundLane.GroundY` (`LaneSpawnPos`) — no gravity to settle them.
+- **Fireball / projectiles:** spawn height = `GroundLane.GroundY + projectileHeight` (`projectileHeight` field on `PlayerCombatController`, default `0.6`). Keep `projectileHeight <= 1` so it still hits 1-tile-high enemies. Direction is horizontal only (`Vector2.left/right` from facing) — projectiles stay on the lane. `FireballProjectile.prefab` is already Kinematic + trigger; trigger hits on Kinematic enemies are verified working.
+- **Not implemented yet:** multi-lane, ladders, portals, jumping, BFS/pathfinding, lane graph. Single flat lane only.
+- **Future interactables / multi-platform:** use a same-lane *walk-to-interact* model first (walk to target X on the current lane, then act); add cross-lane transitions (ladders/portals) as explicit steps later — never physics jumping.
+
+---
+
 ## Combat Rules
 
 ### Map Visual
@@ -1163,3 +1182,34 @@ Scope:
 ## Next task
 
 Re-run the CraftingWindow craftable path in a fully initialized player session, then pick up Fireball polish (icon, hit feedback, MP-insufficient feedback) or the full cross-system QA pass — see Known Limitations above.
+
+---
+
+# Session Update — Phase 1 Movement Refactor (single-lane, no-gravity, feet-root, 2026-06-19)
+
+## Completed & verified
+
+- **Single-lane no-gravity feet-root movement** implemented and play-verified. See "Movement Model — Phase 1" near the top of this file for the full spec.
+- New `GroundLane` component (`GroundY`/`MinX`/`MaxX`/`ClampX`, static `Current`, registers `OnEnable` / clears `OnDisable`). One `GroundLane` object added to the `TestCombat` scene (`GroundY=-2.0`, `MinX=-9.5`, `MaxX=10.5`).
+- Player (scene) + `Slime.prefab` → **Kinematic, gravityScale 0**. Player root relocated to feet (root.y `-1.5`→`-2.0`, capsule offset.y `0`→`+0.5`, Sprite child localY `-0.09`→`+0.41` to preserve the visual — no visible jump). **Imported sprite pivots not touched.**
+- `PlayerCombatController` / `EnemyController` `FixedUpdate` now use `MovePosition`, X-only, Y forced to `GroundLane.GroundY`. Click-to-move ignores clicked Y and clamps X to lane. Enemy patrol clamped to lane bounds. `EnemySpawner` spawns/respawns on `GroundLane.GroundY`.
+- Fireball spawn height = `GroundLane.GroundY + projectileHeight` (default `0.6`), horizontal; verified it kills a 1-tile-high Kinematic Slime and that the kill respawns on `GroundY`.
+
+## Verified (play-mode)
+
+Compile clean (0 errors). Player feet rest at `-2.0` (no fall, no visual jump); Y stays locked when displaced; X clamps to lane; Slime on `-2.0` Kinematic with hitbox feet→+1 tile; spawn/respawn on `GroundY`; Fireball spawns at `(-1.4)` and damages/kills Kinematic Slimes (Kinematic trigger confirmed); `GroundLane.Current` set when active, cleared on disable/destroy, re-set on re-enable.
+
+## Scope
+
+- **No changes** to UI/HUD/SkillHotbar, inventory, crafting, talents, save/load, or item/equipment data. Only `GroundLane.cs` (new), `PlayerCombatController.cs`, `EnemyController.cs`, `EnemySpawner.cs`, the Player scene instance, `Slime.prefab` RB, and the `TestCombat` scene `GroundLane` object.
+- `Enemy.prefab` (broken stub, unreferenced) and `FireballProjectile.prefab` (already Kinematic) untouched. Layer collision matrix unchanged.
+
+## Known polish notes (not bugs, deferred)
+
+- **Camera follow** may need a dedicated follow-target child: after the player root moved center→feet, a camera that tracks the player transform sits ~0.5 lower.
+- **Enemy attack float text** spawns at `playerPos + 0.8` (`EnemyController`); relative to the new feet-root it appears ~0.5 lower — may need an offset tweak.
+- Now-unused (left in place, harmless): `TryResolveMoveTarget`, `groundLayerMask`, `maxGroundSearchDistance` on `PlayerCombatController`.
+
+## Not implemented yet
+
+Multi-lane, ladders, portals, jumping, BFS/pathfinding, lane graph. Future interactables should use same-lane walk-to-interact first.
