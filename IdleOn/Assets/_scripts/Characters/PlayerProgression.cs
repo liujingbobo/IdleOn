@@ -44,7 +44,10 @@ namespace IdleOn.Characters
         public int ExpForNextLevel(int level)
             => Mathf.FloorToInt(_baseExp * Mathf.Pow(_growthRate, level - 1));
 
-        private void HandleEnemyKilled(string enemyId, float xp)
+        private void HandleEnemyKilled(string enemyId, float xp) => AwardExp(xp);
+
+        // Public EXP grant — reused by kill rewards and quest rewards. Runs the same level-up loop.
+        public void AwardExp(float xp)
         {
             CurrentExp += xp;
 

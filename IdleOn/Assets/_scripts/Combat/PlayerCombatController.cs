@@ -350,6 +350,7 @@ namespace IdleOn.Combat
             float distX = Mathf.Abs(transform.position.x - _manualMoveTarget.x);
             if (distX < 0.05f)
             {
+                GameEvents.RaiseGroundMoveCompleted();
                 ResumeAutoCombatOrIdle("manual move reached target");
                 return;
             }

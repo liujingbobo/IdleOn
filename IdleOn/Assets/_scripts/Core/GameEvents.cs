@@ -44,6 +44,19 @@ namespace IdleOn.Core
         // Dialogue
         public static event Action<string>   OnDialogueEnded;            // dialogueId — fires once when a dialogue fully ends
 
+        // Quest hooks (raisers added incrementally; OnGroundMoveCompleted wired in Phase A,
+        // the item/craft/equip/talent raisers wired later with Q6–Q9).
+        public static event Action               OnGroundMoveCompleted;
+        public static event Action<string, int>  OnItemCollected;        // itemId, qty
+        public static event Action<string>       OnItemCrafted;          // itemId
+        public static event Action<string>       OnItemEquipped;         // itemId
+        public static event Action<string>       OnTalentUpgraded;       // talentId
+
+        // Quest / feature state
+        public static event Action<string>       OnQuestChanged;         // new active questId
+        public static event Action<string>       OnQuestCompleted;       // completed questId
+        public static event Action               OnFeaturesChanged;
+
         public static void RaiseAutoCombatChanged(bool active)                          => OnAutoCombatChanged?.Invoke(active);
         public static void RaiseEnemyKilled(string enemyId, float xp)                  => OnEnemyKilled?.Invoke(enemyId, xp);
         public static void RaisePlayerHPChanged(float current, float max)              => OnPlayerHPChanged?.Invoke(current, max);
@@ -61,5 +74,13 @@ namespace IdleOn.Core
         public static void RaiseMapObjectiveProgress(int current, int required)         => OnMapObjectiveProgress?.Invoke(current, required);
         public static void RaiseMapObjectiveCompleted(string mapId)                     => OnMapObjectiveCompleted?.Invoke(mapId);
         public static void RaiseDialogueEnded(string dialogueId)                         => OnDialogueEnded?.Invoke(dialogueId);
+        public static void RaiseGroundMoveCompleted()                                    => OnGroundMoveCompleted?.Invoke();
+        public static void RaiseItemCollected(string itemId, int qty)                    => OnItemCollected?.Invoke(itemId, qty);
+        public static void RaiseItemCrafted(string itemId)                               => OnItemCrafted?.Invoke(itemId);
+        public static void RaiseItemEquipped(string itemId)                              => OnItemEquipped?.Invoke(itemId);
+        public static void RaiseTalentUpgraded(string talentId)                          => OnTalentUpgraded?.Invoke(talentId);
+        public static void RaiseQuestChanged(string questId)                             => OnQuestChanged?.Invoke(questId);
+        public static void RaiseQuestCompleted(string questId)                           => OnQuestCompleted?.Invoke(questId);
+        public static void RaiseFeaturesChanged()                                        => OnFeaturesChanged?.Invoke();
     }
 }
