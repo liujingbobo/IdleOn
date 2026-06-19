@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,33 +9,33 @@ namespace IdleOn.UI
 {
     public class CraftingDetailPanel : MonoBehaviour
     {
-        [Header("States")]
-        [SerializeField] private GameObject emptyState;
-        [SerializeField] private GameObject detailState;
-
-        [Header("Result")]
-        [SerializeField] private Image    resultIcon;
-        [SerializeField] private TMP_Text resultName;
+        [Header("Item Info")]
+        [SerializeField] private Image    itemInfoIcon;
+        [SerializeField] private TMP_Text itemInfoName;
+        [SerializeField] private TMP_Text itemInfoDescription;
 
         [Header("Ingredients")]
         [SerializeField] private Transform       ingredientsContainer;
         [SerializeField] private IngredientRowUI ingredientRowPrefab;
 
         [Header("Craft")]
-        [SerializeField] private Button   craftButton;
-        [SerializeField] private TMP_Text statusLabel;
+        [SerializeField] private Button craftButton;
 
-        private CraftRecipeDefinition    _recipe;
+        private CraftRecipeDefinition _recipe;
         private readonly List<IngredientRowUI> _rows = new List<IngredientRowUI>();
-        private Coroutine _statusRoutine;
 
         void Awake()
         {
-            emptyState.SetActive(true);
-            detailState.SetActive(false);
-            statusLabel.gameObject.SetActive(false);
+            // Demo rows are hand-placed in the scene for art reference; clear them before runtime rows take over.
+            foreach (Transform child in ingredientsContainer)
+                Destroy(child.gameObject);
+
             craftButton.onClick.AddListener(OnCraftClicked);
             GameEvents.OnInventoryChanged += OnInventoryChanged;
+
+            // Awake runs even while the window starts inactive; Start would be deferred until first activation,
+            // leaving stale placeholder text/icon visible for a frame after the first Open().
+            Show(null);
         }
 
         void OnDestroy()
@@ -47,11 +46,23 @@ namespace IdleOn.UI
         public void Show(CraftRecipeDefinition recipe)
         {
             _recipe = recipe;
-            emptyState.SetActive(recipe == null);
-            detailState.SetActive(recipe != null);
 
-            if (recipe == null) return;
+            if (recipe == null)
+            {
+                itemInfoIcon.sprite      = null;
+                itemInfoIcon.enabled     = false;
+                itemInfoName.text        = string.Empty;
+                itemInfoDescription.text = string.Empty;
 
+                foreach (var row in _rows)
+                    Destroy(row.gameObject);
+                _rows.Clear();
+
+                craftButton.interactable = false;
+                return;
+            }
+
+            itemInfoIcon.enabled = true;
             RebuildIngredientRows();
             Refresh();
         }
@@ -60,9 +71,11 @@ namespace IdleOn.UI
         {
             if (_recipe == null) return;
 
-            resultIcon.sprite = _recipe.ResultItem?.Icon;
-            resultIcon.color  = _recipe.ResultItem?.Icon != null ? Color.white : new Color(0.4f, 0.4f, 0.4f);
-            resultName.text   = _recipe.ResultItem?.DisplayName ?? _recipe.RecipeId;
+            var resultItem = _recipe.ResultItem;
+            itemInfoIcon.sprite      = resultItem?.Icon;
+            itemInfoIcon.color       = resultItem?.Icon != null ? Color.white : new Color(0.4f, 0.4f, 0.4f);
+            itemInfoName.text        = resultItem?.DisplayName ?? _recipe.RecipeId;
+            itemInfoDescription.text = resultItem?.Description ?? string.Empty;
 
             for (int i = 0; i < _rows.Count; i++)
                 _rows[i].Populate(_recipe.RequiredIngredients[i]);
@@ -96,22 +109,7 @@ namespace IdleOn.UI
         {
             if (_recipe == null) return;
             if (!CraftingSystem.Instance.Craft(_recipe))
-                ShowStatus("Inventory full!");
-        }
-
-        private void ShowStatus(string message)
-        {
-            statusLabel.text = message;
-            statusLabel.gameObject.SetActive(true);
-            if (_statusRoutine != null) StopCoroutine(_statusRoutine);
-            _statusRoutine = StartCoroutine(HideStatusAfterDelay(2f));
-        }
-
-        private IEnumerator HideStatusAfterDelay(float seconds)
-        {
-            yield return new WaitForSeconds(seconds);
-            statusLabel.gameObject.SetActive(false);
-            _statusRoutine = null;
+                Debug.LogWarning("[CraftingDetailPanel] Inventory full!");
         }
     }
 }

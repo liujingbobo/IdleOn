@@ -73,15 +73,25 @@ namespace IdleOn.UI
             var db = GameDatabase.Instance?.Crafting;
             if (db == null) return;
 
-            foreach (var recipe in db.Recipes)
+            // Destroy() is deferred, so track our own instances instead of trusting transform.childCount mid-frame.
+            foreach (var slot in _slots)
+                Destroy(slot.gameObject);
+            _slots.Clear();
+
+            var recipes = new List<CraftRecipeDefinition>(db.Recipes);
+            recipes.Sort((a, b) =>
+            {
+                bool canCraftA = CraftingSystem.Instance != null && CraftingSystem.Instance.CanCraft(a);
+                bool canCraftB = CraftingSystem.Instance != null && CraftingSystem.Instance.CanCraft(b);
+                return canCraftB.CompareTo(canCraftA);
+            });
+
+            foreach (var recipe in recipes)
             {
                 var slot = Instantiate(recipeSlotPrefab, recipeListContent);
                 slot.Initialize(recipe, OnRecipeSelected);
                 _slots.Add(slot);
             }
-
-            if (_slots.Count > 0)
-                OnRecipeSelected(_slots[0].Recipe);
         }
 
         private void OnRecipeSelected(CraftRecipeDefinition recipe)
@@ -96,14 +106,15 @@ namespace IdleOn.UI
         private void OnInventoryChanged()
         {
             if (!windowPanel.activeSelf) return;
-            foreach (var slot in _slots)
-                slot.Refresh();
+            RefreshAllSlots();
         }
 
         private void RefreshAllSlots()
         {
+            // Crafting/inventory changes can flip craftable state, so re-sort craftable-first and reselect.
+            PopulateRecipeList();
             foreach (var slot in _slots)
-                slot.Refresh();
+                slot.SetSelected(slot.Recipe == _selectedRecipe);
         }
     }
 }

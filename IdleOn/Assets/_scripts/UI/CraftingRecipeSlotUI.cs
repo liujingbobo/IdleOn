@@ -20,6 +20,10 @@ namespace IdleOn.UI
         [SerializeField] private Color canCraftColor   = Color.green;
         [SerializeField] private Color cannotCraftColor = Color.grey;
 
+        [Header("Background Sprites")]
+        [SerializeField] private Sprite craftableSprite;
+        [SerializeField] private Sprite notCraftableSprite;
+
         public CraftRecipeDefinition Recipe { get; private set; }
         private Action<CraftRecipeDefinition> _onSelected;
 
@@ -39,6 +43,9 @@ namespace IdleOn.UI
 
             bool canCraft = CraftingSystem.Instance != null && CraftingSystem.Instance.CanCraft(Recipe);
             canCraftDot.color = canCraft ? canCraftColor : cannotCraftColor;
+
+            if (background != null && craftableSprite != null && notCraftableSprite != null)
+                background.sprite = canCraft ? craftableSprite : notCraftableSprite;
 
             var icon = Recipe.ResultItem?.Icon;
             itemIcon.sprite = icon != null ? icon : GetPlaceholder();
