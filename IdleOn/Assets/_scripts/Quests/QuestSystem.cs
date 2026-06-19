@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using IdleOn.Core;
 using IdleOn.Characters;
@@ -18,6 +19,11 @@ namespace IdleOn.Quests
 
         private QuestDefinition _active;
         private QuestProgress   _progress;
+        private readonly HashSet<string> _completed = new HashSet<string>();
+
+        // Source of completed-quest state for gates (PortalGate etc). Read-only — gates pull, never push.
+        public bool IsCompleted(string questId)
+            => !string.IsNullOrEmpty(questId) && _completed.Contains(questId);
 
         void Awake()
         {
@@ -75,6 +81,7 @@ namespace IdleOn.Quests
         {
             _progress.Completed = true;
             var def = _active;
+            _completed.Add(def.QuestId);
             Debug.Log($"[QuestSystem] Quest completed: {def.QuestId}");
 
             if (def.ExpReward > 0)

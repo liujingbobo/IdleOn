@@ -7635,6 +7635,7 @@ GameObject:
   - component: {fileID: 530448105}
   - component: {fileID: 530448104}
   - component: {fileID: 530448106}
+  - component: {fileID: 530448107}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -7790,6 +7791,23 @@ MonoBehaviour:
   speakerNameText: {fileID: 1870977085}
   dialogueText: {fileID: 1843009477}
   fullScreenButton: {fileID: 688950932}
+--- !u!114 &530448107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530448098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b0878d7a2eeec4e86f9070fcfa48ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoCombatButtonObject: {fileID: 811311406}
+  craftButtonObject: {fileID: 161962178}
+  talentButtonObject: {fileID: 1252927980}
+  vaultButtonObject: {fileID: 1224940402}
+  mapButtonObject: {fileID: 1622610311}
 --- !u!1 &540009213
 GameObject:
   m_ObjectHideFlags: 0
@@ -9555,6 +9573,7 @@ GameObject:
   - component: {fileID: 709208061}
   - component: {fileID: 709208060}
   - component: {fileID: 709208059}
+  - component: {fileID: 709208062}
   m_Layer: 0
   m_Name: Portal
   m_TagString: Untagged
@@ -9638,6 +9657,24 @@ Transform:
   - {fileID: 1109925893}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &709208062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709208058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b209a6e834ac9ec42b953e860837ea8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visual: {fileID: 1109925892}
+  portal: {fileID: 709208059}
+  portalCollider: {fileID: 709208060}
+  revealQuestId: 
+  unlockQuestId: q1
+  requiredFeature: 0
 --- !u!1 &709275783
 GameObject:
   m_ObjectHideFlags: 0

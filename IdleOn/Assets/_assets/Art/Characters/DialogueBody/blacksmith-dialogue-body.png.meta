@@ -129,12 +129,12 @@ TextureImporter:
       name: blacksmith-dialogue-body_0
       rect:
         serializedVersion: 2
-        x: 17
-        y: 3
-        width: 108
-        height: 120
+        x: 0
+        y: 71
+        width: 1254
+        height: 1183
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: c6edcd1993659c04c9439c2ee24b3758
     internalID: 0
     vertices: []
     indices: 
