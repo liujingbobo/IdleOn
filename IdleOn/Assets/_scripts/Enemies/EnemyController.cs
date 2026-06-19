@@ -75,6 +75,14 @@ namespace IdleOn.Enemies
                 patrolLeftX  = transform.position.x - 2f;
                 patrolRightX = transform.position.x + 2f;
             }
+
+            // Phase 1: keep patrol inside the single lane so the enemy never walks off its bounds.
+            var lane = GroundLane.Current;
+            if (lane != null)
+            {
+                patrolLeftX  = Mathf.Max(patrolLeftX,  lane.MinX);
+                patrolRightX = Mathf.Min(patrolRightX, lane.MaxX);
+            }
         }
 
         void OnEnable()
@@ -107,11 +115,18 @@ namespace IdleOn.Enemies
         {
             if (_rb == null || !_rb.simulated) return;
 
-            // Dynamic Rigidbody2D movement must use Rigidbody2D movement APIs.
-            // Only drive horizontal AI movement; gravity and ground contacts own Y.
-            Vector2 velocity = _rb.linearVelocity;
-            velocity.x = _state == EnemyState.Dead ? 0f : _desiredVelocityX;
-            _rb.linearVelocity = velocity;
+            // Phase 1: Kinematic, no-gravity, single-lane movement. Drive X only and force the
+            // feet (root) Y onto the lane. No velocity writes — MovePosition is the only mover.
+            var   lane = GroundLane.Current;
+            float vx   = _state == EnemyState.Dead ? 0f : _desiredVelocityX;
+            Vector2 p  = _rb.position;
+            p.x += vx * Time.fixedDeltaTime;
+            if (lane != null)
+            {
+                p.x = lane.ClampX(p.x);
+                p.y = lane.GroundY;
+            }
+            _rb.MovePosition(p);
         }
 
         void Update()

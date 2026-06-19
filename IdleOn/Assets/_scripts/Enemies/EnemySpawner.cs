@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using IdleOn.World;
 
 namespace IdleOn.Enemies
 {
@@ -26,7 +27,7 @@ namespace IdleOn.Enemies
         {
             foreach (var point in spawnPoints)
             {
-                var enemy = Instantiate(enemyPrefab, point.position, Quaternion.identity);
+                var enemy = Instantiate(enemyPrefab, LaneSpawnPos(point.position), Quaternion.identity);
                 var slot  = new SpawnSlot { SpawnPoint = point, Enemy = enemy };
                 enemy.OnKilled += _ => StartCoroutine(Respawn(slot));
                 _slots.Add(slot);
@@ -77,10 +78,17 @@ namespace IdleOn.Enemies
                 Vector2 velocity = rb != null ? rb.linearVelocity : Vector2.zero;
                 Debug.Log($"[EnemySpawner] Respawn {slot.Enemy.name} old={oldPos} new={newPos} rbVel={velocity} state={slot.Enemy.State}", this);
             }
-            // Temporary. Dynamic Rigidbody2D + direct transform.position can fight physics.
-            // Future fix: MovePosition/velocity in FixedUpdate.
-            slot.Enemy.transform.position = slot.SpawnPoint.position;
+            // Phase 1: Kinematic enemies spawn directly on the lane groundY (no gravity to settle).
+            slot.Enemy.transform.position = LaneSpawnPos(slot.SpawnPoint.position);
             slot.Enemy.gameObject.SetActive(true);
+        }
+
+        // Force a spawn point onto the current lane's groundY (feet-root). X is unchanged.
+        private static Vector3 LaneSpawnPos(Vector3 spawnPoint)
+        {
+            var lane = GroundLane.Current;
+            if (lane != null) spawnPoint.y = lane.GroundY;
+            return spawnPoint;
         }
     }
 }

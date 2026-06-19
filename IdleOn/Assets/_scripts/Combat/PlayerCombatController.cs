@@ -29,6 +29,8 @@ namespace IdleOn.Combat
         [Header("Fireball")]
         [SerializeField] private FireballProjectile fireballProjectilePrefab;
         [SerializeField] private float fireballSpawnOffset = 0.5f;
+        [Tooltip("Projectile spawn height above lane.groundY (tiles). Keep <= 1 so it still hits 1-tile-high enemies.")]
+        [SerializeField] private float projectileHeight     = 0.6f;
 
         [Header("Ground Detection")]
         [SerializeField] private LayerMask groundLayerMask;
@@ -157,7 +159,14 @@ namespace IdleOn.Combat
 
             bool facingLeft = _spriteRenderer != null && _spriteRenderer.flipX;
             Vector2 direction = facingLeft ? Vector2.left : Vector2.right;
-            Vector3 spawnPos = transform.position + (Vector3)(direction * fireballSpawnOffset);
+
+            // Phase 1: spawn height is lane-based (groundY + projectileHeight), not pivot-based,
+            // so it stays horizontal on the lane and still hits 1-tile-high enemies after the
+            // feet-root change. X keeps the forward muzzle offset from the player.
+            var   lane    = GroundLane.Current;
+            float spawnX  = transform.position.x + direction.x * fireballSpawnOffset;
+            float spawnY  = lane != null ? lane.GroundY + projectileHeight : transform.position.y;
+            Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
 
             FireballProjectile projectile = Instantiate(fireballProjectilePrefab, spawnPos, Quaternion.identity);
             projectile.Init(direction, damage);
@@ -202,11 +211,17 @@ namespace IdleOn.Combat
         {
             if (_rb == null) return;
 
-            // Dynamic Rigidbody2D movement must use Rigidbody2D movement APIs.
-            // Only drive horizontal combat movement; gravity and ground contacts own Y.
-            Vector2 velocity = _rb.linearVelocity;
-            velocity.x = _desiredVelocityX;
-            _rb.linearVelocity = velocity;
+            // Phase 1: Kinematic, no-gravity, single-lane movement. Drive X only and force the
+            // feet (root) Y onto the lane. No velocity writes — MovePosition is the only mover.
+            var lane = GroundLane.Current;
+            Vector2 p = _rb.position;
+            p.x += _desiredVelocityX * Time.fixedDeltaTime;
+            if (lane != null)
+            {
+                p.x = lane.ClampX(p.x);
+                p.y = lane.GroundY;
+            }
+            _rb.MovePosition(p);
         }
 
         // ── Drop pickup ──────────────────────────────────────────────────────
@@ -250,11 +265,15 @@ namespace IdleOn.Combat
                 LogTarget("Clicked collider rejected as target", enemy);
             }
 
-            if (TryResolveMoveTarget(worldPos, out Vector2 groundTarget))
+            // Phase 1: click resolves to an X on the current lane only — clicked Y is ignored,
+            // X is clamped to the lane bounds. (Old ground raycast resolve kept below, unused.)
+            var lane = GroundLane.Current;
+            if (lane != null)
             {
                 _resumeAutoCombat = IsAutoCombatActive;
-                _manualMoveTarget = new Vector2(groundTarget.x, transform.position.y);
-                SetState(CombatState.ManualMove, "clicked ground");
+                float targetX     = lane.ClampX(worldPos.x);
+                _manualMoveTarget = new Vector2(targetX, lane.GroundY);
+                SetState(CombatState.ManualMove, "clicked lane");
             }
         }
 
