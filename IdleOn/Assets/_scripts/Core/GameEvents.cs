@@ -41,6 +41,9 @@ namespace IdleOn.Core
         public static event Action<int, int> OnMapObjectiveProgress;     // current, required
         public static event Action<string>   OnMapObjectiveCompleted;    // completedMapId
 
+        // Dialogue
+        public static event Action<string>   OnDialogueEnded;            // dialogueId — fires once when a dialogue fully ends
+
         public static void RaiseAutoCombatChanged(bool active)                          => OnAutoCombatChanged?.Invoke(active);
         public static void RaiseEnemyKilled(string enemyId, float xp)                  => OnEnemyKilled?.Invoke(enemyId, xp);
         public static void RaisePlayerHPChanged(float current, float max)              => OnPlayerHPChanged?.Invoke(current, max);
@@ -57,5 +60,6 @@ namespace IdleOn.Core
         public static void RaiseMapChanged(string mapId)                                => OnMapChanged?.Invoke(mapId);
         public static void RaiseMapObjectiveProgress(int current, int required)         => OnMapObjectiveProgress?.Invoke(current, required);
         public static void RaiseMapObjectiveCompleted(string mapId)                     => OnMapObjectiveCompleted?.Invoke(mapId);
+        public static void RaiseDialogueEnded(string dialogueId)                         => OnDialogueEnded?.Invoke(dialogueId);
     }
 }
