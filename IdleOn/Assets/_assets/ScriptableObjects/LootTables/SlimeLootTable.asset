@@ -31,3 +31,9 @@ MonoBehaviour:
     DropChance: 0.05
     MinQuantity: 1
     MaxQuantity: 1
+  - DropType: 0
+    ItemDefinition: {fileID: 11400000, guid: 504741d8a736492997bab1715795eee0, type: 2}
+    CurrencyType: 0
+    DropChance: 1
+    MinQuantity: 1
+    MaxQuantity: 1

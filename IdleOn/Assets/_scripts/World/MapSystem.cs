@@ -91,47 +91,18 @@ namespace IdleOn.World
             GameEvents.RaiseMapChanged(mapId);
         }
 
+        // Kill counting per current map is kept (read by MapRowUI), but no longer grants rewards or
+        // auto-unlocks the next map — portal unlocking now lives entirely in PortalGate, driven by the
+        // destination MapDefinition's own unlock requirements. See PortalGate.cs.
         private void HandleEnemyKilled(string enemyId, float xp)
         {
             var mapDef = CurrentMapDef;
             if (mapDef == null) return;
 
             var prog = GetProgress(CurrentMapId);
-            if (prog == null || prog.IsComplete) return;
-
-            bool counts = string.IsNullOrEmpty(mapDef.ObjectiveEnemyId)
-                       || mapDef.ObjectiveEnemyId == enemyId;
-            if (!counts) return;
+            if (prog == null) return;
 
             prog.KillCount++;
-
-            GameEvents.RaiseMapObjectiveProgress(prog.KillCount, mapDef.KillObjective);
-
-            if (prog.KillCount >= mapDef.KillObjective)
-                CompleteObjective(mapDef, prog);
-        }
-
-        private void CompleteObjective(MapDefinition mapDef, MapProgressData prog)
-        {
-            prog.IsComplete = true;
-
-            if (!string.IsNullOrEmpty(mapDef.UnlocksMapId))
-            {
-                var next = GetProgress(mapDef.UnlocksMapId);
-                if (next == null)
-                {
-                    next = new MapProgressData { MapId = mapDef.UnlocksMapId };
-                    _progress.Add(next);
-                }
-                next.IsUnlocked = true;
-            }
-
-            if (mapDef.SilverReward > 0)
-                CurrencySystem.Instance?.Add(CurrencyType.Silver, mapDef.SilverReward);
-
-            GameEvents.RaiseMapObjectiveCompleted(mapDef.MapId);
-
-            Debug.Log($"[MapSystem] {mapDef.DisplayName} complete! +{mapDef.SilverReward} Silver | Unlocks: {mapDef.UnlocksMapId}");
         }
     }
 }

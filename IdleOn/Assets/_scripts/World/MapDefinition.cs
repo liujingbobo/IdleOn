@@ -9,13 +9,10 @@ namespace IdleOn.World
         public string MapId;
         public string DisplayName;
 
-        [Header("Objective")]
-        public string ObjectiveEnemyId;   // empty = any enemy counts
-        public int    KillObjective;
-        public string ObjectiveLabel;     // e.g. "Kill Slimes"
-
-        [Header("Reward")]
-        public long   SilverReward;
-        public string UnlocksMapId;       // empty = no unlock — end of content
+        [Header("Unlock Requirements (all optional, ANDed)")]
+        public string UnlockQuestId;             // empty = no quest requirement
+        public string UnlockEnemyId;              // empty = no kill requirement
+        public int    UnlockKillCount;
+        public string UnlockRequirementLabel;     // e.g. "Slime" — used in portal requirement text
     }
 }

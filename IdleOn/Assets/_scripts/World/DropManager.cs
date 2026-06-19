@@ -70,6 +70,7 @@ namespace IdleOn.World
                     GameEvents.RaiseInventoryFull();
                     return;
                 }
+                GameEvents.RaiseItemCollected(entry.ItemId, entry.Quantity);
             }
             else
             {

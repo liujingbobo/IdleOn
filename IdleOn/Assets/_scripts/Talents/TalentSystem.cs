@@ -79,6 +79,7 @@ namespace IdleOn.Talents
                 GameEvents.RaiseInventoryChanged();
 
             GameEvents.RaiseTalentChanged();
+            GameEvents.RaiseTalentUpgraded(def.TalentId);
             Debug.Log($"[TalentSystem] {def.DisplayName} → Lv.{entry.Level} | Points left: {save.TalentPoints}");
         }
 

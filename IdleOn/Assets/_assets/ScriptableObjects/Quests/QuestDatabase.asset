@@ -19,4 +19,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9051ec5a8b248a64db71f7c9cfdf45b0, type: 2}
   - {fileID: 11400000, guid: 330fa1e9b43743347bf09371e4ffde91, type: 2}
   - {fileID: 11400000, guid: bdb82c9b12c69524fa813d13095652b8, type: 2}
+  - {fileID: 11400000, guid: 66567617efce4660b0eb744aa5479606, type: 2}
+  - {fileID: 11400000, guid: d10fd4a7ade84db7bcb96125c3a7f3b7, type: 2}
+  - {fileID: 11400000, guid: 6770bcb9c0de4791a4f68a80a42bbf27, type: 2}
+  - {fileID: 11400000, guid: c4f2525c354840a4b3b7967ae8c52185, type: 2}
+  - {fileID: 11400000, guid: 766bf5ec8a93e0b459df5663c99fef9a, type: 2}
+  - {fileID: 11400000, guid: a20041e651cfe3e4ebc602ab3aaee237, type: 2}
   StartQuest: {fileID: 11400000, guid: 5b22265c474253b4fbc0cbffe6bde2cf, type: 2}

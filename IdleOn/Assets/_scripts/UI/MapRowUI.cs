@@ -36,39 +36,20 @@ namespace IdleOn.UI
             var  prog       = MapSystem.Instance.GetProgress(_def.MapId);
             bool isCurrent  = MapSystem.Instance.CurrentMapId == _def.MapId;
             bool isUnlocked = prog != null && prog.IsUnlocked;
-            bool isComplete = prog != null && prog.IsComplete;
 
-            // Objective text
-            if (!isUnlocked)
-            {
-                objectiveText.text = "???";
-            }
-            else if (isComplete)
-            {
-                objectiveText.text = $"✓ {_def.ObjectiveLabel}  —  Complete";
-            }
-            else
-            {
-                int kills = prog?.KillCount ?? 0;
-                objectiveText.text = $"{_def.ObjectiveLabel}  {kills} / {_def.KillObjective}";
-            }
+            // Unlock requirement display now lives on the Portal (PortalGate) — this row just shows
+            // identity + travel state.
+            objectiveText.text = isUnlocked ? "" : "Locked";
 
-            // Travel button visibility and state
             travelButton.gameObject.SetActive(isUnlocked);
             travelButton.interactable = !isCurrent;
             if (travelButtonText != null)
                 travelButtonText.text = isCurrent ? "Here" : "Travel";
 
-            // Lock icon
             if (lockIcon != null) lockIcon.SetActive(!isUnlocked);
 
-            // Row background tint
             if (rowBackground != null)
-            {
-                if (isCurrent)        rowBackground.color = currentMapColor;
-                else if (isComplete)  rowBackground.color = completeColor;
-                else                  rowBackground.color = defaultColor;
-            }
+                rowBackground.color = isCurrent ? currentMapColor : defaultColor;
         }
 
         private void OnTravelClicked()

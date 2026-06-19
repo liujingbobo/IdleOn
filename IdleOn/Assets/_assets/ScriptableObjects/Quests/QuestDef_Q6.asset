@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: QuestDef_Q6
   m_EditorClassIdentifier: 
   QuestId: q6
-  Title: Q6 (placeholder)
-  Objectives: []
-  ExpReward: 0
+  Title: Gather Slime Essence
+  Objectives:
+  - Type: 2
+    TargetId: slime
+    RequiredCount: 5
+  - Type: 3
+    TargetId: slime_essence
+    RequiredCount: 5
+  ExpReward: 100
   UnlocksFeatures: 0
   UnlocksMapId: 
-  NextQuestId: 
+  NextQuestId: q7

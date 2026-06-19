@@ -47,6 +47,7 @@ namespace IdleOn.Equipment
             data.Set(slot, itemId);
             PlayerStats.Instance?.Recalculate();
             GameEvents.RaiseEquipmentChanged();
+            GameEvents.RaiseItemEquipped(itemId);
             return true;
         }
 

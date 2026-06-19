@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65fbafbd0c402a44ea694524b5b08546, type: 3}
+  m_Name: DialogueDef_ChiefQ8
+  m_EditorClassIdentifier: 
+  DialogueId: chief_hint_q8
+  SpeakerName: Chief
+  PortraitKey: 
+  Nodes:
+  - NodeId: n1
+    SpeakerNameOverride: 
+    Text: Use the crafting station here in town to forge a Slime Sword.
+    Choices: []
+    NextNodeId: 
+    EndDialogue: 1

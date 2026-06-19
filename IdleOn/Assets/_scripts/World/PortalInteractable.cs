@@ -8,6 +8,8 @@ namespace IdleOn.World
     {
         [SerializeField] private string destinationMapId;
 
+        public string DestinationMapId => destinationMapId;
+
         public override void Interact(GameObject player)
         {
             if (string.IsNullOrEmpty(destinationMapId))

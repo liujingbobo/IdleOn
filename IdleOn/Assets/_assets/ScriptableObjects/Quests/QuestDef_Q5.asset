@@ -20,5 +20,5 @@ MonoBehaviour:
     RequiredCount: 1
   ExpReward: 75
   UnlocksFeatures: 0
-  UnlocksMapId: grassland_3
+  UnlocksMapId: 
   NextQuestId: q6

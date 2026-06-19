@@ -50,6 +50,7 @@ namespace IdleOn.Crafting
                 inv.RemoveItem(ingredient.Item.ItemId, ingredient.Quantity);
             }
 
+            GameEvents.RaiseItemCrafted(recipe.ResultItem.ItemId);
             return true;
         }
     }

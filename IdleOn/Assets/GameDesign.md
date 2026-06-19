@@ -20,8 +20,8 @@
 | Player/Enemy physical collision separation (Physics2D layer matrix) | Implemented |
 | Click-to-move ground filtering (groundLayerMask) | Implemented |
 | Skill casting (Fireball — MP cost, damage, cooldown) | Implemented |
-| Quest system | Not implemented |
-| Map system / area progression (3 Grassland maps, ObjectiveHelper, MapWindow) | Implemented |
+| Quest system (Q1–Q10 linear chain, gates HUD features) | Implemented (in-memory only — not saved) |
+| Map system / area progression (multi-map single-scene, destination-MapDef-gated portals) | Implemented — superseded the old 3-Grassland/ObjectiveHelper/silver-reward model below, see "Quest/Portal/Map Architecture (2026-06-19)" |
 | Offline progression | Not implemented |
 | Settings | Not implemented |
 
@@ -444,7 +444,9 @@ Talent points accumulate and can be spent in the Talent Window (T key or Talent 
 
 # Map / Area Progression
 
-## Current Behavior
+> **Superseded 2026-06-19 — see "Quest/Portal/Map Architecture" session update near the bottom of this file.** Map unlocks are no longer kill-objective-per-map with auto-unlock-next; they're driven by each destination map's own `UnlockQuestId`/`UnlockEnemyId`/`UnlockKillCount` via `PortalGate`, tied into the Q1–Q10 quest chain. `ObjectiveHelper` is disabled (not deleted). The section below describes the original (now replaced) design intent; kept for history.
+
+## Current Behavior (superseded)
 
 Three Grassland areas provide the core progression ladder for the demo. Each area has a kill objective. Completing it grants Silver and unlocks the next area.
 
@@ -505,7 +507,16 @@ A reviewer can complete the full area loop (Grassland 1 → 2 → 3) in about 5 
 
 # Quest System
 
-## Quest 1
+> **Implemented 2026-06-19** — supersedes the placeholder "Quest 1/Quest 2" sketch below. See `.claude/HANDOFF_CURRENT_STATE.md` for the exact, current Q1–Q10 objective/reward table and `Assets/CLAUDE.md` "Quest/Portal/Map Architecture" session update for the full mechanism. Summary:
+
+- One active linear quest at a time (`QuestSystem`, in-memory only, not yet saved). No branching, no concurrent quests.
+- 10-quest chain (q1–q10): ground-move → enter grassland_2 → kill slime → enter town → talk to Chief → kill 5 slimes + collect 5 slime_essence + talk to Chief → craft+equip Slime Sword → talk to Chief → upgrade Fireball Training talent → talk to Chief.
+- Quest completion can award Exp and/or unlock a HUD feature (Craft/Talents/AutoCombat/Vault/Map via `FeatureFlags`). Inventory is never gated.
+- Map/portal unlocks are driven by the destination `MapDefinition`'s own requirements (quest id and/or enemy kill count), evaluated by `PortalGate` — not by `QuestSystem` itself.
+
+## Original sketch (superseded, kept for history)
+
+### Quest 1
 
 Kill 10 Slimes
 
@@ -514,7 +525,7 @@ Rewards:
 * Coins
 * EXP
 
-## Quest 2
+### Quest 2
 
 Kill 20 Slimes
 
@@ -872,3 +883,15 @@ No character deletion, no rename/text input, no multiple account save slots, no 
 - Crafting Window's "enough materials" / successful-craft path should be manually re-tested in a normal play session with a real inventory.
 - Quest and Settings systems still not implemented.
 - Full end-to-end QA across save/load, inventory, talents, hotbar, crafting, and MainHUD together hasn't been done in one sitting yet.
+
+---
+
+# Session Update — Quest/Portal/Map Architecture (2026-06-19, uncommitted)
+
+**Full detail lives in `Assets/CLAUDE.md` ("Session Update — Q6–Q10, Multi-Map Rework, Portal Redesign") and `.claude/HANDOFF_CURRENT_STATE.md` (exact tables + manual test route). This is a pointer, not a duplicate.**
+
+- Quest System (above) and Map/Area Progression (above) are both implemented, superseding their original sketches in this file.
+- Destination `MapDefinition` now owns portal unlock requirements (`UnlockQuestId`/`UnlockEnemyId`/`UnlockKillCount`/`UnlockRequirementLabel`); `PortalInteractable` is travel-only; `PortalGate` is the evaluator. `EnemyKillTracker` is a temporary in-memory global kill counter flagged for future `PlayerSaveData` migration.
+- `TestCombat` is now one scene with 4 map-root GameObjects switched by a new `MapContentController`, not one flat Grassland area.
+- Save/load does not yet persist quest progress, feature unlocks, current map, or kill counts — every session restarts from q1/grassland_1.
+- Working tree is uncommitted at time of writing — check `git status` before assuming any of this matches `HEAD`.

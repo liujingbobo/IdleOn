@@ -5,6 +5,9 @@ using IdleOn.World;
 
 namespace IdleOn.UI
 {
+    // Map-level top-strip objective display. Disabled in TestCombat for the current demo —
+    // portal unlock requirements are now shown on the Portal itself (see PortalGate), not here.
+    // Kept compiling/minimal since MapDefinition no longer carries kill-objective/reward fields.
     public class ObjectiveHelperUI : MonoBehaviour
     {
         [SerializeField] private TMP_Text mainText;
@@ -12,16 +15,12 @@ namespace IdleOn.UI
 
         void Awake()
         {
-            GameEvents.OnMapChanged            += OnMapChanged;
-            GameEvents.OnMapObjectiveProgress  += OnObjectiveProgress;
-            GameEvents.OnMapObjectiveCompleted += OnObjectiveCompleted;
+            GameEvents.OnMapChanged += OnMapChanged;
         }
 
         void OnDestroy()
         {
-            GameEvents.OnMapChanged            -= OnMapChanged;
-            GameEvents.OnMapObjectiveProgress  -= OnObjectiveProgress;
-            GameEvents.OnMapObjectiveCompleted -= OnObjectiveCompleted;
+            GameEvents.OnMapChanged -= OnMapChanged;
         }
 
         void Start() => RefreshFromCurrentMap();
@@ -33,68 +32,15 @@ namespace IdleOn.UI
             var mapDef = MapSystem.Instance.CurrentMapDef;
             if (mapDef == null)
             {
-                if (mainText  != null) mainText.text  = "";
+                if (mainText   != null) mainText.text   = "";
                 if (rewardText != null) rewardText.text = "";
                 return;
             }
 
-            var  prog       = MapSystem.Instance.GetProgress(MapSystem.Instance.CurrentMapId);
-            bool isComplete = prog != null && prog.IsComplete;
-
-            if (isComplete)
-            {
-                ShowComplete(mapDef);
-            }
-            else
-            {
-                int kills = prog?.KillCount ?? 0;
-                if (mainText != null)
-                    mainText.text = $"{mapDef.DisplayName}  ·  {mapDef.ObjectiveLabel}:  {kills} / {mapDef.KillObjective}";
-
-                if (rewardText != null)
-                {
-                    string unlockLabel = string.IsNullOrEmpty(mapDef.UnlocksMapId)
-                        ? "Demo Complete"
-                        : GetMapName(mapDef.UnlocksMapId) + " Unlock";
-                    rewardText.text = $"Reward: {mapDef.SilverReward} Silver + {unlockLabel}";
-                }
-            }
+            if (mainText != null) mainText.text = mapDef.DisplayName;
+            if (rewardText != null) rewardText.text = "";
         }
 
-        private void OnMapChanged(string mapId)                      => RefreshFromCurrentMap();
-        private void OnObjectiveProgress(int current, int required)  => RefreshFromCurrentMap();
-
-        private void OnObjectiveCompleted(string mapId)
-        {
-            var mapDef = GameDatabase.Instance?.Maps?.GetMap(mapId);
-            ShowComplete(mapDef);
-        }
-
-        private void ShowComplete(MapDefinition mapDef)
-        {
-            if (mapDef == null) return;
-
-            bool isEndOfContent = string.IsNullOrEmpty(mapDef.UnlocksMapId);
-
-            if (mainText != null)
-            {
-                mainText.text = isEndOfContent
-                    ? $"✓ {mapDef.DisplayName}  —  All areas cleared!"
-                    : $"✓ {mapDef.DisplayName}  —  Complete!";
-            }
-
-            if (rewardText != null)
-            {
-                rewardText.text = isEndOfContent
-                    ? "Demo Complete  —  Thanks for playing!"
-                    : $"{GetMapName(mapDef.UnlocksMapId)} Unlocked!   +{mapDef.SilverReward} Silver";
-            }
-        }
-
-        private string GetMapName(string mapId)
-        {
-            var def = GameDatabase.Instance?.Maps?.GetMap(mapId);
-            return def != null ? def.DisplayName : mapId;
-        }
+        private void OnMapChanged(string mapId) => RefreshFromCurrentMap();
     }
 }
