@@ -21,13 +21,26 @@ namespace IdleOn.Characters
 
         public StatSheet FinalStats => _finalStats;
         public float     CurrentMP  => _currentMP;
+        public float     CurrentHP  => _health != null ? _health.CurrentHP : 0f;
+        public float     MaxHP      => _health != null ? _health.MaxHP     : _finalStats.MaxHP;
 
         void Awake()
         {
             Instance = this;
             _health  = GetComponent<HealthComponent>();
+            // Subscribe before Recalculate() — its first-time _health.Initialize fires OnHPChanged,
+            // which we forward so the HUD receives the initial HP.
+            _health.OnHPChanged += HandleHPChanged;
             Recalculate();
         }
+
+        void OnDestroy()
+        {
+            if (_health != null) _health.OnHPChanged -= HandleHPChanged;
+        }
+
+        private void HandleHPChanged(float current, float max)
+            => GameEvents.RaisePlayerHPChanged(current, max);
 
         public void Recalculate()
         {

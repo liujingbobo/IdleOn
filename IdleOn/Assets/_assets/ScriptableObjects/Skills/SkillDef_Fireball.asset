@@ -15,9 +15,9 @@ MonoBehaviour:
   SkillId: fireball
   DisplayName: Fireball
   Description: Hurl a ball of fire at your target, dealing magic damage.
-  Icon: {fileID: 0}
-  MpCost: 20
-  Cooldown: 3
+  Icon: {fileID: 21300000, guid: 8ccd4fbf63108b34f92c55b80b4c3e7e, type: 3}
+  MpCost: 0
+  Cooldown: 0
   BaseDamage: 15
   RequiredTalentId: fireball_training
   RequiredTalentLevel: 1

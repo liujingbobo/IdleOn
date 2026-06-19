@@ -26,6 +26,10 @@ namespace IdleOn.Combat
         [Header("Drop Pickup")]
         [SerializeField] private LayerMask dropLayerMask;
 
+        [Header("Fireball")]
+        [SerializeField] private FireballProjectile fireballProjectilePrefab;
+        [SerializeField] private float fireballSpawnOffset = 0.5f;
+
         [Header("Ground Detection")]
         [SerializeField] private LayerMask groundLayerMask;
         [SerializeField] private float     maxGroundSearchDistance = 2.5f;
@@ -38,6 +42,7 @@ namespace IdleOn.Combat
 
         private PlayerStats    _stats;
         private Rigidbody2D    _rb;
+        private SpriteRenderer _spriteRenderer;
         private EnemyController _currentTarget;
         private float          _attackTimer;
         private readonly Dictionary<string, float> _skillReadyTimes = new Dictionary<string, float>();
@@ -64,6 +69,9 @@ namespace IdleOn.Combat
         {
             _stats = GetComponent<PlayerStats>();
             _rb    = GetComponent<Rigidbody2D>();
+
+            var sprite = transform.Find("Sprite");
+            if (sprite != null) _spriteRenderer = sprite.GetComponent<SpriteRenderer>();
         }
 
         void Start()
@@ -125,24 +133,34 @@ namespace IdleOn.Combat
                 return false;
             }
 
-            EnemyController target = ResolveSkillTarget();
-            if (!IsValidTarget(target))
-            {
-                Debug.Log("[PlayerCombatController] Fireball found no valid target.");
-                return false;
-            }
-
             if (!_stats.SpendMP(skill.MpCost))
             {
                 Debug.Log("[PlayerCombatController] Not enough MP to cast Fireball.");
                 return false;
             }
 
-            float damage = skill.BaseDamage + (TalentSystem.Instance?.GetFireballDamageBonus() ?? 0f);
-            target.TakeMagicDamage(damage);
             _skillReadyTimes[skill.SkillId] = Time.time + Mathf.Max(0f, skill.Cooldown);
+
+            float damage = skill.BaseDamage + (TalentSystem.Instance?.GetFireballDamageBonus() ?? 0f);
+            SpawnFireballProjectile(damage);
             Debug.Log($"[PlayerCombatController] Cast Fireball for {Mathf.RoundToInt(damage)} damage.");
             return true;
+        }
+
+        private void SpawnFireballProjectile(float damage)
+        {
+            if (fireballProjectilePrefab == null)
+            {
+                Debug.LogWarning("[PlayerCombatController] fireballProjectilePrefab not assigned.");
+                return;
+            }
+
+            bool facingLeft = _spriteRenderer != null && _spriteRenderer.flipX;
+            Vector2 direction = facingLeft ? Vector2.left : Vector2.right;
+            Vector3 spawnPos = transform.position + (Vector3)(direction * fireballSpawnOffset);
+
+            FireballProjectile projectile = Instantiate(fireballProjectilePrefab, spawnPos, Quaternion.identity);
+            projectile.Init(direction, damage);
         }
 
         void Update()
@@ -338,14 +356,6 @@ namespace IdleOn.Combat
 
             int level = TalentSystem.Instance != null ? TalentSystem.Instance.GetLevel(skill.RequiredTalentId) : 0;
             return level >= skill.RequiredTalentLevel;
-        }
-
-        private EnemyController ResolveSkillTarget()
-        {
-            if (IsValidTarget(_manualAttackTarget)) return _manualAttackTarget;
-            if (IsValidTarget(_currentTarget)) return _currentTarget;
-
-            return enemySpawner != null ? enemySpawner.GetNearestValidEnemy(transform.position) : null;
         }
 
         private void MoveToTarget()

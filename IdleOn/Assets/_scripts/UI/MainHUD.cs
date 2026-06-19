@@ -6,6 +6,7 @@ using IdleOn.Items;
 using IdleOn.Inventory;
 using IdleOn.Characters;
 using IdleOn.Combat;
+using IdleOn.Save;
 
 namespace IdleOn.UI
 {
@@ -32,6 +33,7 @@ namespace IdleOn.UI
         [Header("Combat")]
         [SerializeField] private PlayerCombatController combatController;
         [SerializeField] private TextMeshProUGUI         autoCombatButtonText;
+        [SerializeField] private Button                  autoCombatButton;
 
         [Header("Progression")]
         [SerializeField] private PlayerProgression playerProgression;
@@ -43,11 +45,32 @@ namespace IdleOn.UI
         [SerializeField] private Button talentButtonRef;
         [SerializeField] private Button mapButton;
 
+        [Header("Button State Sprites")]
+        [SerializeField] private Sprite buttonOnSprite;
+        [SerializeField] private Sprite buttonOffSprite;
+
         private enum WindowType { None, Inventory, Crafting, Vault, Talent, Map }
         private WindowType _currentWindow = WindowType.None;
 
+        private bool _pendingRefresh;
+
+        private Image _autoCombatBg;
+        private Image _invButtonBg;
+        private Image _craftButtonBg;
+        private Image _vaultButtonBg;
+        private Image _talentButtonBg;
+        private Image _mapButtonBg;
+
         void Awake()
         {
+            if (autoCombatButton != null) _autoCombatBg   = autoCombatButton.GetComponent<Image>();
+            if (invButton != null)        _invButtonBg    = invButton.GetComponent<Image>();
+            if (craftButton != null)      _craftButtonBg  = craftButton.GetComponent<Image>();
+            if (vaultButton != null)      _vaultButtonBg  = vaultButton.GetComponent<Image>();
+            if (talentButtonRef != null)  _talentButtonBg = talentButtonRef.GetComponent<Image>();
+            if (mapButton != null)        _mapButtonBg    = mapButton.GetComponent<Image>();
+
+            SaveManager.OnSaveLoaded         += OnSaveLoaded;
             GameEvents.OnPlayerHPChanged    += OnHPChanged;
             GameEvents.OnPlayerMPChanged    += OnMPChanged;
             GameEvents.OnCurrencyChanged    += OnCurrencyChanged;
@@ -60,6 +83,7 @@ namespace IdleOn.UI
 
         void OnDestroy()
         {
+            SaveManager.OnSaveLoaded         -= OnSaveLoaded;
             GameEvents.OnPlayerHPChanged    -= OnHPChanged;
             GameEvents.OnPlayerMPChanged    -= OnMPChanged;
             GameEvents.OnCurrencyChanged    -= OnCurrencyChanged;
@@ -77,12 +101,16 @@ namespace IdleOn.UI
 
         void Update()
         {
+            // OnSaveLoaded fires synchronously across all subscribers; defer one consume so
+            // PlayerProgression/etc. have finished initializing before we read their values.
+            if (_pendingRefresh) { _pendingRefresh = false; RefreshAll(); }
             RefreshButtonStates();
         }
 
         public void RefreshAll()
         {
             RefreshNameLevel();
+            RefreshHP();
             RefreshMP();
             RefreshXP();
             RefreshCurrency();
@@ -193,10 +221,15 @@ namespace IdleOn.UI
         {
             if (autoCombatButtonText != null)
                 autoCombatButtonText.text = active ? "Auto: ON" : "Auto: OFF";
+            if (_autoCombatBg != null)
+                _autoCombatBg.sprite = active ? buttonOnSprite : buttonOffSprite;
         }
 
         private void OnEquipmentChanged() => RefreshMP();
         private void OnTalentChanged()     => RefreshMP();
+
+        // Character just loaded/selected — defer full refresh so other systems finish initializing first.
+        private void OnSaveLoaded() => _pendingRefresh = true;
 
         // ── Refresh helpers ──────────────────────────────────────────────────
 
@@ -204,6 +237,15 @@ namespace IdleOn.UI
         {
             int level = playerProgression != null ? playerProgression.Level : 1;
             nameLevelText.text = $"Lv. {level}";
+        }
+
+        private void RefreshHP()
+        {
+            var stats = PlayerStats.Instance;
+            float currentHP = stats != null ? stats.CurrentHP : 0f;
+            float maxHP     = stats != null ? stats.MaxHP : 0f;
+            hpSlider.value = maxHP > 0f ? currentHP / maxHP : 0f;
+            hpText.text    = $"{Mathf.CeilToInt(currentHP)}/{Mathf.CeilToInt(maxHP)}";
         }
 
         private void RefreshMP()
@@ -237,15 +279,17 @@ namespace IdleOn.UI
             bool active = combatController != null && combatController.IsAutoCombatActive;
             if (autoCombatButtonText != null)
                 autoCombatButtonText.text = active ? "Auto: ON" : "Auto: OFF";
+            if (_autoCombatBg != null)
+                _autoCombatBg.sprite = active ? buttonOnSprite : buttonOffSprite;
         }
 
         private void RefreshButtonStates()
         {
-            if (invButton != null)        invButton.interactable        = !IsWindowOpen(WindowType.Inventory);
-            if (craftButton != null)      craftButton.interactable      = !IsWindowOpen(WindowType.Crafting);
-            if (vaultButton != null)      vaultButton.interactable      = !IsWindowOpen(WindowType.Vault);
-            if (talentButtonRef != null)  talentButtonRef.interactable  = !IsWindowOpen(WindowType.Talent);
-            if (mapButton != null)        mapButton.interactable        = !IsWindowOpen(WindowType.Map);
+            if (_invButtonBg != null)    _invButtonBg.sprite    = IsWindowOpen(WindowType.Inventory) ? buttonOnSprite : buttonOffSprite;
+            if (_craftButtonBg != null)  _craftButtonBg.sprite  = IsWindowOpen(WindowType.Crafting)  ? buttonOnSprite : buttonOffSprite;
+            if (_vaultButtonBg != null)  _vaultButtonBg.sprite  = IsWindowOpen(WindowType.Vault)     ? buttonOnSprite : buttonOffSprite;
+            if (_talentButtonBg != null) _talentButtonBg.sprite = IsWindowOpen(WindowType.Talent)    ? buttonOnSprite : buttonOffSprite;
+            if (_mapButtonBg != null)    _mapButtonBg.sprite    = IsWindowOpen(WindowType.Map)       ? buttonOnSprite : buttonOffSprite;
         }
     }
 }
