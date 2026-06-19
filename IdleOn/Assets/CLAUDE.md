@@ -362,19 +362,36 @@ Public API: `Open()`, `Close()`, `Toggle()` — call these from MainHUD buttons.
 
 **Equipment placeholders (added 2026-06-17):** each `EquipmentSlotUI` has a `[SerializeField] GameObject placeholder` child. `Refresh()` shows the placeholder and hides the icon when the slot has no equipped item with an icon; shows the icon and hides the placeholder when equipped. Unequipping restores the placeholder automatically (same `Refresh()` call, driven by `OnEquipmentChanged`). New nested equipment slot UI (`Left`/`Middle`/`Right` groups) is wired into `ItemWindow.equipmentSlots`; old inactive flat equipment slots were left in place, untouched.
 
-### Crafting Window
+### Crafting Window (redesigned 2026-06-18)
 
-`CraftingWindow` component lives on `Canvas/CraftingWindow` child.
+`CraftingWindow` component lives on `Canvas/CraftingWindow` child. `windowPanel` field is wired to `BookUI` (the manually-redesigned book-style panel root) — this was previously unwired/null and would have NPE'd on `IsOpen`/`Open()`/`Close()`.
 
 Press **C** to open/close (temporary debug key — `enableDebugKey` bool on component).
 
 Public API: `Open()`, `Close()`, `Toggle()`.
 
-Two-panel layout: right panel = recipe list, left panel = recipe detail with craft button.
+**Layout (manually redesigned, code adapted to it — do not redesign further without instruction):**
+- **Left (`LeftPanel`, `CraftingDetailPanel` component):**
+  - `ItemInfo` — icon (nested `IconBackground/Icon`, frame stays on the outer `IconBackground`), name, description. All cleared/hidden when no recipe is selected.
+  - `Materials` — scrollable list of one reusable row per required ingredient.
+  - `CraftButton` — single button, position is user-controlled in the scene.
+- **Right (`ScrollView/Viewport/Content`)** — recipe list, one reusable row per recipe.
 
-Subscribes to `OnInventoryChanged` to refresh affordability dots.
+**No selection on open:** `CraftingDetailPanel.Show(null)` runs from `Awake()` (not `Start()` — the window starts inactive, so `Start()` would be deferred until first `Open()`, leaving stale placeholder text/icon visible for a frame). Empty state: icon hidden, name/description empty, materials list empty, `CraftButton.interactable = false`.
 
-Add result item first before consuming ingredients. If inventory full, `RaiseInventoryFull()` fires and nothing is consumed.
+**Recipe row (`CraftingRecipeSlotUI`, prefab `Assets/_assets/Prefabs/UI/CraftingRecipeSlot.prefab`):** one prefab, reused for every recipe. `itemIcon` is wired to the nested `IconBackground/Icon` (fixed this session — was incorrectly wired to the outer frame `IconBackground`). New fields `craftableSprite`/`notCraftableSprite` — `Refresh()` swaps `background.sprite` based on `CraftingSystem.CanCraft(recipe)`. `canCraftDot` tint logic is unchanged (both indicators coexist).
+
+**Recipe list sort:** `CraftingWindow.PopulateRecipeList()` sorts craftable recipes first, then uncraftable (stable, preserves DB order within each group). Re-sorts and rebuilds (via `RefreshAllSlots()`) on `OnInventoryChanged` while the window is open, so crafting/consuming materials live-reorders the list. Old instantiated slots are destroyed by reference (tracked in `_slots`), not by iterating `transform` children — `Destroy()` is deferred in Play mode, so trusting live child count mid-frame double-instantiates.
+
+**Material row (`IngredientRowUI`, prefab `Assets/_assets/Prefabs/UI/IngredientRow.prefab`):** one prefab, reused for every ingredient. Count text format is exactly `{owned}/{required}` (no spaces). `ColorEnough` = `RGBA(0.361,0.459,0.173,1)` (green), `ColorMissing` = `RGBA(0.761,0.294,0.282,1)` (red) — matched exactly to the sample rows the user hand-placed before this session, not arbitrary colors.
+
+**Demo rows removed:** the hand-placed example rows the user used to show the desired look (`RecipeRow-Enough`/`RecipesRow-NotEnough` on the left, `CraftingRecipeSlot-CanCraft`/`CraftingRecipeSlot-CanNotCraft` on the right) were converted into the two prefabs above (copying their sprites/colors/structure) and then removed from the scene — they are not part of the runtime flow.
+
+Subscribes to `OnInventoryChanged` to refresh row backgrounds, material counts/colors, recipe order, and `CraftButton` state together (`CraftingDetailPanel.Refresh()` + `CraftingWindow.RefreshAllSlots()`).
+
+Add result item first before consuming ingredients. If inventory full, the failure is logged (`Debug.LogWarning`, no dedicated status UI text exists in the new layout) and nothing is consumed.
+
+**Not verified live:** the "enough materials" / craftable path (green count, craftable sprite, enabled CraftButton, successful craft) was verified by code symmetry only — the test scene's player/inventory had 0 capacity (uninitialized in that session's Play context), not a bug in this change. Re-verify with a fully initialized player/inventory session (see Known Limitations).
 
 ### Map Window
 
@@ -911,7 +928,7 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - `TalentSystem` — talent upgrade logic and stat bonus getters
 - `MapSystem` — kill tracking, travel, objective completion
 - `PlayerStats.Recalculate()` — stat pipeline (only extend at the end with new bonuses)
-- `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `ObjectiveHelperUI` — window UI logic (buttons and events are wired)
+- `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `ObjectiveHelperUI` — window UI logic (buttons and events are wired). `CraftingWindow`/`CraftingDetailPanel`/`CraftingRecipeSlotUI`/`IngredientRowUI` were intentionally modified 2026-06-18 under explicit instruction to adapt to a manual UI redesign — still protected going forward.
 - `TalentWindow`, `TalentInfoPanel`, `SkillHotbarUI`, `SkillSlotUI` — talent and hotbar UI logic (wired and verified)
 
 ---
@@ -931,6 +948,10 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - **groundLayerMask** on `PlayerCombatController` must be assigned in the Inspector. If it is 0 (Nothing), all floor clicks silently do nothing. Floor Tilemap must also have `CompositeCollider2D` geometry set to **Polygons** — Outlines mode is incompatible with `Physics2D.OverlapPoint`.
 - **Player / Enemy animations** — no Animator components or animation clips exist yet. `PlayerCombatController.State` (CombatState enum) is the intended driver for player animation transitions when added.
 - **RemoveItem/Equip are itemId-based, not slot-index-based** (since the 2026-06-17 fixed-slot refactor). If the same item exists in multiple slots, only the first match is affected. Future task: add `RemoveItemAt(slotIndex)`, `EquipFromSlot(slotIndex)`, `MoveItem(fromSlot, toSlot)` for exact-slot drag/drop and equip.
+- **Full QA pass still needed** across save/load, inventory, talents, hotbar, crafting, and MainHUD together in one play session — recent sessions verified each system individually (often via reflection/test scripts), not as a full end-to-end playthrough.
+- **Fireball needs a polish pass:** final icon asset, visual feedback (projectile or hit effect — currently damage is applied directly with no visual), and feedback when MP is insufficient to cast (currently silently does nothing).
+- **MainHUD visual polish** may still be needed (colors/spacing/art), but the layout itself is now manually controlled in the scene — do not move/resize CharacterPanel/ButtonBar without instruction.
+- **CraftingWindow craftable path** (green/enough materials, successful craft, sort moving a recipe to the front) should be manually re-tested in a fully initialized player/inventory session — see "Crafting Window" above for why it wasn't exercised live this session.
 
 ---
 
@@ -1119,3 +1140,26 @@ Scope:
 - Quest and Settings systems still unimplemented (placeholder log only, buttons inactive in scene — no icon assets).
 - Skill casting only exists for Fireball; no other skills defined yet.
 - No task explicitly queued — pick from "Known Limitations / TODOs" above (e.g. Arcane Power skill, slot-index-based inventory ops, Rigidbody2D MovePosition migration) when ready.
+
+---
+
+# Session Update — CraftingWindow UI Redesign Adaptation (2026-06-18)
+
+## Completed this session
+
+- **Audited and adapted `CraftingWindow` to a manually-redesigned scene hierarchy** (`ItemInfo`/`Materials`/`CraftButton` on the left, sorted recipe list on the right) without altering the redesign itself. See "Crafting Window (redesigned 2026-06-18)" above for full detail.
+- `CraftingWindow.cs` — fixed unwired `windowPanel` (was `NULL`, would NPE); removed auto-select-first-recipe on open; recipe list now sorts craftable-first; fixed a Destroy-is-deferred duplicate-row bug by tracking instantiated slots instead of trusting live `transform.childCount`.
+- `CraftingDetailPanel.cs` — rewritten for the new `ItemInfo` layout (no more `emptyState`/`detailState` GameObjects); dropped the unused `statusLabel` (craft-fail now logs a warning instead); empty-state init moved to `Awake()` so it's guaranteed set before the panel is ever shown.
+- `CraftingRecipeSlotUI.cs` — added `craftableSprite`/`notCraftableSprite`, swaps `background.sprite` by craftable state in `Refresh()`.
+- `IngredientRowUI.cs` — `ColorEnough`/`ColorMissing` matched exactly to the user's sample rows; count format fixed to `owned/required` (no spaces).
+- Rebuilt `Assets/_assets/Prefabs/UI/CraftingRecipeSlot.prefab` (`itemIcon` fixed to point at the nested `Icon`, was wrongly on the outer frame; added the two new sprite fields) and `Assets/_assets/Prefabs/UI/IngredientRow.prefab` (rebuilt from the user's sample row to match its structure/sprites, now carries `IngredientRowUI`). Demo rows removed from the scene.
+
+## Verified
+
+- Compile clean (console: 0 errors after each change).
+- Play-mode: window opens with no selection (icon hidden, text empty, materials empty, CraftButton disabled), no duplicate/leftover rows, selecting a recipe populates `ItemInfo`/`Materials` correctly, insufficient-material row shows exact red `0/5`, uncraftable sprite, disabled CraftButton.
+- **Not verified live:** the craftable/enough-materials path — test scene's inventory had 0 capacity in that Play session (separate, unrelated init gap). Verified by code symmetry only.
+
+## Next task
+
+Re-run the CraftingWindow craftable path in a fully initialized player session, then pick up Fireball polish (icon, hit feedback, MP-insufficient feedback) or the full cross-system QA pass — see Known Limitations above.

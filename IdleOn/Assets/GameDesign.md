@@ -19,7 +19,7 @@
 | Player / Enemy animations (Animator + sprite-swap clips, driver components) | Implemented |
 | Player/Enemy physical collision separation (Physics2D layer matrix) | Implemented |
 | Click-to-move ground filtering (groundLayerMask) | Implemented |
-| Skill casting (Fireball — MP cost, damage, cooldown) | Not implemented |
+| Skill casting (Fireball — MP cost, damage, cooldown) | Implemented |
 | Quest system | Not implemented |
 | Map system / area progression (3 Grassland maps, ObjectiveHelper, MapWindow) | Implemented |
 | Offline progression | Not implemented |
@@ -528,12 +528,26 @@ The Talent Window shows a grid of square talent slots (72×72px, 3-column grid).
 
 ## Skill Hotbar
 
-3 slots at the bottom-center of the screen (above the HUD button bar). Drag an unlocked skill talent from the Talent Window in Assign mode to assign it to a slot. Clicking a hotbar slot is a placeholder — skill casting is not yet implemented.
+3 slots at the bottom-center of the screen (above the HUD button bar). Drag an unlocked skill talent from the Talent Window in Assign mode to assign it to a slot.
+
+Each slot shows two layered icon images, `IconBG` and `IconFront`:
+- Empty slot: both hidden.
+- Assigned skill: both show the skill's icon.
+- `IconFront` is a Filled-type image used as a radial cooldown indicator — `fillAmount` is 0 right when the skill is cast and fills back up to 1 as the cooldown finishes (driven by `PlayerCombatController.GetSkillCooldownProgress01(skillId)`, read-only).
+
+Clicking a slot casts the assigned skill (`PlayerCombatController.TryCastSkill`) — costs MP, applies damage, starts the cooldown.
+
+Hovering a slot for 1 second shows a tooltip with the skill's name, description, MP cost, cooldown, and required talent level. The tooltip hides immediately on pointer exit.
+
+## Fireball (implemented)
+
+Click the hotbar slot to cast. Costs MP, deals magic damage to the current/nearest valid enemy, then enters cooldown (no other skill can be cast from that slot until it finishes). Damage includes `TalentSystem.GetFireballDamageBonus()` from the Fireball Training talent.
+
+**Still missing (polish, not core logic):** final icon asset, a visual/audio effect on cast or hit (currently damage applies with no projectile/flash), and explicit feedback when MP is insufficient (currently the cast silently does nothing).
 
 ## TODOs (Phase 2B)
 
-- Implement Fireball casting: MP cost, cooldown timer, projectile/area damage
-- Add MP spending and `OnPlayerMPChanged` event to drain and refill the MP bar
+- Fireball polish: icon, cast/hit visual or audio feedback, MP-insufficient feedback
 - Add Arcane Power skill
 - Assign icon sprites to TalentDefinition and SkillDefinition ScriptableObject assets (now 7 assets, including Inventory Expansion)
 
@@ -663,33 +677,47 @@ Each recipe defines:
 * Slime Armor — 5× Slime Gel → Armor
 * Basic Hat — 3× Slime Gel → Hat
 
+## Crafting Window (redesigned 2026-06-18)
+
+Left side: result item icon/name/description, the materials list, and a Craft button. Right side: the full recipe list, craftable recipes shown before uncraftable ones.
+
+* No recipe selected: item info and materials are empty, Craft button is disabled.
+* Recipe selected: shows the result item's icon/name/description, lists each required material with owned/required count (`{owned}/{required}`), colored green when you have enough and red when you don't. Craft button is enabled only when every material requirement is met.
+* Each recipe row in the list visually distinguishes craftable from uncraftable (background changes).
+* Crafting (or any inventory change while the window is open) refreshes everything live: recipe order, row backgrounds, material counts/colors, and the Craft button.
+
 ---
 
 # UI
 
 ## Main HUD
 
-Always-visible HUD anchored to the bottom of the screen.
+Always-visible HUD anchored to the bottom of the screen. Layout is manually placed in the scene (`CharacterPanel`/`ButtonBar`) — MainHUD's job is display logic and window switching, not layout.
 
 **Character panel** (bottom-left):
-* Name placeholder ("Hero") + Level
-* HP bar — live via `OnPlayerHPChanged`
-* MP bar — shows MaxMP/MaxMP (placeholder until current-MP tracking exists)
-* XP bar — fills toward `Level × xpPerLevel` via `OnPlayerExpGained`
+* Name (static text, not script-driven — player naming isn't implemented yet)
+* Level — `Lv. {level}`
+* HP bar — slider + `{cur}/{max}` text, live via `OnPlayerHPChanged`
+* MP bar — slider + `{cur}/{max}` text, shows real current MP (not a placeholder)
+* XP bar — slider + `{cur}/{max}` text, fills toward the real level-up threshold via `OnPlayerExpGained`/`OnPlayerLevelChanged`
 * Silver and Gold coin display — live via `OnCurrencyChanged`
 
-**Button bar** (bottom strip):
+**Button bar** (bottom strip) — all real Unity `Button` components:
 * Auto Combat toggle — calls `PlayerCombatController.SetAutoCombat()`
 * Inv — opens/closes Inventory window
 * Craft — opens/closes Crafting window
 * Vault — opens/closes Vault window
-* Talent / Quest / Map / Settings — placeholder buttons (log only)
+* Talent — opens/closes Talent window
+* Map — opens/closes Map window
+* Quest / Settings — placeholder buttons (log only, inactive in scene, no icon assets yet)
+
+Each window-toggle button's `interactable` state mirrors whether its window is currently open: closed = clickable, open/current = greyed out and unclickable. This stays correct even if a window is closed via its own in-window Close button rather than the HUD.
 
 ## Window Flow
 
-All windows expose `Open()`, `Close()`, `Toggle()`. MainHUD buttons call `Toggle()`.
+MainHUD owns window switching for the windows it has buttons for (Inv/Craft/Vault/Talent/Map): clicking a different window's button closes whatever is currently open and opens the new one; clicking the currently-open window's button just closes it. Only one MainHUD-managed window is open at a time.
 
-Multiple windows can be open simultaneously. No window manager.
+All windows also expose their own `Open()`, `Close()`, `Toggle()` and can still be opened directly (e.g. debug keys below) — MainHUD's one-at-a-time rule only applies to its own button clicks.
 
 Temporary debug keys remain active:
 * **Tab** — Inventory window
@@ -716,7 +744,7 @@ Priority order based on completeness of the core loop:
 
 1. **Save/Load Trigger** — ✅ Done. Account-based save/load with character select is implemented (see Save System above).
 
-2. **Skill Casting (Phase 2B)** — Fireball is assigned to the hotbar but does nothing when clicked. Implement: MP spending, `OnPlayerMPChanged` event, cooldown timer on `SkillSlotUI`, projectile or area damage via `FloatTextManager`. Arcane Power can follow the same pattern. **This is the current next task.**
+2. **Fireball polish pass** — casting/MP/cooldown/damage is implemented. Remaining: final icon asset, a visual or audio cue on cast/hit, and feedback when MP is insufficient (currently silent). Arcane Power can follow the same pattern once added. **This is the current next task.**
 
 3. **Quest System** — add `QuestSystem`, `QuestDefinition` ScriptableObjects (Kill 10 Slimes, Kill 20 Slimes), and `QuestWindow` UI with progress tracking.
 
@@ -805,3 +833,20 @@ No character deletion, no rename/text input, no multiple account save slots, no 
 - Use `TalentSystem.GetFireballDamageBonus()`.
 - No projectile art/VFX yet unless trivial.
 - Do not implement complex projectile collisions unless explicitly approved.
+
+---
+
+# Session Update — MainHUD, Skill Hotbar, Crafting Window (2026-06-18)
+
+## Completed across recent sessions
+
+- **Fireball casting** — fully implemented: click the hotbar slot, spend MP, deal magic damage to the current/nearest valid enemy, enter cooldown. Hotbar slot shows a radial cooldown fill and a hover tooltip with skill details.
+- **Main HUD** — display logic rewired to the manually laid-out HUD: `Lv. {level}` text, HP/MP/EXP shown as `{cur}/{max}`, all window-toggle buttons are real Buttons whose `interactable` state reflects whether their window is open, and MainHUD enforces one-window-at-a-time switching for its own buttons.
+- **Crafting Window** — redesigned layout (item info / materials list / craft button on the left, sorted recipe list on the right) is now fully wired: empty state on open, live material owned/required counts with green/red coloring, craftable-first sorting, and a craftable/uncraftable visual on each recipe row. See "Crafting Window (redesigned 2026-06-18)" above.
+
+## Known gaps / next steps
+
+- Fireball polish: icon, cast/hit feedback, MP-insufficient feedback.
+- Crafting Window's "enough materials" / successful-craft path should be manually re-tested in a normal play session with a real inventory.
+- Quest and Settings systems still not implemented.
+- Full end-to-end QA across save/load, inventory, talents, hotbar, crafting, and MainHUD together hasn't been done in one sitting yet.
