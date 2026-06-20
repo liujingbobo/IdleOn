@@ -38,6 +38,11 @@ namespace IdleOn.Save
         // Map progression
         public List<MapProgressData> MapProgress = new List<MapProgressData>();
 
+        // Tutorial vertical-slice progression
+        public QuestSaveData Quest = new QuestSaveData();
+        public int UnlockedFeatureFlags = 0;
+        public List<EnemyKillSaveData> EnemyKillCounts = new List<EnemyKillSaveData>();
+
         // Talent levels
         public List<TalentSaveData> TalentData = new List<TalentSaveData>();
 

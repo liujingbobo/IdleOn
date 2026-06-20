@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using IdleOn.Core;
 using IdleOn.Characters;
+using IdleOn.Save;
 
 namespace IdleOn.Quests
 {
@@ -20,6 +21,8 @@ namespace IdleOn.Quests
         private QuestDefinition _active;
         private QuestProgress   _progress;
         private readonly HashSet<string> _completed = new HashSet<string>();
+        private bool _stateImported;
+        private bool _isImporting;
 
         // Source of completed-quest state for gates (PortalGate etc). Read-only — gates pull, never push.
         public bool IsCompleted(string questId)
@@ -63,7 +66,82 @@ namespace IdleOn.Quests
         void Start()
         {
             if (database == null) { Debug.LogWarning("[QuestSystem] No QuestDatabase assigned."); return; }
-            StartQuest(database.StartQuest);
+            if (!_stateImported)
+                StartQuest(database.StartQuest);
+        }
+
+        public QuestSaveData ExportState()
+        {
+            var data = new QuestSaveData
+            {
+                ActiveQuestId = _active != null ? _active.QuestId : string.Empty
+            };
+
+            if (database != null)
+            {
+                foreach (var quest in database.Quests)
+                    if (quest != null && _completed.Contains(quest.QuestId))
+                        data.CompletedQuestIds.Add(quest.QuestId);
+            }
+
+            if (_progress != null)
+                foreach (int count in _progress.Counts)
+                    data.ActiveObjectiveCounts.Add(count);
+
+            return data;
+        }
+
+        public void ImportState(QuestSaveData data)
+        {
+            _stateImported = true;
+            _isImporting = true;
+            _completed.Clear();
+            _active = null;
+            _progress = null;
+
+            if (database == null)
+            {
+                Debug.LogWarning("[QuestSystem] Cannot import state without a QuestDatabase.");
+                _isImporting = false;
+                return;
+            }
+
+            if (data != null && data.CompletedQuestIds != null)
+            {
+                foreach (string questId in data.CompletedQuestIds)
+                    if (database.Get(questId) != null)
+                        _completed.Add(questId);
+            }
+
+            QuestDefinition activeDef = data != null
+                ? database.Get(data.ActiveQuestId)
+                : null;
+
+            if (activeDef != null && !_completed.Contains(activeDef.QuestId))
+            {
+                StartQuest(activeDef);
+                var savedCounts = data.ActiveObjectiveCounts;
+                if (savedCounts != null)
+                {
+                    int count = Mathf.Min(savedCounts.Count, activeDef.Objectives.Count);
+                    for (int i = 0; i < count; i++)
+                        _progress.Counts[i] = Mathf.Clamp(
+                            savedCounts[i], 0, activeDef.Objectives[i].RequiredCount);
+                }
+            }
+            else if (!_completed.Contains("q12"))
+            {
+                StartQuest(database.StartQuest);
+            }
+            else
+            {
+                GameEvents.RaiseQuestChanged(null);
+            }
+
+            _isImporting = false;
+            PersistState();
+            if (_active != null)
+                GameEvents.RaiseQuestChanged(_active.QuestId);
         }
 
         // ── Quest lifecycle ─────────────────────────────────────────────────
@@ -75,6 +153,7 @@ namespace IdleOn.Quests
 
             Debug.Log($"[QuestSystem] Quest started: {_active.QuestId} — {_active.Title}");
             GameEvents.RaiseQuestChanged(_active.QuestId);
+            if (!_isImporting) PersistState();
         }
 
         private void Complete()
@@ -107,6 +186,7 @@ namespace IdleOn.Quests
             {
                 _active = null;
                 _progress = null;
+                PersistState();
                 Debug.Log("[QuestSystem] No next quest — chain complete.");
             }
         }
@@ -140,8 +220,12 @@ namespace IdleOn.Quests
                 changed = true;
             }
 
-            if (changed && AllObjectivesDone())
+            if (!changed) return;
+
+            if (AllObjectivesDone())
                 Complete();
+            else
+                PersistState();
         }
 
         private bool AllObjectivesDone()
@@ -150,6 +234,13 @@ namespace IdleOn.Quests
             for (int i = 0; i < objs.Count; i++)
                 if (_progress.Counts[i] < objs[i].RequiredCount) return false;
             return true;
+        }
+
+        private void PersistState()
+        {
+            var save = SaveManager.Instance?.CurrentSave;
+            if (save != null)
+                save.Quest = ExportState();
         }
     }
 }

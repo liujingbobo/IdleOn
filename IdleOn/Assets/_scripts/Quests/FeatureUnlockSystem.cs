@@ -1,5 +1,6 @@
 using UnityEngine;
 using IdleOn.Core;
+using IdleOn.Save;
 
 namespace IdleOn.Quests
 {
@@ -25,14 +26,31 @@ namespace IdleOn.Quests
         public bool IsUnlocked(FeatureFlags feature)
             => feature != FeatureFlags.None && (Unlocked & feature) == feature;
 
+        public int ExportState() => (int)Unlocked;
+
+        public void ImportState(int flags)
+        {
+            Unlocked = (FeatureFlags)flags;
+            MirrorToSave();
+            GameEvents.RaiseFeaturesChanged();
+        }
+
         public void Unlock(FeatureFlags feature)
         {
             if (feature == FeatureFlags.None) return;
             if ((Unlocked & feature) == feature) return;   // already unlocked
 
             Unlocked |= feature;
+            MirrorToSave();
             Debug.Log($"[FeatureUnlock] Unlocked: {feature} | now: {Unlocked}");
             GameEvents.RaiseFeaturesChanged();
+        }
+
+        private void MirrorToSave()
+        {
+            var save = SaveManager.Instance?.CurrentSave;
+            if (save != null)
+                save.UnlockedFeatureFlags = ExportState();
         }
     }
 }

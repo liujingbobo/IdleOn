@@ -11,7 +11,7 @@ namespace IdleOn.Save
     [Serializable]
     public class AccountSaveData
     {
-        public int Version = 1;
+        public int Version = 2;
 
         // ── Account-shared data ──────────────────────────────────────────────
         public VaultSaveData Vault = new VaultSaveData();

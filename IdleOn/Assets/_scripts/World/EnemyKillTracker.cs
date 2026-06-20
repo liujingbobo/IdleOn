@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using IdleOn.Core;
+using IdleOn.Save;
 
 namespace IdleOn.World
 {
@@ -29,14 +30,48 @@ namespace IdleOn.World
 
         private void HandleEnemyKilled(string enemyId, float xp)
         {
+            if (string.IsNullOrEmpty(enemyId)) return;
             _kills.TryGetValue(enemyId, out int count);
             _kills[enemyId] = count + 1;
+            MirrorToSave();
         }
 
         public int GetKillCount(string enemyId)
         {
             if (string.IsNullOrEmpty(enemyId)) return 0;
             return _kills.TryGetValue(enemyId, out int count) ? count : 0;
+        }
+
+        public List<EnemyKillSaveData> ExportState()
+        {
+            var data = new List<EnemyKillSaveData>();
+            foreach (var pair in _kills)
+                data.Add(new EnemyKillSaveData { EnemyId = pair.Key, Count = pair.Value });
+            data.Sort((a, b) => string.CompareOrdinal(a.EnemyId, b.EnemyId));
+            return data;
+        }
+
+        public void ImportState(List<EnemyKillSaveData> data)
+        {
+            _kills.Clear();
+            if (data != null)
+            {
+                foreach (var entry in data)
+                {
+                    if (entry == null || string.IsNullOrEmpty(entry.EnemyId)) continue;
+                    int count = Mathf.Max(0, entry.Count);
+                    _kills.TryGetValue(entry.EnemyId, out int existing);
+                    _kills[entry.EnemyId] = existing + count;
+                }
+            }
+            MirrorToSave();
+        }
+
+        private void MirrorToSave()
+        {
+            var save = SaveManager.Instance?.CurrentSave;
+            if (save != null)
+                save.EnemyKillCounts = ExportState();
         }
     }
 }

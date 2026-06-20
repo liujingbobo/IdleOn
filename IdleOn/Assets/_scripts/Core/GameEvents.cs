@@ -56,6 +56,7 @@ namespace IdleOn.Core
         public static event Action<string>       OnQuestChanged;         // new active questId
         public static event Action<string>       OnQuestCompleted;       // completed questId
         public static event Action               OnFeaturesChanged;
+        public static event Action               OnPersistentProgressLoaded;
 
         public static void RaiseAutoCombatChanged(bool active)                          => OnAutoCombatChanged?.Invoke(active);
         public static void RaiseEnemyKilled(string enemyId, float xp)                  => OnEnemyKilled?.Invoke(enemyId, xp);
@@ -82,5 +83,6 @@ namespace IdleOn.Core
         public static void RaiseQuestChanged(string questId)                             => OnQuestChanged?.Invoke(questId);
         public static void RaiseQuestCompleted(string questId)                           => OnQuestCompleted?.Invoke(questId);
         public static void RaiseFeaturesChanged()                                        => OnFeaturesChanged?.Invoke();
+        public static void RaisePersistentProgressLoaded()                               => OnPersistentProgressLoaded?.Invoke();
     }
 }

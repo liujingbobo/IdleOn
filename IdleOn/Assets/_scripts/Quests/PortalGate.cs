@@ -30,6 +30,7 @@ namespace IdleOn.Quests
         {
             GameEvents.OnQuestCompleted  += HandleQuestCompleted;
             GameEvents.OnFeaturesChanged += Evaluate;
+            GameEvents.OnPersistentProgressLoaded += Evaluate;
             Evaluate();
         }
 
@@ -37,6 +38,7 @@ namespace IdleOn.Quests
         {
             GameEvents.OnQuestCompleted  -= HandleQuestCompleted;
             GameEvents.OnFeaturesChanged -= Evaluate;
+            GameEvents.OnPersistentProgressLoaded -= Evaluate;
         }
 
         // Re-evaluate after all Awakes have run (QuestSystem/EnemyKillTracker instances ready).

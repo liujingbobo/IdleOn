@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using IdleOn.Vault;
+using IdleOn.Quests;
+using IdleOn.World;
+using IdleOn.Core;
+using IdleOn.Items;
+using IdleOn.Equipment;
+using IdleOn.Talents;
 
 namespace IdleOn.Save
 {
@@ -70,6 +76,9 @@ namespace IdleOn.Save
                 // Defensive defaults for forward/backward tolerance.
                 if (acc.Vault   == null) acc.Vault   = new VaultSaveData();
                 if (acc.Players == null) acc.Players = new List<PlayerSaveData>();
+                foreach (var player in acc.Players)
+                    NormalizePlayerSave(player);
+                if (acc.Version < 2) acc.Version = 2;
 
                 CurrentAccount = acc;
                 CurrentSave    = null;
@@ -87,7 +96,16 @@ namespace IdleOn.Save
         public void SaveAccountToDisk()
         {
             if (CurrentAccount == null) return;
-            if (CurrentSave != null) CurrentAccount.CurrentPlayerId = CurrentSave.PlayerId;
+            if (CurrentSave != null)
+            {
+                CurrentAccount.CurrentPlayerId = CurrentSave.PlayerId;
+                if (QuestSystem.Instance != null)
+                    CurrentSave.Quest = QuestSystem.Instance.ExportState();
+                if (FeatureUnlockSystem.Instance != null)
+                    CurrentSave.UnlockedFeatureFlags = FeatureUnlockSystem.Instance.ExportState();
+                if (EnemyKillTracker.Instance != null)
+                    CurrentSave.EnemyKillCounts = EnemyKillTracker.Instance.ExportState();
+            }
 
             string json = JsonUtility.ToJson(CurrentAccount, prettyPrint: true);
             File.WriteAllText(GetSaveFilePath(), json);
@@ -122,8 +140,35 @@ namespace IdleOn.Save
             CurrentSave = p;
             CurrentAccount.CurrentPlayerId = p.PlayerId;
             IsLoaded = true;
+
+            NormalizePlayerSave(CurrentSave);
+            QuestSystem.Instance?.ImportState(CurrentSave.Quest);
+            FeatureUnlockSystem.Instance?.ImportState(CurrentSave.UnlockedFeatureFlags);
+            EnemyKillTracker.Instance?.ImportState(CurrentSave.EnemyKillCounts);
+
             OnSaveLoaded?.Invoke();
+            GameEvents.RaisePersistentProgressLoaded();
             return true;
+        }
+
+        private static void NormalizePlayerSave(PlayerSaveData player)
+        {
+            if (player == null) return;
+
+            if (player.Inventory == null) player.Inventory = new InventoryData(20);
+            if (player.Equipment == null) player.Equipment = new EquipmentData();
+            if (player.MapProgress == null) player.MapProgress = new List<MapProgressData>();
+            if (player.TalentData == null) player.TalentData = new List<TalentSaveData>();
+            if (player.HotbarSkillIds == null)
+                player.HotbarSkillIds = new List<string> { "", "", "" };
+
+            if (player.Quest == null) player.Quest = new QuestSaveData();
+            if (player.Quest.CompletedQuestIds == null)
+                player.Quest.CompletedQuestIds = new List<string>();
+            if (player.Quest.ActiveObjectiveCounts == null)
+                player.Quest.ActiveObjectiveCounts = new List<int>();
+            if (player.EnemyKillCounts == null)
+                player.EnemyKillCounts = new List<EnemyKillSaveData>();
         }
 
         public string GetSaveFilePath() => Path.Combine(Application.persistentDataPath, SaveFileName);
