@@ -178,7 +178,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -216,7 +216,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -1335,7 +1335,55 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      freefantasy_0: 7600556706847304873
+      freefantasy_1: -3739263145700898989
+      freefantasy_10: -648409735419788680
+      freefantasy_11: 9004853348098817813
+      freefantasy_12: -797318900541757190
+      freefantasy_13: 8533037943929413156
+      freefantasy_14: -6466971399939474044
+      freefantasy_15: -6782511813196969350
+      freefantasy_16: 4917550396751412127
+      freefantasy_17: 5313375645424334161
+      freefantasy_18: -1373152310824799161
+      freefantasy_19: -3157098025099123024
+      freefantasy_2: 3839088401311749340
+      freefantasy_20: -3039598198655708522
+      freefantasy_21: 5839002195570277953
+      freefantasy_22: -2735639328025685281
+      freefantasy_23: 3387459199429316458
+      freefantasy_24: -5688208543020767502
+      freefantasy_25: 5546543543096372722
+      freefantasy_26: -1183852225370820685
+      freefantasy_27: -2034106283846391131
+      freefantasy_28: 3682429121056376090
+      freefantasy_29: -3095657233149760096
+      freefantasy_3: -5373843855946165335
+      freefantasy_30: -4870241116707284395
+      freefantasy_31: 5248021736140231313
+      freefantasy_32: 5533544858568060732
+      freefantasy_33: 1247613261567311849
+      freefantasy_34: -946183349718426932
+      freefantasy_35: -4109696056349349879
+      freefantasy_36: 539156067807627140
+      freefantasy_37: 2578980780699462578
+      freefantasy_38: 262127790810613595
+      freefantasy_39: -705846087949635355
+      freefantasy_4: -8558231677218921464
+      freefantasy_40: -4472860345069387786
+      freefantasy_41: 5505424997237641580
+      freefantasy_42: 2367187089338778679
+      freefantasy_43: -3916220057257347860
+      freefantasy_44: -6275630989673790513
+      freefantasy_45: 5848091016066605445
+      freefantasy_46: 730357596880777051
+      freefantasy_47: 2014957931977646450
+      freefantasy_5: 161550135424696826
+      freefantasy_6: -6841947726182556968
+      freefantasy_7: 4873216702683809056
+      freefantasy_8: -3183833743515940919
+      freefantasy_9: -1792985642017392206
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
