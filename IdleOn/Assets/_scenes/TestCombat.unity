@@ -8299,6 +8299,7 @@ GameObject:
   - component: {fileID: 530448104}
   - component: {fileID: 530448106}
   - component: {fileID: 530448107}
+  - component: {fileID: 530448108}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -8471,6 +8472,26 @@ MonoBehaviour:
   talentButtonObject: {fileID: 1252927980}
   vaultButtonObject: {fileID: 1224940402}
   mapButtonObject: {fileID: 1622610311}
+--- !u!114 &530448108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530448098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d41b068b180349849bc67a34d8e21701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryTarget: {fileID: 1304754078}
+  goldTarget: {fileID: 1021060172}
+  worldCamera: {fileID: 521357515}
+  duration: 0.55
+  arcHeight: 70
+  iconSize: {x: 24, y: 24}
+  shrinkStart: 0.65
+  prewarmCount: 8
 --- !u!1 &536218130
 GameObject:
   m_ObjectHideFlags: 0
@@ -13345,6 +13366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropPrefab: {fileID: 66798933666442457, guid: 5cb086fa3b0c43d4b9876181ba06c452, type: 3}
+  pickupFlyEffect: {fileID: 530448108}
   preWarmCount: 10
 --- !u!4 &878114753
 Transform:
