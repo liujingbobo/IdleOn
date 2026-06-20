@@ -55,6 +55,7 @@ namespace IdleOn.Core
         // Quest / feature state
         public static event Action<string>       OnQuestChanged;         // new active questId
         public static event Action<string>       OnQuestCompleted;       // completed questId
+        public static event Action               OnQuestProgressChanged;
         public static event Action               OnFeaturesChanged;
         public static event Action               OnPersistentProgressLoaded;
 
@@ -82,6 +83,7 @@ namespace IdleOn.Core
         public static void RaiseTalentUpgraded(string talentId)                          => OnTalentUpgraded?.Invoke(talentId);
         public static void RaiseQuestChanged(string questId)                             => OnQuestChanged?.Invoke(questId);
         public static void RaiseQuestCompleted(string questId)                           => OnQuestCompleted?.Invoke(questId);
+        public static void RaiseQuestProgressChanged()                                   => OnQuestProgressChanged?.Invoke();
         public static void RaiseFeaturesChanged()                                        => OnFeaturesChanged?.Invoke();
         public static void RaisePersistentProgressLoaded()                               => OnPersistentProgressLoaded?.Invoke();
     }

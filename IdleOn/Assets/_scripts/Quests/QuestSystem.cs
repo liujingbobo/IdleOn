@@ -17,6 +17,8 @@ namespace IdleOn.Quests
         [SerializeField] private PlayerProgression progression;   // for EXP rewards
 
         public string ActiveQuestId => _active != null ? _active.QuestId : null;
+        public QuestDefinition ActiveQuestDefinition => _active;
+        public IReadOnlyList<int> ActiveObjectiveCounts => _progress?.Counts;
 
         private QuestDefinition _active;
         private QuestProgress   _progress;
@@ -222,6 +224,7 @@ namespace IdleOn.Quests
 
             if (!changed) return;
 
+            GameEvents.RaiseQuestProgressChanged();
             if (AllObjectivesDone())
                 Complete();
             else
