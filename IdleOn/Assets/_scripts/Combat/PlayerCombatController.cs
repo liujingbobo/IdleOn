@@ -50,8 +50,6 @@ namespace IdleOn.Combat
         private readonly Dictionary<string, float> _skillReadyTimes = new Dictionary<string, float>();
         private Vector2        _manualMoveTarget;
         private WorldInteractable _pendingInteractable;
-        private EnemyController _manualAttackTarget;
-        private bool           _resumeAutoCombat;
         private float          _desiredVelocityX;
 
         public bool        IsAutoCombatActive { get; private set; }
@@ -60,8 +58,6 @@ namespace IdleOn.Combat
         {
             get
             {
-                if (State == CombatState.ManualAttack && IsValidTarget(_manualAttackTarget))
-                    return _manualAttackTarget.transform;
                 if (State == CombatState.Attacking && IsValidTarget(_currentTarget))
                     return _currentTarget.transform;
                 return null;
@@ -202,9 +198,6 @@ namespace IdleOn.Combat
                 case CombatState.ManualMove:
                     UpdateManualMove();
                     break;
-                case CombatState.ManualAttack:
-                    UpdateManualAttack();
-                    break;
             }
         }
 
@@ -257,11 +250,18 @@ namespace IdleOn.Combat
                 var enemy = col.GetComponent<EnemyController>();
                 if (IsValidTarget(enemy))
                 {
-                    _pendingInteractable = null;          // starting a manual attack cancels pending interaction
-                    _resumeAutoCombat    = IsAutoCombatActive;
-                    _manualAttackTarget  = enemy;
-                    LogTarget("Manual target assigned from click", enemy);
-                    SetState(CombatState.ManualAttack, "clicked enemy");
+                    // Same target already being chased/attacked: no-op. Prevents spam-click from
+                    // restarting movement, resetting the attack timer, or forcing an extra attack.
+                    if (enemy == _currentTarget && (State == CombatState.Moving || State == CombatState.Attacking))
+                    {
+                        LogTarget("Same-target click ignored (already chasing/attacking)", enemy);
+                        return;
+                    }
+
+                    _pendingInteractable = null;          // clicking an enemy cancels pending interaction
+                    _currentTarget        = enemy;
+                    LogTarget("Current target assigned from click", enemy);
+                    SetState(CombatState.Moving, "clicked enemy");
                     return;
                 }
                 LogTarget("Clicked collider rejected as target", enemy);
@@ -276,7 +276,6 @@ namespace IdleOn.Combat
                 if (interactable != null && interactable.CanInteract(gameObject))
                 {
                     _pendingInteractable = interactable;
-                    _resumeAutoCombat    = IsAutoCombatActive;
                     float ix = lane != null ? lane.ClampX(interactable.InteractionX) : interactable.InteractionX;
                     _manualMoveTarget = new Vector2(ix, lane != null ? lane.GroundY : transform.position.y);
                     SetState(CombatState.ManualMove, "clicked interactable");
@@ -289,7 +288,7 @@ namespace IdleOn.Combat
             if (lane != null)
             {
                 _pendingInteractable = null;
-                _resumeAutoCombat    = IsAutoCombatActive;
+                _currentTarget        = null;     // ground click cancels the current enemy target
                 float targetX        = lane.ClampX(worldPos.x);
                 _manualMoveTarget    = new Vector2(targetX, lane.GroundY);
                 SetState(CombatState.ManualMove, "clicked lane");
@@ -356,33 +355,6 @@ namespace IdleOn.Combat
             }
             float direction = Mathf.Sign(_manualMoveTarget.x - transform.position.x);
             SetDesiredVelocityX(direction * _stats.FinalStats.MoveSpeed, "UpdateManualMove");
-        }
-
-        private void UpdateManualAttack()
-        {
-            if (!IsValidTarget(_manualAttackTarget))
-            {
-                LogTarget("Manual target rejected/cleared in UpdateManualAttack", _manualAttackTarget);
-                ResumeAutoCombatOrIdle("manual target invalid");
-                return;
-            }
-
-            float dist = Vector2.Distance(transform.position, _manualAttackTarget.transform.position);
-            LogTargetFrame("UpdateManualAttack", _manualAttackTarget, dist);
-            if (dist > attackRange)
-            {
-                float direction = Mathf.Sign(_manualAttackTarget.transform.position.x - transform.position.x);
-                SetDesiredVelocityX(direction * _stats.FinalStats.MoveSpeed, "UpdateManualAttack");
-                return;
-            }
-
-            SetDesiredVelocityX(0f, "manual attack in range");
-            float damage = Random.Range(_stats.FinalStats.ATKMin, _stats.FinalStats.ATKMax);
-            _manualAttackTarget.TakeDamage(damage);
-            _attackTimer        = attackCooldown;
-            LogTarget("Manual target cleared after attack", _manualAttackTarget);
-            _manualAttackTarget = null;
-            SetState(_resumeAutoCombat ? CombatState.Seeking : CombatState.Idle, "manual attack complete");
         }
 
         private void SeekTarget()
@@ -478,12 +450,6 @@ namespace IdleOn.Combat
             {
                 LogTarget("Current target cleared by resume", _currentTarget);
                 _currentTarget = null;
-            }
-
-            if (!IsValidTarget(_manualAttackTarget))
-            {
-                LogTarget("Manual target cleared by resume", _manualAttackTarget);
-                _manualAttackTarget = null;
             }
 
             SetState(IsAutoCombatActive ? CombatState.Seeking : CombatState.Idle, reason);
