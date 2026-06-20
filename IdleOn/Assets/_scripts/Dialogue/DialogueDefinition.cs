@@ -10,7 +10,7 @@ namespace IdleOn.Dialogue
         [Header("Identity")]
         public string DialogueId;
         public string SpeakerName;
-        public string PortraitKey;
+        public Sprite Portrait;
 
         [Header("Nodes")]
         public List<DialogueNode> Nodes = new List<DialogueNode>();

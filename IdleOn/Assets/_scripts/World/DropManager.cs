@@ -6,6 +6,7 @@ using IdleOn.Inventory;
 using IdleOn.Core;
 using IdleOn.Vault;
 using IdleOn.Talents;
+using IdleOn.UI;
 
 namespace IdleOn.World
 {
@@ -15,6 +16,7 @@ namespace IdleOn.World
 
         [Header("References")]
         [SerializeField] private WorldDrop dropPrefab;
+        [SerializeField] private PickupFlyEffectController pickupFlyEffect;
 
         [Header("Pool")]
         [SerializeField] private int preWarmCount = 10;
@@ -59,6 +61,9 @@ namespace IdleOn.World
             if (drop == null || !drop.CanBeCollected) return;
 
             var entry = drop.Entry;
+            Vector3 worldPosition = drop.transform.position;
+            Sprite icon = ResolveIcon(entry);
+            bool collectionSucceeded = false;
 
             if (entry.DropType == DropType.Item)
             {
@@ -71,6 +76,7 @@ namespace IdleOn.World
                     return;
                 }
                 GameEvents.RaiseItemCollected(entry.ItemId, entry.Quantity);
+                collectionSucceeded = true;
             }
             else
             {
@@ -80,10 +86,26 @@ namespace IdleOn.World
                 if (vault != null) amount = Mathf.RoundToInt(amount * vault.GetCurrencyMultiplier());
                 var talent = TalentSystem.Instance;
                 if (talent != null) amount = Mathf.RoundToInt(amount * (1f + talent.GetCurrencyMultiplierBonus()));
+                long previousAmount = CurrencySystem.Instance.GetAmount(entry.CurrencyType);
                 CurrencySystem.Instance.Add(entry.CurrencyType, amount);
+                collectionSucceeded = CurrencySystem.Instance.GetAmount(entry.CurrencyType) > previousAmount;
             }
 
             ReturnToPool(drop);
+
+            if (!collectionSucceeded)
+                return;
+
+            if (pickupFlyEffect == null)
+            {
+                Debug.LogWarning("[DropManager] PickupFlyEffectController is not assigned; pickup visual skipped.", this);
+                return;
+            }
+
+            if (entry.DropType == DropType.Item)
+                pickupFlyEffect.PlayItem(icon, worldPosition);
+            else
+                pickupFlyEffect.PlayCurrency(icon, worldPosition, entry.CurrencyType);
         }
 
         // ── Pool ─────────────────────────────────────────────────────────────

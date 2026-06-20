@@ -1,0 +1,2993 @@
+fileFormatVersion: 2
+guid: e6693c15dc88b88489d238139af6623b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4737135141246649224
+    second: MPSliderFill_0
+  - first:
+      213: -1646626566775475060
+    second: MPSliderFill_1
+  - first:
+      213: -5994725339872468047
+    second: MPSliderFill_2
+  - first:
+      213: -3094284336151457683
+    second: MPSliderFill_3
+  - first:
+      213: 8005624042734326303
+    second: MPSliderFill_4
+  - first:
+      213: -249796661886458145
+    second: MPSliderFill_5
+  - first:
+      213: 1122882465889407964
+    second: MPSliderFill_6
+  - first:
+      213: -651614114512608550
+    second: MPSliderFill_7
+  - first:
+      213: 2853290342188799193
+    second: MPSliderFill_8
+  - first:
+      213: -8154728187628536604
+    second: MPSliderFill_9
+  - first:
+      213: -2577700119228264822
+    second: MPSliderFill_10
+  - first:
+      213: -6182160200165735161
+    second: MPSliderFill_11
+  - first:
+      213: 4582285946358508808
+    second: MPSliderFill_12
+  - first:
+      213: -1140263224246822920
+    second: MPSliderFill_13
+  - first:
+      213: 8663373829011007594
+    second: MPSliderFill_14
+  - first:
+      213: 5951608741855164009
+    second: MPSliderFill_15
+  - first:
+      213: 8438031326090868950
+    second: MPSliderFill_16
+  - first:
+      213: -8534471239563320941
+    second: MPSliderFill_17
+  - first:
+      213: -358235866339477606
+    second: MPSliderFill_18
+  - first:
+      213: -8482603775371920721
+    second: MPSliderFill_19
+  - first:
+      213: -6496140273424535472
+    second: MPSliderFill_20
+  - first:
+      213: -540578227446263759
+    second: MPSliderFill_21
+  - first:
+      213: 6497268067446130069
+    second: MPSliderFill_22
+  - first:
+      213: -6871459828815646215
+    second: MPSliderFill_23
+  - first:
+      213: -5973994482109531
+    second: MPSliderFill_24
+  - first:
+      213: -7737277285078275066
+    second: MPSliderFill_25
+  - first:
+      213: -401349811059852447
+    second: MPSliderFill_26
+  - first:
+      213: -2414435935710981394
+    second: MPSliderFill_27
+  - first:
+      213: -957020959200742215
+    second: MPSliderFill_28
+  - first:
+      213: 1996462596918403999
+    second: MPSliderFill_29
+  - first:
+      213: -5833333837516924885
+    second: MPSliderFill_30
+  - first:
+      213: -5713457033007278853
+    second: MPSliderFill_31
+  - first:
+      213: 7735991319164751380
+    second: MPSliderFill_32
+  - first:
+      213: -4881933787773544341
+    second: MPSliderFill_33
+  - first:
+      213: -8128033180870794769
+    second: MPSliderFill_34
+  - first:
+      213: -4736671159775746048
+    second: MPSliderFill_35
+  - first:
+      213: 4899732502244373884
+    second: MPSliderFill_36
+  - first:
+      213: 8159735195521017130
+    second: MPSliderFill_37
+  - first:
+      213: -1603820200661231864
+    second: MPSliderFill_38
+  - first:
+      213: 3749844584048965284
+    second: MPSliderFill_39
+  - first:
+      213: 3265387681073219989
+    second: MPSliderFill_40
+  - first:
+      213: 6529172336243296303
+    second: MPSliderFill_41
+  - first:
+      213: -1195419072073024351
+    second: MPSliderFill_42
+  - first:
+      213: -843548678372976082
+    second: MPSliderFill_43
+  - first:
+      213: -5266932884487713862
+    second: MPSliderFill_44
+  - first:
+      213: 3589606861992704226
+    second: MPSliderFill_45
+  - first:
+      213: 3733706115795569509
+    second: MPSliderFill_46
+  - first:
+      213: 1465433219044473650
+    second: MPSliderFill_47
+  - first:
+      213: -5350584803548914989
+    second: MPSliderFill_48
+  - first:
+      213: 3592757993504589432
+    second: MPSliderFill_49
+  - first:
+      213: -600613300932583316
+    second: MPSliderFill_50
+  - first:
+      213: 8267303668301764420
+    second: MPSliderFill_51
+  - first:
+      213: 3180050245576182099
+    second: MPSliderFill_52
+  - first:
+      213: -8392640966455466868
+    second: MPSliderFill_53
+  - first:
+      213: -444167498075351314
+    second: MPSliderFill_54
+  - first:
+      213: -4608082946790427630
+    second: MPSliderFill_55
+  - first:
+      213: -453156612714230842
+    second: MPSliderFill_56
+  - first:
+      213: 2986530630199254263
+    second: MPSliderFill_57
+  - first:
+      213: -3479660107174954219
+    second: MPSliderFill_58
+  - first:
+      213: -6991822332392496408
+    second: MPSliderFill_59
+  - first:
+      213: 2918803300774472360
+    second: MPSliderFill_60
+  - first:
+      213: 4659587246207862493
+    second: MPSliderFill_61
+  - first:
+      213: 1472056834488454453
+    second: MPSliderFill_62
+  - first:
+      213: -365125918355050242
+    second: MPSliderFill_63
+  - first:
+      213: -2983751337564884258
+    second: MPSliderFill_64
+  - first:
+      213: 7460655124454333170
+    second: MPSliderFill_65
+  - first:
+      213: -5791359524320230068
+    second: MPSliderFill_66
+  - first:
+      213: -7616846501044076889
+    second: MPSliderFill_67
+  - first:
+      213: -4993263097784647522
+    second: MPSliderFill_68
+  - first:
+      213: 1530303599670234478
+    second: MPSliderFill_69
+  - first:
+      213: -4991414666065352950
+    second: MPSliderFill_70
+  - first:
+      213: 4122429126587545593
+    second: MPSliderFill_71
+  - first:
+      213: 5390313257817726839
+    second: MPSliderFill_72
+  - first:
+      213: -8298430415681533872
+    second: MPSliderFill_73
+  - first:
+      213: 2962950391286996165
+    second: MPSliderFill_74
+  - first:
+      213: 982021817500490295
+    second: MPSliderFill_75
+  - first:
+      213: 659942063315171977
+    second: MPSliderFill_76
+  - first:
+      213: -2913262602932729538
+    second: MPSliderFill_77
+  - first:
+      213: -1063485418152901086
+    second: MPSliderFill_78
+  - first:
+      213: -5469752189965589404
+    second: MPSliderFill_79
+  - first:
+      213: -2058126475468332878
+    second: MPSliderFill_80
+  - first:
+      213: -3085098497543596679
+    second: MPSliderFill_81
+  - first:
+      213: 1222381861140769028
+    second: MPSliderFill_82
+  - first:
+      213: -6072843083366441642
+    second: MPSliderFill_83
+  - first:
+      213: -3538520986644992876
+    second: MPSliderFill_84
+  - first:
+      213: 18658448003294474
+    second: MPSliderFill_85
+  - first:
+      213: -3102640789838716475
+    second: MPSliderFill_86
+  - first:
+      213: 6594527500760913760
+    second: MPSliderFill_87
+  - first:
+      213: 5579619367015966837
+    second: MPSliderFill_88
+  - first:
+      213: 4591619523152030022
+    second: MPSliderFill_89
+  - first:
+      213: -7994127308626776857
+    second: MPSliderFill_90
+  - first:
+      213: -1999962242005823166
+    second: MPSliderFill_91
+  - first:
+      213: 7580175688360298036
+    second: MPSliderFill_92
+  - first:
+      213: -2948955706931560788
+    second: MPSliderFill_93
+  - first:
+      213: -2080477862802516035
+    second: MPSliderFill_94
+  - first:
+      213: 6640230049812852712
+    second: MPSliderFill_95
+  - first:
+      213: -6583020705527187457
+    second: MPSliderFill_96
+  - first:
+      213: 6728545188278193335
+    second: MPSliderFill_97
+  - first:
+      213: 6583811102204003736
+    second: MPSliderFill_98
+  - first:
+      213: -450692486818727521
+    second: MPSliderFill_99
+  - first:
+      213: -8898838408086603065
+    second: MPSliderFill_100
+  - first:
+      213: -4543479571804674464
+    second: MPSliderFill_101
+  - first:
+      213: 7192157629207698481
+    second: MPSliderFill_102
+  - first:
+      213: 4795011495059883936
+    second: MPSliderFill_103
+  - first:
+      213: 5070746322083258541
+    second: MPSliderFill_104
+  - first:
+      213: 1625877739317868197
+    second: MPSliderFill_105
+  - first:
+      213: -4769775741922207466
+    second: MPSliderFill_106
+  - first:
+      213: 5748868623613232424
+    second: MPSliderFill_107
+  - first:
+      213: -4628386747510368592
+    second: MPSliderFill_108
+  - first:
+      213: 5184885118625771810
+    second: MPSliderFill_109
+  - first:
+      213: -1467953978684097698
+    second: MPSliderFill_110
+  - first:
+      213: 5060289860209002881
+    second: MPSliderFill_111
+  - first:
+      213: -3257439822478550625
+    second: MPSliderFill_112
+  - first:
+      213: 8837022454995794284
+    second: MPSliderFill_113
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: MPSliderFill_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 831
+        width: 61
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 883c603005fadb140800000000000000
+      internalID: 4737135141246649224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_1
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 687
+        width: 226
+        height: 162
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8470a99cd10629e0800000000000000
+      internalID: -1646626566775475060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_2
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 700
+        width: 106
+        height: 149
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b36ed690157ecca0800000000000000
+      internalID: -5994725339872468047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_3
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 700
+        width: 106
+        height: 149
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6013ad5ac4ee05d0800000000000000
+      internalID: -3094284336151457683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 655
+        width: 61
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f129188b6a0b91f60800000000000000
+      internalID: 8005624042734326303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_5
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 639
+        width: 226
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd6ed2e624b888cf0800000000000000
+      internalID: -249796661886458145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_6
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 671
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd35ad747a7459f00800000000000000
+      internalID: 1122882465889407964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_7
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 655
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad268dd4a6005f6f0800000000000000
+      internalID: -651614114512608550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_8
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 655
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d45737e27ce89720800000000000000
+      internalID: 2853290342188799193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_9
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 654
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ec39804be594de80800000000000000
+      internalID: -8154728187628536604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_10
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 655
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8ecae7166b2a3cd0800000000000000
+      internalID: -2577700119228264822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_11
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 655
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 705409c6d0e843aa0800000000000000
+      internalID: -6182160200165735161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_12
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 641
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80da6fb4acc879f30800000000000000
+      internalID: 4582285946358508808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_13
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 607
+        width: 38
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f7935093a8fc20f0800000000000000
+      internalID: -1140263224246822920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_14
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 633
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a68ed92d89c7a3870800000000000000
+      internalID: 8663373829011007594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_15
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 633
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 966f2642e9c589250800000000000000
+      internalID: 5951608741855164009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 575
+        width: 61
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d8b343d8c8e91570800000000000000
+      internalID: 8438031326090868950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_17
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 623
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3916a0c00a77f8980800000000000000
+      internalID: -8534471239563320941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_18
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 623
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a97f709a06a470bf0800000000000000
+      internalID: -358235866339477606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_19
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 592
+        width: 32
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: faab19e1fccb74a80800000000000000
+      internalID: -8482603775371920721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_20
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 607
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 050fb6fd6d219d5a0800000000000000
+      internalID: -6496140273424535472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_21
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 606
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13051cb57fa7f78f0800000000000000
+      internalID: -540578227446263759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_22
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 605
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5958d9222eeea2a50800000000000000
+      internalID: 6497268067446130069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_23
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 605
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f1b31731bba3a0a0800000000000000
+      internalID: -6871459828815646215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_24
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 560
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a3f0050fa6caeff0800000000000000
+      internalID: -5973994482109531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_25
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 569
+        width: 226
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60ce5369d4baf9490800000000000000
+      internalID: -7737277285078275066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 543
+        width: 61
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16b7b19297e1e6af0800000000000000
+      internalID: -401349811059852447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_27
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 528
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee252070f433e7ed0800000000000000
+      internalID: -2414435935710981394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_28
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 534
+        width: 81
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b47c34128af7b2f0800000000000000
+      internalID: -957020959200742215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_29
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 511
+        width: 61
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f93eca8772cd4bb10800000000000000
+      internalID: 1996462596918403999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_30
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 496
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b289986f7c5db0fa0800000000000000
+      internalID: -5833333837516924885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_31
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 523
+        width: 81
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf4d4248919b5b0b0800000000000000
+      internalID: -5713457033007278853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_32
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 513
+        width: 81
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41e02542e13cb5b60800000000000000
+      internalID: 7735991319164751380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_33
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 479
+        width: 61
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b68d7cae513ef3cb0800000000000000
+      internalID: -4881933787773544341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_34
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 497
+        width: 85
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe1ab9bd2ec633f80800000000000000
+      internalID: -8128033180870794769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_35
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 488
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 008aab71da6f34eb0800000000000000
+      internalID: -4736671159775746048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_36
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 488
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7536ba30c85ff340800000000000000
+      internalID: 4899732502244373884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_37
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 474
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a25684e9de33d3170800000000000000
+      internalID: 8159735195521017130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_38
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 474
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 807ddff56061eb9e0800000000000000
+      internalID: -1603820200661231864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_39
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 478
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a6392b18cf1a0430800000000000000
+      internalID: 3749844584048965284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_40
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 480
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5994e409bccf05d20800000000000000
+      internalID: 3265387681073219989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_41
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 399
+        width: 61
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f28c61395a74c9a50800000000000000
+      internalID: 6529172336243296303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_42
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 464
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac3c5300b4096fe0800000000000000
+      internalID: -1195419072073024351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_43
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 448
+        width: 64
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2a14d242fc1b44f0800000000000000
+      internalID: -843548678372976082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_44
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 464
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abb494c627818e6b0800000000000000
+      internalID: -5266932884487713862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_45
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 456
+        width: 20
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e831642c68d0d130800000000000000
+      internalID: 3589606861992704226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_46
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 432
+        width: 64
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56bc2b72ee9c0d330800000000000000
+      internalID: 3733706115795569509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_47
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 416
+        width: 64
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23bf33f9fb3465410800000000000000
+      internalID: 1465433219044473650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 367
+        width: 61
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3da1dd34877eeb5b0800000000000000
+      internalID: -5350584803548914989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_49
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 384
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87649ce1c5a0cd130800000000000000
+      internalID: 3592757993504589432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_50
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 352
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c60e98e82613aa7f0800000000000000
+      internalID: -600613300932583316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_51
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 61
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 447196f52ec5bb270800000000000000
+      internalID: 8267303668301764420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_52
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 327
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 359467789dec12c20800000000000000
+      internalID: 3180050245576182099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_53
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 327
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c84e703d189578b80800000000000000
+      internalID: -8392640966455466868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_54
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 191
+        width: 61
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee6d178830006d9f0800000000000000
+      internalID: -444167498075351314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_55
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 294
+        width: 64
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 214750d79fccc00c0800000000000000
+      internalID: -4608082946790427630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_56
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 303
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cb8c8f267016b9f0800000000000000
+      internalID: -453156612714230842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_57
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 275
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fc99dbe8c9427920800000000000000
+      internalID: 2986530630199254263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_58
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 272
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51b3dbc8193c5bfc0800000000000000
+      internalID: -3479660107174954219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_59
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 259
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e22a1902ae08fe90800000000000000
+      internalID: -6991822332392496408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_60
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 245
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8aa66e7332ca18820800000000000000
+      internalID: 2918803300774472360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_61
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 228
+        width: 12
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd60922b9ed2aa040800000000000000
+      internalID: 4659587246207862493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_62
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 228
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53dced444ebcd6410800000000000000
+      internalID: 1472056834488454453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_63
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 212
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef0b82a69efceeaf0800000000000000
+      internalID: -365125918355050242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_64
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 212
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed2395297f59796d0800000000000000
+      internalID: -2983751337564884258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_65
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 194
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fa5cc4be42998760800000000000000
+      internalID: 7460655124454333170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_66
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 194
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4541525235f0afa0800000000000000
+      internalID: -5791359524320230068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_67
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 194
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ae379c86768b4690800000000000000
+      internalID: -7616846501044076889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_68
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 194
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e90ca720bad54bab0800000000000000
+      internalID: -4993263097784647522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_69
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 194
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6d88d8140bbc3510800000000000000
+      internalID: 1530303599670234478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_70
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 194
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a07ef7e8eceeabab0800000000000000
+      internalID: -4991414666065352950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_71
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 194
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f779f5f27fc53930800000000000000
+      internalID: 4122429126587545593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_72
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 192
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77fdd40595d3eca40800000000000000
+      internalID: 5390313257817726839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_73
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 192
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0584100018d06dc80800000000000000
+      internalID: -8298430415681533872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_74
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 193
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cc14c7bea38e1920800000000000000
+      internalID: 2962950391286996165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_75
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 193
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73adcc9d3a7d0ad00800000000000000
+      internalID: 982021817500490295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_76
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 176
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98a3d306fc5982900800000000000000
+      internalID: 659942063315171977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_77
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 176
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e39c3c609130297d0800000000000000
+      internalID: -2913262602932729538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_78
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 176
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 226403395adbd31f0800000000000000
+      internalID: -1063485418152901086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_79
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 179
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 464afabfc598714b0800000000000000
+      internalID: -5469752189965589404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_80
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 179
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b022eeffd01073e0800000000000000
+      internalID: -2058126475468332878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_81
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 179
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97592d413478f25d0800000000000000
+      internalID: -3085098497543596679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_82
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 179
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4092d2583d5c6f010800000000000000
+      internalID: 1222381861140769028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_83
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 177
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65d5147146de8bba0800000000000000
+      internalID: -6072843083366441642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_84
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 177
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49ca2c819e5a4eec0800000000000000
+      internalID: -3538520986644992876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_85
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 177
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a05eb4572c9424000800000000000000
+      internalID: 18658448003294474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_86
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 176
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c1a600e3a431f4d0800000000000000
+      internalID: -3102640789838716475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_87
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 162
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 067166892d7748b50800000000000000
+      internalID: 6594527500760913760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_88
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 162
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57860e0904ace6d40800000000000000
+      internalID: 5579619367015966837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_89
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 162
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 649a93df0a5b8bf30800000000000000
+      internalID: 4591619523152030022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_90
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 164
+        width: 25
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ec2d0841972f0190800000000000000
+      internalID: -7994127308626776857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_91
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 163
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2419c09efe4be34e0800000000000000
+      internalID: -1999962242005823166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_92
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 111
+        width: 61
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43684c780a1323960800000000000000
+      internalID: 7580175688360298036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_93
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 132
+        width: 13
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caebbf5a8643317d0800000000000000
+      internalID: -2948955706931560788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_94
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 115
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db797981868a023e0800000000000000
+      internalID: -2080477862802516035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_95
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 115
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ef28f18c06d62c50800000000000000
+      internalID: 6640230049812852712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_96
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 115
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff7b202fb8964a4a0800000000000000
+      internalID: -6583020705527187457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_97
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 115
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bc4c7a0338906d50800000000000000
+      internalID: 6728545188278193335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_98
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 99
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895842f90556e5b50800000000000000
+      internalID: 6583811102204003736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_99
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 99
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f997b343291deb9f0800000000000000
+      internalID: -450692486818727521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_100
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 99
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ca356cad99f08480800000000000000
+      internalID: -8898838408086603065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_101
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 99
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 066a65ed66152f0c0800000000000000
+      internalID: -4543479571804674464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_102
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 82
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13c5a81124dafc360800000000000000
+      internalID: 7192157629207698481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_103
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 82
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a785f8bc8d4b8240800000000000000
+      internalID: 4795011495059883936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_104
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 82
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da024e9f9e8ee5640800000000000000
+      internalID: 5070746322083258541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_105
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 82
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a6b14c8037409610800000000000000
+      internalID: 1625877739317868197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_106
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 67
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 619937ceb3a5ecdb0800000000000000
+      internalID: -4769775741922207466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_107
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 67
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8250bdaed8518cf40800000000000000
+      internalID: 5748868623613232424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_108
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 67
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b6d48f76caa4cfb0800000000000000
+      internalID: -4628386747510368592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_109
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 67
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 221f5e07b8964f740800000000000000
+      internalID: 5184885118625771810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_110
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 35
+        width: 11
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5bb9e942a7c0abe0800000000000000
+      internalID: -1467953978684097698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_111
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 34
+        width: 11
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 189c44a31d2c93640800000000000000
+      internalID: 5060289860209002881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_112
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 51
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9954f77dbf3bc2d0800000000000000
+      internalID: -3257439822478550625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MPSliderFill_113
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 33
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c69bc2e2a1963aa70800000000000000
+      internalID: 8837022454995794284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable: {}
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DialogueId: chief_q5
   SpeakerName: Chief
-  PortraitKey: 
+  Portrait: {fileID: -3629139751447027812, guid: ce2e0e8ca57f98943b0d54afc173fbda, type: 3}
   Nodes:
   - NodeId: n1
     SpeakerNameOverride: 

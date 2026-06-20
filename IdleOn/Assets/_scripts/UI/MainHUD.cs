@@ -223,7 +223,7 @@ namespace IdleOn.UI
         private void OnCurrencyChanged(CurrencyType type, long newTotal)
         {
             if (type == CurrencyType.Gold && goldText != null)
-                goldText.text = $"Gold: {newTotal}";
+                goldText.text = $"{newTotal}";
         }
 
         private void OnExpGained(float delta)          => RefreshXP();
@@ -283,7 +283,7 @@ namespace IdleOn.UI
         {
             var cs = CurrencySystem.Instance;
             if (cs == null || goldText == null) return;
-            goldText.text = $"Gold: {cs.GetAmount(CurrencyType.Gold)}";
+            goldText.text = $"{cs.GetAmount(CurrencyType.Gold)}";
         }
 
         private void RefreshAutoCombat()
