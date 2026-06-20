@@ -1,5 +1,19 @@
 # IdleOn-Inspired Demo
 
+## Frozen Vertical Slice (2026-06-20)
+
+The demo scope is frozen. The Q1–Q12 tutorial vertical slice is complete; subsequent work is polish, bug fixing, QA, and documentation unless a scope change is explicitly approved. Map4, Map5, and the boss are not part of the current demo.
+
+The current tutorial alternates Chief dialogue quests (Q5/Q7/Q10/Q12) with action quests (Q6/Q8/Q9/Q11). During action quests, the Chief gives hints only; those dialogue IDs are not quest objective targets. Q12 ends the tutorial, after which the Chief plays random daily dialogue without advancing quests.
+
+The always-visible top-right Quest Window shows the active quest title and live objective progress, restores after save/load, and displays `Tutorial Complete` / `Keep exploring.` after Q12. The old `ObjectiveHelper` top-map-objective UI is disabled.
+
+Tutorial persistence includes active quest, completed quests, active objective counts, unlocked feature flags, global enemy kill counts, and current map ID. Old saves normalize missing fields, imports do not replay quest rewards, and `EnemyKillTracker` uses saved per-character counts.
+
+`TestCombat` is a one-scene, four-root demo: grassland_1, grassland_2, town, and grassland_3. Portals are travel-only (`destinationMapId`), while destination `MapDefinition` assets own unlock requirements: none, q1, q3, and q5 respectively. Craft unlocks at Q7; Talents and AutoCombat at Q10; Vault and Map at Q12. AutoCombat starts off and is hidden before Q10.
+
+The final release gate is one uninterrupted human Q1–Q12 playthrough with real save/quit/reload checkpoints. `.claude/HANDOFF_CURRENT_STATE.md` is the authoritative test route. Older design sketches below are retained only as history where explicitly marked.
+
 ## Implementation Status
 
 | System | Status |
@@ -20,7 +34,7 @@
 | Player/Enemy physical collision separation (Physics2D layer matrix) | Implemented |
 | Click-to-move ground filtering (groundLayerMask) | Implemented |
 | Skill casting (Fireball — MP cost, damage, cooldown) | Implemented |
-| Quest system (Q1–Q10 linear chain, gates HUD features) | Implemented (in-memory only — not saved) |
+| Quest system (Q1–Q12 linear chain, gates HUD features) | Implemented and persisted |
 | Map system / area progression (multi-map single-scene, destination-MapDef-gated portals) | Implemented — superseded the old 3-Grassland/ObjectiveHelper/silver-reward model below, see "Quest/Portal/Map Architecture (2026-06-19)" |
 | Offline progression | Not implemented |
 | Settings | Not implemented |
@@ -444,7 +458,7 @@ Talent points accumulate and can be spent in the Talent Window (T key or Talent 
 
 # Map / Area Progression
 
-> **Superseded 2026-06-19 — see "Quest/Portal/Map Architecture" session update near the bottom of this file.** Map unlocks are no longer kill-objective-per-map with auto-unlock-next; they're driven by each destination map's own `UnlockQuestId`/`UnlockEnemyId`/`UnlockKillCount` via `PortalGate`, tied into the Q1–Q10 quest chain. `ObjectiveHelper` is disabled (not deleted). The section below describes the original (now replaced) design intent; kept for history.
+> **Superseded 2026-06-19 — see "Quest/Portal/Map Architecture" session update near the bottom of this file.** Map unlocks are no longer kill-objective-per-map with auto-unlock-next; they're driven by each destination map's own `UnlockQuestId`/`UnlockEnemyId`/`UnlockKillCount` via `PortalGate`, tied into the Q1–Q12 quest chain. `ObjectiveHelper` is disabled (not deleted). The section below describes the original (now replaced) design intent; kept for history.
 
 ## Current Behavior (superseded)
 
@@ -507,10 +521,10 @@ A reviewer can complete the full area loop (Grassland 1 → 2 → 3) in about 5 
 
 # Quest System
 
-> **Implemented 2026-06-19** — supersedes the placeholder "Quest 1/Quest 2" sketch below. See `.claude/HANDOFF_CURRENT_STATE.md` for the exact, current Q1–Q10 objective/reward table and `Assets/CLAUDE.md` "Quest/Portal/Map Architecture" session update for the full mechanism. Summary:
+> **Implemented and superseded by the frozen Q1–Q12 specification above.** See `.claude/HANDOFF_CURRENT_STATE.md` for the exact current objective/reward table and manual route. The older Q1–Q10 summary below is retained as historical implementation context only.
 
-- One active linear quest at a time (`QuestSystem`, in-memory only, not yet saved). No branching, no concurrent quests.
-- 10-quest chain (q1–q10): ground-move → enter grassland_2 → kill slime → enter town → talk to Chief → kill 5 slimes + collect 5 slime_essence + talk to Chief → craft+equip Slime Sword → talk to Chief → upgrade Fireball Training talent → talk to Chief.
+- Historical implementation started as one active linear quest at a time with no branching or concurrent quests. The same model now persists as Q1–Q12.
+- The original 10-quest sketch has been replaced by the Q1–Q12 route in `.claude/HANDOFF_CURRENT_STATE.md`.
 - Quest completion can award Exp and/or unlock a HUD feature (Craft/Talents/AutoCombat/Vault/Map via `FeatureFlags`). Inventory is never gated.
 - Map/portal unlocks are driven by the destination `MapDefinition`'s own requirements (quest id and/or enemy kill count), evaluated by `PortalGate` — not by `QuestSystem` itself.
 
@@ -666,7 +680,7 @@ Vault upgrades are shared account-wide; per-character progress is isolated.
 
 Vault Levels are **not** per-character — they live on `AccountSaveData.Vault` and apply to every character on the account.
 
-Quest Progress is not yet implemented (no Quest system).
+Quest progress is implemented and persisted for the frozen Q1–Q12 tutorial. This section's earlier “not implemented” state is superseded.
 
 ## Implementation Notes
 
@@ -771,7 +785,9 @@ Temporary debug keys remain active:
 
 ---
 
-# Recommended Next Features
+# Historical Recommended Next Features (Superseded)
+
+The demo is now feature-frozen. Do not treat this backlog as approval to add features; only polish, bug fixes, QA, and documentation are currently in scope.
 
 Priority order based on completeness of the core loop:
 
@@ -881,7 +897,7 @@ No character deletion, no rename/text input, no multiple account save slots, no 
 
 - Fireball polish: icon, cast/hit feedback, MP-insufficient feedback.
 - Crafting Window's "enough materials" / successful-craft path should be manually re-tested in a normal play session with a real inventory.
-- Quest and Settings systems still not implemented.
+- The Quest system is implemented and persisted. Settings remains unimplemented; the Quest/Settings HUD buttons are still placeholders separate from the always-visible Quest Window.
 - Full end-to-end QA across save/load, inventory, talents, hotbar, crafting, and MainHUD together hasn't been done in one sitting yet.
 
 ---
@@ -891,7 +907,7 @@ No character deletion, no rename/text input, no multiple account save slots, no 
 **Full detail lives in `Assets/CLAUDE.md` ("Session Update — Q6–Q10, Multi-Map Rework, Portal Redesign") and `.claude/HANDOFF_CURRENT_STATE.md` (exact tables + manual test route). This is a pointer, not a duplicate.**
 
 - Quest System (above) and Map/Area Progression (above) are both implemented, superseding their original sketches in this file.
-- Destination `MapDefinition` now owns portal unlock requirements (`UnlockQuestId`/`UnlockEnemyId`/`UnlockKillCount`/`UnlockRequirementLabel`); `PortalInteractable` is travel-only; `PortalGate` is the evaluator. `EnemyKillTracker` is a temporary in-memory global kill counter flagged for future `PlayerSaveData` migration.
+- Destination `MapDefinition` owns portal unlock requirements (`UnlockQuestId`/`UnlockEnemyId`/`UnlockKillCount`/`UnlockRequirementLabel`); `PortalInteractable` is travel-only; `PortalGate` is the evaluator. `EnemyKillTracker` is now backed by saved per-character global kill counts.
 - `TestCombat` is now one scene with 4 map-root GameObjects switched by a new `MapContentController`, not one flat Grassland area.
-- Save/load does not yet persist quest progress, feature unlocks, current map, or kill counts — every session restarts from q1/grassland_1.
-- Working tree is uncommitted at time of writing — check `git status` before assuming any of this matches `HEAD`.
+- Save/load persists quest progress, feature unlocks, current map ID, and global enemy kill counts. Import normalizes missing old-save fields and does not replay completion rewards.
+- This session note is historical. Use the frozen-state section and `.claude/HANDOFF_CURRENT_STATE.md`, then check `git status`, before assuming documentation matches `HEAD`.

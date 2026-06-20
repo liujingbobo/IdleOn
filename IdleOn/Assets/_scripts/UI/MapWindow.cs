@@ -10,6 +10,7 @@ namespace IdleOn.UI
         [SerializeField] private GameObject windowPanel;
         [SerializeField] private Transform  rowContainer;
         [SerializeField] private MapRowUI   rowPrefab;
+        [SerializeField] private MapWindowUI mapWindowUI;
 
         [Header("Debug")]
         [SerializeField] private bool    enableDebugKey = true;
@@ -17,11 +18,15 @@ namespace IdleOn.UI
 
         private readonly List<MapRowUI> _rows = new List<MapRowUI>();
 
-        public bool IsOpen => windowPanel.activeSelf;
+        public bool IsOpen => windowPanel != null && windowPanel.activeSelf;
 
         void Awake()
         {
-            windowPanel.SetActive(false);
+            if (windowPanel != null)
+                windowPanel.SetActive(false);
+            else
+                Debug.LogWarning("[MapWindow] Window panel is not assigned.");
+
             GameEvents.OnMapChanged            += OnMapChanged;
             GameEvents.OnMapObjectiveCompleted += OnObjectiveCompleted;
         }
@@ -32,7 +37,13 @@ namespace IdleOn.UI
             GameEvents.OnMapObjectiveCompleted -= OnObjectiveCompleted;
         }
 
-        void Start() => PopulateRows();
+        void Start()
+        {
+            if (mapWindowUI != null)
+                mapWindowUI.Refresh();
+            else
+                PopulateRows();
+        }
 
         void Update()
         {
@@ -42,14 +53,20 @@ namespace IdleOn.UI
 
         public void Open()
         {
+            if (windowPanel == null) return;
             windowPanel.SetActive(true);
             RefreshRows();
         }
 
-        public void Close()  => windowPanel.SetActive(false);
+        public void Close()
+        {
+            if (windowPanel != null)
+                windowPanel.SetActive(false);
+        }
 
         public void Toggle()
         {
+            if (windowPanel == null) return;
             if (windowPanel.activeSelf) Close();
             else Open();
         }
@@ -57,7 +74,7 @@ namespace IdleOn.UI
         private void PopulateRows()
         {
             var db = GameDatabase.Instance?.Maps;
-            if (db == null) return;
+            if (db == null || rowContainer == null || rowPrefab == null) return;
 
             foreach (var mapDef in db.Maps)
             {
@@ -70,6 +87,9 @@ namespace IdleOn.UI
 
         private void RefreshRows()
         {
+            if (mapWindowUI != null)
+                mapWindowUI.Refresh();
+
             foreach (var row in _rows) row.Refresh();
         }
 

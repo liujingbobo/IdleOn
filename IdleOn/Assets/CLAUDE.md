@@ -1,5 +1,25 @@
 # CLAUDE.md
 
+## Frozen Demo State (2026-06-20)
+
+The playable vertical slice is feature-frozen. Q1–Q12, the right-top Quest Window, tutorial persistence, four-map single-scene travel, portal gating, and HUD feature unlocks are implemented. Until explicitly approved, future work is limited to polish, bug fixes, QA, and documentation. Do not implement Map4, Map5, or the boss.
+
+Current tutorial rules:
+
+* Q5/Q7/Q10/Q12 are Chief dialogue quests.
+* Q6/Q8/Q9/Q11 are action quests. During those quests the Chief plays hint-only dialogue, which must never satisfy a quest objective.
+* Q12 ends the chain. Afterwards the Chief selects random daily dialogue and cannot advance a quest.
+* The always-visible Quest Window shows the active quest and live objective counts, restores after load, and shows `Tutorial Complete` / `Keep exploring.` after Q12.
+* `Canvas/ObjectiveHelper` is disabled. The old top-map-objective flow is historical only.
+
+Persistence now covers the active quest, completed quests, active objective counts, unlocked feature flags, per-character global enemy kill counts, and current map ID. It uses `TutorialProgressSaveData`, `QuestSaveData`, and `EnemyKillSaveData`; missing old-save fields are normalized, import does not replay completion rewards, and `EnemyKillTracker` is backed by saved counts. Existing `CurrentMapId` / `MapProgress` remains for travel compatibility.
+
+`TestCombat` contains `Map_grassland_1`, `Map_grassland_2`, `Map_town`, and `Map_grassland_3`. `MapContentController` switches roots and moves the player to the matching spawn. `PortalInteractable` stores only `destinationMapId`; `PortalGate` reads requirements from the destination `MapDefinition`. Requirements are: grassland_1 none, grassland_2 q1, town q3, grassland_3 q5. Portal alpha is 1 when active and 0.5 when locked.
+
+Inventory is always available. Q7 unlocks Craft, Q10 unlocks Talents and AutoCombat, and Q12 unlocks Vault and Map. AutoCombat starts off and stays hidden before Q10. Slime Essence, Slime Sword, and silver/currency visuals are assigned. Q11 directs the player to kill monsters, level up, earn a Talent Point, and then upgrade Fireball Training.
+
+The remaining release gate is one uninterrupted human Q1–Q12 playthrough with real save/quit/reload checkpoints. Use `.claude/HANDOFF_CURRENT_STATE.md` for the authoritative route and current debt. Any contradictory implementation note below is historical and superseded by this section.
+
 ## Project Overview
 
 This project is a Unity take-home assessment inspired by IdleOn.
@@ -393,27 +413,23 @@ Add result item first before consuming ingredients. If inventory full, the failu
 
 **Not verified live:** the "enough materials" / craftable path (green count, craftable sprite, enabled CraftButton, successful craft) was verified by code symmetry only — the test scene's player/inventory had 0 capacity (uninitialized in that session's Play context), not a bug in this change. Re-verify with a fully initialized player/inventory session (see Known Limitations).
 
-### Map Window
+### Map Window (rebuilt 2026-06-20 — hand-authored book UI)
 
-`MapWindow` component lives on `Canvas/MapWindow` child. Inner `WindowPanel` is 490×260px, centered.
+`MapWindow` component lives on `Canvas/MapWindow` child, `windowPanel` wired to `BookUI` (the manually-authored book-style panel root). Press **M** to open/close (debug key). Also opened via MainHUD Map button. Public API: `Open()`, `Close()`, `Toggle()`.
 
-Press **M** to open/close (debug key). Also opened via MainHUD Map button.
+Display/travel logic now lives in `MapWindowUI` (`_scripts/UI/MapWindowUI.cs`), a second component on the same `MapWindow` GameObject, wired via `MapWindow.mapWindowUI`. `MapWindow.RefreshRows()` calls `mapWindowUI.Refresh()` first, then the legacy per-row refresh below (kept only as a fallback path — `PopulateRows()`/`MapRowUI` are unused while `mapWindowUI` is assigned).
 
-Public API: `Open()`, `Close()`, `Toggle()`.
+`MapWindowUI.points[]` is a hand-wired array (one entry per hand-placed map point under `BookUI/WindowPanel/Map/`: `Grassland1..5`, `Town`), each holding `MapId`, `Button`, `Current` (GameObject), `Locked` (GameObject). `Locked` GameObjects did not exist in the original hand-authored hierarchy (only `Button`/`Current`/`Image` per point) — a `Locked` child (dark overlay `Image`, `raycastTarget=false`, 12×12, centered) was added under each of the 6 points this session specifically to drive the locked-state visual.
 
-Populated once in `Start()` via `PopulateRows()` — instantiates one `MapRowUI` prefab per MapDefinition.
+State per point, driven by `Refresh()`: locked → `Button.interactable=false`, `Current` hidden, `Locked` shown. Unlocked+not current → `Button.interactable=true`, `Current` shown, `Locked` hidden. Unlocked+current → `Button.interactable=false`, `Current` shown, `Locked` hidden. Unlock check mirrors `PortalGate`: destination `MapDefinition.UnlockQuestId`/`UnlockEnemyId`+`UnlockKillCount`, plus a `HasMapContent` guard (looks for a `Map_{mapId}` root in the scene) so `grassland_4`/`grassland_5` (no map content yet) stay locked regardless of quest state. Refreshes on `OnMapChanged`, `OnQuestChanged`/`OnQuestCompleted`, `OnFeaturesChanged`, `OnPersistentProgressLoaded`, `OnEnemyKilled`, and `Awake`/`Start`.
 
-`RefreshRows()` is called on `Open()`, `OnMapChanged`, and `OnMapObjectiveCompleted` (only if window is active). Rows stay stale while the window is closed — this is intentional.
+Clicking an unlocked non-current point calls `MapSystem.Instance.TravelTo(mapId)`; clicking is otherwise a no-op (locked or already-current). Verified live (Play mode, via direct `QuestSystem`/`GameEvents` calls): default state has `grassland_1` current+unlocked (`Locked` hidden, `Current` shown, button non-interactable) and all other points locked (`Locked` shown, `Current` hidden); completing q1 through the real `QuestSystem.Complete()` path correctly flipped `grassland_2` to unlocked (`Locked` hidden, button interactable) live, with no console errors. Actual `TravelTo` succeeding additionally requires `MapProgressData.IsUnlocked` to be synced by `PortalGate`, which only happens once `MapSystem.Initialize()` has run against a loaded save (i.e. after `StartupMenu` character selection) — not exercised in this no-save Play session; this is existing, untouched architecture, not a `MapWindowUI` gap.
 
-`MapRowUI` prefab is at `Assets/_assets/Prefabs/UI/MapRowUI.prefab`.
-
-Each row shows: map name (bold, fixed 120px), objective text (flex), Travel button (76px, hidden when locked, disabled when current map).
-
-Row background tint: green = current map, blue = complete, dark = default, hidden = locked.
+Old per-row path (kept for reference, not currently wired): `PopulateRows()` instantiates one `MapRowUI` prefab (`Assets/_assets/Prefabs/UI/MapRowUI.prefab`) per `MapDefinition` into `rowContainer`; each row shows map name/objective text/Travel button; tint green=current, blue=complete, dark=default, hidden=locked.
 
 ### ObjectiveHelper
 
-`ObjectiveHelperUI` component lives on `Canvas/ObjectiveHelper`. **Always visible — no open/close.**
+`ObjectiveHelperUI` still exists on `Canvas/ObjectiveHelper`, but that GameObject is disabled for the frozen demo. The old always-visible top objective strip is historical and must not drive tutorial progression.
 
 Anchored top-center: 640×58px, 6px from top edge.
 
@@ -782,7 +798,7 @@ Do NOT wire `TalentPoints` to anything else until TalentSystem is built.
 | `MapSystem.cs` | `_scripts/World/` | Singleton MonoBehaviour — kill tracking, travel, reward grant |
 | `MapWindow.cs` | `_scripts/UI/` | Popup window — row population and refresh |
 | `MapRowUI.cs` | `_scripts/UI/` | Single row component — wired to MapSystem.Instance at refresh time |
-| `ObjectiveHelperUI.cs` | `_scripts/UI/` | Always-visible top-strip — live objective progress |
+| `ObjectiveHelperUI.cs` | `_scripts/UI/` | Legacy top-strip objective UI; disabled in `TestCombat` |
 
 ### Assets
 
@@ -979,7 +995,7 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - **MP bar** in MainHUD now shows real current MP (`OnPlayerMPChanged` wired). No longer a placeholder.
 - **Player name** is hardcoded "Hero" in save data; the Name text object in MainHUD's CharacterPanel is static/manual, not script-driven. Add a `PlayerName` field to PlayerSaveData when character creation is built.
 - **Debug keys** T (Talent), C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.
-- **Quest / Settings** buttons still log placeholder messages. These systems are not implemented.
+- **Quest / Settings HUD buttons** still log placeholder messages. The tutorial `QuestSystem` and always-visible Quest Window are implemented independently; Settings remains unimplemented.
 - **Skill casting** (Fireball) is implemented — click hotbar slot → `PlayerCombatController.TryCastSkill`, MP cost, cooldown (`GetSkillCooldownProgress01` drives the radial fill on `SkillSlotUI`), hover tooltip. Arcane Power and other skills still not implemented.
 - **Talent / Skill icons** — `TalentDefinition.Icon` and `SkillDefinition.Icon` sprites are not assigned in the ScriptableObject assets. Slots show a grey placeholder. Assign sprites in the Inspector when art is ready.
 - **NaturalTalent** vault upgrade is wired: each level-up grants `1 + GetTalentPointBonus()` talent points. TalentSystem and TalentWindow are implemented and can now spend these points.
@@ -1064,7 +1080,7 @@ Goal: Player/Enemy colliders stay **solid and query-detectable** (clicking/targe
 - **Skill casting** not implemented; hotbar assignment exists but clicking a slot is a placeholder.
 - **MP / current-MP** system is still a placeholder (MP bar shows MaxMP/MaxMP).
 - **Talent / Skill icon sprites** still unassigned on some SO assets (grey placeholder).
-- **Quest system** not implemented.
+- **Quest system** is implemented as the frozen Q1–Q12 tutorial chain with persistence. Do not confuse it with the placeholder Quest HUD button.
 - **Offline progression** not implemented.
 - **No WindowManager** — multiple windows can be open at once.
 - **Dynamic Rigidbody2D movement** should eventually move off direct `transform.position` (see above).
@@ -1178,9 +1194,9 @@ Scope:
 
 ## Known gaps / next task
 
-- Quest and Settings systems still unimplemented (placeholder log only, buttons inactive in scene — no icon assets).
+- The Quest/Settings HUD buttons remain placeholders, but the Q1–Q12 `QuestSystem` and always-visible Quest Window are implemented. Settings remains unimplemented.
 - Skill casting only exists for Fireball; no other skills defined yet.
-- No task explicitly queued — pick from "Known Limitations / TODOs" above (e.g. Arcane Power skill, slot-index-based inventory ops, Rigidbody2D MovePosition migration) when ready.
+- No new feature task is approved. The frozen demo's next step is polish/bug-fix QA and the full manual Q1–Q12 release route.
 
 ---
 
@@ -1273,7 +1289,7 @@ Committed through HEAD `ee10615`. See `.claude/HANDOFF_CURRENT_STATE.md` for the
 - **Gates.** `PortalGate` (toggles visual/collider/`PortalInteractable.enabled`, never the root; q1-gated on the existing Portal) + `HUDFeatureGate` (SetActive feature buttons; Inventory never gated). Neither touches MainHUD logic. Quest/feature → gate is **pull**, not push.
 - **GameEvents added:** `OnGroundMoveCompleted` (raised in `PlayerCombatController` ground-move arrival), `OnItemCollected`/`OnItemCrafted`/`OnItemEquipped`/`OnTalentUpgraded` (declared, **not yet raised**), `OnQuestChanged`/`OnQuestCompleted`/`OnFeaturesChanged`, `OnDialogueEnded(string)`.
 
-**Not yet (at that point):** Q6–Q10, the 4 deferred raisers, quest/feature persistence, Map4 kill-requirement UI, multi-map/Town content. — all of this is now done; see the session below.
+**Not yet at that historical point:** Q6–Q12, the deferred event raisers, persistence, and multi-map/Town content. Those demo requirements are now complete. Map4 remains intentionally out of scope.
 
 ---
 
@@ -1288,7 +1304,7 @@ The unlock model changed: **the destination `MapDefinition` is now the sole sour
 - `MapDefinition` gained `UnlockQuestId`, `UnlockEnemyId`, `UnlockKillCount`, `UnlockRequirementLabel` (all optional, ANDed).
 - `PortalInteractable` stores only `destinationMapId` — no unlock fields live on the portal anymore.
 - `PortalGate` (`_scripts/Quests/PortalGate.cs`) is a pure evaluator: destination map lookup via `GameDatabase.Instance.Maps.GetMap()` → `QuestSystem.IsCompleted` + new `EnemyKillTracker.GetKillCount` → drives alpha (1.0/0.5), `Collider2D.enabled`, `PortalInteractable.enabled`, optional kill-requirement TMP label. Never deactivates the portal root.
-- New temporary `EnemyKillTracker` (`_scripts/World/`) singleton — in-memory global (not per-map) `enemyId` → kill count, subscribes to `OnEnemyKilled`. **Flagged in its own code comments for migration into `PlayerSaveData`.** Do that migration before extending it further.
+- `EnemyKillTracker` (`_scripts/World/`) remains a global (not per-map) `enemyId` → kill-count singleton and subscribes to `OnEnemyKilled`, but its per-character counts are now persisted through tutorial save data. Do not extend its role without explicit approval.
 - `PortalGate.Evaluate()` syncs `MapProgressData.IsUnlocked = true` on its destination once unlocked — `MapSystem.TravelTo` still gates on that legacy flag and `MapSystem.cs` was not touched. `MapContentController` (below) separately also force-sets this for every configured map on every map change, making the two slightly redundant — known, not urgent to fix.
 - `Portal.prefab` (`_assets/Prefabs/`) gained a hidden-by-default `RequirementText` TMP child, wired to `PortalGate.requirementText`. Only shown when locked by a kill requirement.
 - `ObjectiveHelperUI`/the always-visible top-strip objective UI is disabled (not deleted) in `TestCombat` — it doesn't understand destination-MapDef unlocks and would show stale text.
@@ -1305,6 +1321,6 @@ All four previously-deferred `GameEvents` raisers are now wired: `DropManager.Co
 
 ### Not yet (current gaps)
 
-- Save/load still doesn't persist quest/feature/map-root/EnemyKillTracker state.
-- Q7–Q10 not yet walked through the real game UI (only Q1–Q6 verified end-to-end in a headless Play-mode test).
-- Map4 (kill-requirement portal with live label) and Map5/boss not built — `grassland_4` is the planned next map, likely `UnlockQuestId=q10` + `UnlockEnemyId=slime` + `UnlockKillCount=10`.
+- Save/load now persists quest state, feature flags, current map ID, and per-character global enemy kill counts.
+- Final code/asset QA found no wiring blockers; one uninterrupted human Q1–Q12 playthrough with real save/quit/reload checkpoints remains the release gate.
+- Map4, Map5, and the boss are not built and are outside the frozen demo. A future Map4 may require tutorial completion (likely q12, or q10 if explicitly redesigned) plus 10 slime kills, but no such requirement is active.
