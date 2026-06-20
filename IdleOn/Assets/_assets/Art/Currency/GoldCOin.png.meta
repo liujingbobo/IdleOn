@@ -1,0 +1,3693 @@
+fileFormatVersion: 2
+guid: b451daff376954448adf02d4bd93bef8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5808260418630608729
+    second: GoldCOin_0
+  - first:
+      213: 4736912239360167030
+    second: GoldCOin_1
+  - first:
+      213: 8375253901286506232
+    second: GoldCOin_2
+  - first:
+      213: 1426263860471879456
+    second: GoldCOin_3
+  - first:
+      213: 6170234287233790717
+    second: GoldCOin_4
+  - first:
+      213: -1238995677707379827
+    second: GoldCOin_5
+  - first:
+      213: -6699482397024919059
+    second: GoldCOin_6
+  - first:
+      213: -5426968104214636347
+    second: GoldCOin_7
+  - first:
+      213: -490264403467417542
+    second: GoldCOin_8
+  - first:
+      213: -8414282098939819412
+    second: GoldCOin_9
+  - first:
+      213: -3776616927461517530
+    second: GoldCOin_10
+  - first:
+      213: -3183140562689577107
+    second: GoldCOin_11
+  - first:
+      213: -3346261007732291228
+    second: GoldCOin_12
+  - first:
+      213: 2066278107660416080
+    second: GoldCOin_13
+  - first:
+      213: -8413637192051540367
+    second: GoldCOin_14
+  - first:
+      213: 2887698191520439833
+    second: GoldCOin_15
+  - first:
+      213: 3328058392936383090
+    second: GoldCOin_16
+  - first:
+      213: -5756114348351902373
+    second: GoldCOin_17
+  - first:
+      213: -8686861176434823715
+    second: GoldCOin_18
+  - first:
+      213: 3676611518512318838
+    second: GoldCOin_19
+  - first:
+      213: -2315871908174221815
+    second: GoldCOin_20
+  - first:
+      213: 6239991605297361582
+    second: GoldCOin_21
+  - first:
+      213: -6823381302272643301
+    second: GoldCOin_22
+  - first:
+      213: 7695357284290837378
+    second: GoldCOin_23
+  - first:
+      213: 699451742490372233
+    second: GoldCOin_24
+  - first:
+      213: -60060534951316385
+    second: GoldCOin_25
+  - first:
+      213: -866590039089532463
+    second: GoldCOin_26
+  - first:
+      213: 932398237947848990
+    second: GoldCOin_27
+  - first:
+      213: -4723275859389607492
+    second: GoldCOin_28
+  - first:
+      213: -2614788913279381696
+    second: GoldCOin_29
+  - first:
+      213: -4692849324547163454
+    second: GoldCOin_30
+  - first:
+      213: 6452869461228976464
+    second: GoldCOin_31
+  - first:
+      213: -5734367088015118619
+    second: GoldCOin_32
+  - first:
+      213: 6052077711748339635
+    second: GoldCOin_33
+  - first:
+      213: -3594232854907497442
+    second: GoldCOin_34
+  - first:
+      213: -1269573708685870215
+    second: GoldCOin_35
+  - first:
+      213: -1364932977129068655
+    second: GoldCOin_36
+  - first:
+      213: 6104145225549841550
+    second: GoldCOin_37
+  - first:
+      213: -6942568582221753108
+    second: GoldCOin_38
+  - first:
+      213: -332060665306841944
+    second: GoldCOin_39
+  - first:
+      213: -8126864099572371584
+    second: GoldCOin_40
+  - first:
+      213: -4058671731805156458
+    second: GoldCOin_41
+  - first:
+      213: -26843850739075204
+    second: GoldCOin_42
+  - first:
+      213: -2737101266642114253
+    second: GoldCOin_43
+  - first:
+      213: -221870785262275516
+    second: GoldCOin_44
+  - first:
+      213: -6022306161803275410
+    second: GoldCOin_45
+  - first:
+      213: -1166721041319895068
+    second: GoldCOin_46
+  - first:
+      213: -8563472927029117933
+    second: GoldCOin_47
+  - first:
+      213: -2739315644686764707
+    second: GoldCOin_48
+  - first:
+      213: -1047231897107926527
+    second: GoldCOin_49
+  - first:
+      213: -2653894528230549097
+    second: GoldCOin_50
+  - first:
+      213: -4108012673563015006
+    second: GoldCOin_51
+  - first:
+      213: 3803818102264739181
+    second: GoldCOin_52
+  - first:
+      213: -4865140046194079184
+    second: GoldCOin_53
+  - first:
+      213: -4924522908288753559
+    second: GoldCOin_54
+  - first:
+      213: 365004800678140144
+    second: GoldCOin_55
+  - first:
+      213: -2493808399834474071
+    second: GoldCOin_56
+  - first:
+      213: 1768005784184999577
+    second: GoldCOin_57
+  - first:
+      213: -6255060256500145649
+    second: GoldCOin_58
+  - first:
+      213: 7103510035836261031
+    second: GoldCOin_59
+  - first:
+      213: 164367404785154106
+    second: GoldCOin_60
+  - first:
+      213: 6837997667642347748
+    second: GoldCOin_61
+  - first:
+      213: -7310386147004634890
+    second: GoldCOin_62
+  - first:
+      213: -3712376148908342193
+    second: GoldCOin_63
+  - first:
+      213: 1237777836418268918
+    second: GoldCOin_64
+  - first:
+      213: 3325028370074713120
+    second: GoldCOin_65
+  - first:
+      213: -4825687228901683037
+    second: GoldCOin_66
+  - first:
+      213: 3803877448972802844
+    second: GoldCOin_67
+  - first:
+      213: -2807238614954690829
+    second: GoldCOin_68
+  - first:
+      213: -8387992205276854869
+    second: GoldCOin_69
+  - first:
+      213: 6389933395568750513
+    second: GoldCOin_70
+  - first:
+      213: 569155866579648106
+    second: GoldCOin_71
+  - first:
+      213: 4873602530469795719
+    second: GoldCOin_72
+  - first:
+      213: 2505749319843917030
+    second: GoldCOin_73
+  - first:
+      213: -7520691636099832339
+    second: GoldCOin_74
+  - first:
+      213: 9010293891474647404
+    second: GoldCOin_75
+  - first:
+      213: -3792613753140468979
+    second: GoldCOin_76
+  - first:
+      213: 1543919904910600749
+    second: GoldCOin_77
+  - first:
+      213: -3147348697756327833
+    second: GoldCOin_78
+  - first:
+      213: -858438613847860681
+    second: GoldCOin_79
+  - first:
+      213: -99412968742171433
+    second: GoldCOin_80
+  - first:
+      213: 4674248787813629125
+    second: GoldCOin_81
+  - first:
+      213: 4324120550224671550
+    second: GoldCOin_82
+  - first:
+      213: 4698541573901392258
+    second: GoldCOin_83
+  - first:
+      213: 8746101372069539635
+    second: GoldCOin_84
+  - first:
+      213: 8779523994812854430
+    second: GoldCOin_85
+  - first:
+      213: 6030013180671747355
+    second: GoldCOin_86
+  - first:
+      213: 4984004536283969826
+    second: GoldCOin_87
+  - first:
+      213: -4450358747755945939
+    second: GoldCOin_88
+  - first:
+      213: 8203246600037521123
+    second: GoldCOin_89
+  - first:
+      213: 389894209234698244
+    second: GoldCOin_90
+  - first:
+      213: -8137251386198368308
+    second: GoldCOin_91
+  - first:
+      213: 1951397320735183803
+    second: GoldCOin_92
+  - first:
+      213: 9207772712262999470
+    second: GoldCOin_93
+  - first:
+      213: -5497430415519125433
+    second: GoldCOin_94
+  - first:
+      213: -980902015245410629
+    second: GoldCOin_95
+  - first:
+      213: 1098601310579557105
+    second: GoldCOin_96
+  - first:
+      213: 6876418089937969550
+    second: GoldCOin_97
+  - first:
+      213: -7712426650149670634
+    second: GoldCOin_98
+  - first:
+      213: 6704013963090049120
+    second: GoldCOin_99
+  - first:
+      213: -4296539133880256018
+    second: GoldCOin_100
+  - first:
+      213: -8210713072113287581
+    second: GoldCOin_101
+  - first:
+      213: 9062745338494008687
+    second: GoldCOin_102
+  - first:
+      213: -476825718397703878
+    second: GoldCOin_103
+  - first:
+      213: 1715757267448137021
+    second: GoldCOin_104
+  - first:
+      213: 5752259969871010951
+    second: GoldCOin_105
+  - first:
+      213: 3310381242748186357
+    second: GoldCOin_106
+  - first:
+      213: -7301315933270843932
+    second: GoldCOin_107
+  - first:
+      213: 5984538653138530859
+    second: GoldCOin_108
+  - first:
+      213: 3520309873398619265
+    second: GoldCOin_109
+  - first:
+      213: -7884739840373214541
+    second: GoldCOin_110
+  - first:
+      213: 6850374173332405623
+    second: GoldCOin_111
+  - first:
+      213: 1326677617593887085
+    second: GoldCOin_112
+  - first:
+      213: 5405597306199022218
+    second: GoldCOin_113
+  - first:
+      213: -2555578473839613472
+    second: GoldCOin_114
+  - first:
+      213: 2531405620338805412
+    second: GoldCOin_115
+  - first:
+      213: -7232023829109308993
+    second: GoldCOin_116
+  - first:
+      213: -2074408787294333039
+    second: GoldCOin_117
+  - first:
+      213: -6968324598511034677
+    second: GoldCOin_118
+  - first:
+      213: 5940152027166356234
+    second: GoldCOin_119
+  - first:
+      213: 592664980641404257
+    second: GoldCOin_120
+  - first:
+      213: -2548220799256047165
+    second: GoldCOin_121
+  - first:
+      213: 6192095986809536467
+    second: GoldCOin_122
+  - first:
+      213: -3869453771041807379
+    second: GoldCOin_123
+  - first:
+      213: 3854810125854481422
+    second: GoldCOin_124
+  - first:
+      213: 1033252057939318473
+    second: GoldCOin_125
+  - first:
+      213: -7617887728247253809
+    second: GoldCOin_126
+  - first:
+      213: -1518456407931364131
+    second: GoldCOin_127
+  - first:
+      213: -1307732225443972722
+    second: GoldCOin_128
+  - first:
+      213: 6519212289652723378
+    second: GoldCOin_129
+  - first:
+      213: -3422946017940307225
+    second: GoldCOin_130
+  - first:
+      213: 9000180253621640879
+    second: GoldCOin_131
+  - first:
+      213: -8659173332803668862
+    second: GoldCOin_132
+  - first:
+      213: 3350548774142332225
+    second: GoldCOin_133
+  - first:
+      213: 8503941452934777297
+    second: GoldCOin_134
+  - first:
+      213: -4190041718145792746
+    second: GoldCOin_135
+  - first:
+      213: -5709018546305503538
+    second: GoldCOin_136
+  - first:
+      213: 1019184473838208497
+    second: GoldCOin_137
+  - first:
+      213: 6789951056322595196
+    second: GoldCOin_138
+  - first:
+      213: 4911728772942188973
+    second: GoldCOin_139
+  - first:
+      213: -60390374505737406
+    second: GoldCOin_140
+  - first:
+      213: -6543271036122005366
+    second: GoldCOin_141
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: GoldCOin_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3327
+        width: 241
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a89f883ce9e46fa0800000000000000
+      internalID: -5808260418630608729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_1
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 2751
+        width: 898
+        height: 642
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67c434f9594ecb140800000000000000
+      internalID: 4736912239360167030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_2
+      rect:
+        serializedVersion: 2
+        x: 1215
+        y: 2803
+        width: 418
+        height: 590
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fef2e99c01ea3470800000000000000
+      internalID: 8375253901286506232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_3
+      rect:
+        serializedVersion: 2
+        x: 1727
+        y: 2803
+        width: 418
+        height: 590
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0275767ac6b1bc310800000000000000
+      internalID: 1426263860471879456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2623
+        width: 241
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df27187946311a550800000000000000
+      internalID: 6170234287233790717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_5
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 2559
+        width: 898
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8bd100eef33ecee0800000000000000
+      internalID: -1238995677707379827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_6
+      rect:
+        serializedVersion: 2
+        x: 1471
+        y: 2687
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de1e85a5148a603a0800000000000000
+      internalID: -6699482397024919059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_7
+      rect:
+        serializedVersion: 2
+        x: 1663
+        y: 2623
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c859e433498fa4b0800000000000000
+      internalID: -5426968104214636347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_8
+      rect:
+        serializedVersion: 2
+        x: 1791
+        y: 2623
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a384e416f1b3239f0800000000000000
+      internalID: -490264403467417542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_9
+      rect:
+        serializedVersion: 2
+        x: 1911
+        y: 2619
+        width: 78
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6a83c403077a3b80800000000000000
+      internalID: -8414282098939819412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_10
+      rect:
+        serializedVersion: 2
+        x: 2047
+        y: 2623
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 627dde1f9e2c69bc0800000000000000
+      internalID: -3776616927461517530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_11
+      rect:
+        serializedVersion: 2
+        x: 2175
+        y: 2623
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6f20c2f58633d3d0800000000000000
+      internalID: -3183140562689577107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_12
+      rect:
+        serializedVersion: 2
+        x: 1307
+        y: 2567
+        width: 106
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 469406cb751bf81d0800000000000000
+      internalID: -3346261007732291228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_13
+      rect:
+        serializedVersion: 2
+        x: 1471
+        y: 2559
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 054f346cdf4ecac10800000000000000
+      internalID: 2066278107660416080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_14
+      rect:
+        serializedVersion: 2
+        x: 1479
+        y: 2559
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17eb0ca1d81cc3b80800000000000000
+      internalID: -8413637192051540367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_15
+      rect:
+        serializedVersion: 2
+        x: 1491
+        y: 2559
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91e1d1c943a231820800000000000000
+      internalID: 2887698191520439833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_16
+      rect:
+        serializedVersion: 2
+        x: 1503
+        y: 2559
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2720bbeb973af2e20800000000000000
+      internalID: 3328058392936383090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_17
+      rect:
+        serializedVersion: 2
+        x: 1523
+        y: 2559
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5da4f35f7c2e10b0800000000000000
+      internalID: -5756114348351902373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_18
+      rect:
+        serializedVersion: 2
+        x: 1535
+        y: 2559
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddd6875f8c1127780800000000000000
+      internalID: -8686861176434823715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_19
+      rect:
+        serializedVersion: 2
+        x: 1547
+        y: 2559
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 679490252b2f50330800000000000000
+      internalID: 3676611518512318838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_20
+      rect:
+        serializedVersion: 2
+        x: 2047
+        y: 2535
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90e28fff4ce5cdfd0800000000000000
+      internalID: -2315871908174221815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_21
+      rect:
+        serializedVersion: 2
+        x: 2087
+        y: 2535
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea23b2bdd47e89650800000000000000
+      internalID: 6239991605297361582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_22
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2303
+        width: 241
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1f2ffe7bda7e41a0800000000000000
+      internalID: -6823381302272643301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_23
+      rect:
+        serializedVersion: 2
+        x: 2047
+        y: 2495
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28bbed5ada66bca60800000000000000
+      internalID: 7695357284290837378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_24
+      rect:
+        serializedVersion: 2
+        x: 2087
+        y: 2495
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 988aaa867a3f4b900800000000000000
+      internalID: 699451742490372233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_25
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 2459
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f54f43df24f9a2ff0800000000000000
+      internalID: -60060534951316385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_26
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 2459
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d13d2a63f049f3f0800000000000000
+      internalID: -866590039089532463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_27
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 2459
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e19e412e14b80fc00800000000000000
+      internalID: 932398237947848990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_28
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 2459
+        width: 50
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb197e081ad837eb0800000000000000
+      internalID: -4723275859389607492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_29
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 2459
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04f4a5d465766bbd0800000000000000
+      internalID: -2614788913279381696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_30
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 2459
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ca3fe13766afdeb0800000000000000
+      internalID: -4692849324547163454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_31
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 2459
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 059f48216923d8950800000000000000
+      internalID: 6452869461228976464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_32
+      rect:
+        serializedVersion: 2
+        x: 1591
+        y: 2431
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5eeea23f38f6b60b0800000000000000
+      internalID: -5734367088015118619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_33
+      rect:
+        serializedVersion: 2
+        x: 1631
+        y: 2431
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b791d11d9c4df350800000000000000
+      internalID: 6052077711748339635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_34
+      rect:
+        serializedVersion: 2
+        x: 1671
+        y: 2427
+        width: 30
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e145333f248be1ec0800000000000000
+      internalID: -3594232854907497442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_35
+      rect:
+        serializedVersion: 2
+        x: 1771
+        y: 2423
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97b7a9d3071916ee0800000000000000
+      internalID: -1269573708685870215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_36
+      rect:
+        serializedVersion: 2
+        x: 1835
+        y: 2423
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 197610460b8ce0de0800000000000000
+      internalID: -1364932977129068655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_37
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 2371
+        width: 82
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e848b42ddb746b450800000000000000
+      internalID: 6104145225549841550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_38
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 2279
+        width: 898
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce492e368aa07af90800000000000000
+      internalID: -6942568582221753108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_39
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 2243
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ac71809598446bf0800000000000000
+      internalID: -332060665306841944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2175
+        width: 241
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08f2d1fc824973f80800000000000000
+      internalID: -8126864099572371584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_41
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 2115
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69b85dd4093bca7c0800000000000000
+      internalID: -4058671731805156458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_42
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 2139
+        width: 318
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c773b44f8a1a0aff0800000000000000
+      internalID: -26843850739075204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_43
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2047
+        width: 241
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 339668756ecd30ad0800000000000000
+      internalID: -2737101266642114253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_44
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1987
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 444b76242b1cbecf0800000000000000
+      internalID: -221870785262275516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_45
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 2095
+        width: 318
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e63d11114787c6ca0800000000000000
+      internalID: -6022306161803275410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_46
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 2055
+        width: 318
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ef572cf469fecfe0800000000000000
+      internalID: -1166721041319895068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_47
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 1991
+        width: 334
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31c31cc7ebe682980800000000000000
+      internalID: -8563472927029117933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1919
+        width: 241
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5576c64feefbf9d0800000000000000
+      internalID: -2739315644686764707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_49
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1955
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1027c67532c7771f0800000000000000
+      internalID: -1047231897107926527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_50
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 1955
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 799177dccf87b2bd0800000000000000
+      internalID: -2653894528230549097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_51
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 1915
+        width: 42
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a849731d386df6c0800000000000000
+      internalID: -4108012673563015006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_52
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 1899
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d65b0b71960e9c430800000000000000
+      internalID: 3803818102264739181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_53
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 1899
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03a031497ec8b7cb0800000000000000
+      internalID: -4865140046194079184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_54
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 1923
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 960ec23918498abb0800000000000000
+      internalID: -4924522908288753559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_55
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1859
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f89bbdaee1c01500800000000000000
+      internalID: 365004800678140144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_56
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 1859
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a91bfd1976346dd0800000000000000
+      internalID: -2493808399834474071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_57
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 1827
+        width: 74
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99ece27b4e7398810800000000000000
+      internalID: 1768005784184999577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_58
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1599
+        width: 241
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0225a266df8139a0800000000000000
+      internalID: -6255060256500145649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_59
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1795
+        width: 250
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a25178ddbcb49260800000000000000
+      internalID: 7103510035836261031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_60
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1731
+        width: 250
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a383fd6a843f74200800000000000000
+      internalID: 164367404785154106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_61
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1667
+        width: 250
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e095c246a275ee50800000000000000
+      internalID: 6837997667642347748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_62
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1539
+        width: 250
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f82ad8088a4c8a90800000000000000
+      internalID: -7310386147004634890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_63
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1471
+        width: 241
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f448fa3cf8dfa7cc0800000000000000
+      internalID: -3712376148908342193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_64
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1411
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6feff8a52687d2110800000000000000
+      internalID: 1237777836418268918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_65
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1343
+        width: 241
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02c36629fafd42e20800000000000000
+      internalID: 3325028370074713120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_66
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 1311
+        width: 58
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a01d2c6807b70db0800000000000000
+      internalID: -4825687228901683037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_67
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 1311
+        width: 58
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1b9423d2661ac430800000000000000
+      internalID: 3803877448972802844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_68
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 767
+        width: 241
+        height: 514
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f6bdd36a5faa09d0800000000000000
+      internalID: -2807238614954690829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_69
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1239
+        width: 250
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba54ab1e78dd79b80800000000000000
+      internalID: -8387992205276854869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_70
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 1215
+        width: 18
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bfe745619a9da850800000000000000
+      internalID: 6389933395568750513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_71
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 1227
+        width: 10
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6e3f41ce3c06e700800000000000000
+      internalID: 569155866579648106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_72
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1179
+        width: 122
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 787d8151ea382a340800000000000000
+      internalID: 4873602530469795719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_73
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 1179
+        width: 122
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ec2979fab536c220800000000000000
+      internalID: 2505749319843917030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_74
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 1103
+        width: 30
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de5a405adc221a790800000000000000
+      internalID: -7520691636099832339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_75
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 1091
+        width: 66
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c69e7334e8efa0d70800000000000000
+      internalID: 9010293891474647404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_76
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 1039
+        width: 38
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d032dc9b2eded5bc0800000000000000
+      internalID: -3792613753140468979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_77
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 983
+        width: 22
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2ae9d539fa1d6510800000000000000
+      internalID: 1543919904910600749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_78
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 983
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76022f5e80f5254d0800000000000000
+      internalID: -3147348697756327833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_79
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 987
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73a9e1001a63614f0800000000000000
+      internalID: -858438613847860681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_80
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 915
+        width: 42
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7dc4e008e60de9ef0800000000000000
+      internalID: -99412968742171433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_81
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 915
+        width: 42
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cc7e6dd1844ed040800000000000000
+      internalID: 4674248787813629125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_82
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 851
+        width: 34
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e33bb12fabc520c30800000000000000
+      internalID: 4324120550224671550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_83
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 851
+        width: 34
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2891cc2eaa2943140800000000000000
+      internalID: 4698541573901392258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_84
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 779
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33fe2cbebd4606970800000000000000
+      internalID: 8746101372069539635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_85
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 779
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e90b6dfae8227d970800000000000000
+      internalID: 8779523994812854430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_86
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 779
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b15ecd81a09eea350800000000000000
+      internalID: 6030013180671747355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_87
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 779
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 229342828bdba2540800000000000000
+      internalID: 4984004536283969826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_88
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 779
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2064f44c462d32c0800000000000000
+      internalID: -4450358747755945939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_89
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 779
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e6da20f159c7d170800000000000000
+      internalID: 8203246600037521123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_90
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 779
+        width: 30
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4008a61b7be296500800000000000000
+      internalID: 389894209234698244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_91
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 771
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccf579d2afca21f80800000000000000
+      internalID: -8137251386198368308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_92
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 771
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb3d1163681c41b10800000000000000
+      internalID: 1951397320735183803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_93
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 775
+        width: 66
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ead98f63f7498cf70800000000000000
+      internalID: 9207772712262999470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_94
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 775
+        width: 46
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 740fd89e92435b3b0800000000000000
+      internalID: -5497430415519125433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_95
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 707
+        width: 50
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbe15dd60d22362f0800000000000000
+      internalID: -980902015245410629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_96
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 707
+        width: 50
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f28fd242140f3f00800000000000000
+      internalID: 1098601310579557105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_97
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 707
+        width: 50
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e81a2d9e1d1fd6f50800000000000000
+      internalID: 6876418089937969550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_98
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 719
+        width: 30
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 611b299e2d4f7f490800000000000000
+      internalID: -7712426650149670634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_99
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 719
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 068bd371e21790d50800000000000000
+      internalID: 6704013963090049120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_100
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 719
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee9b089fb60af54c0800000000000000
+      internalID: -4296539133880256018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_101
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 719
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36ef70096ffad0e80800000000000000
+      internalID: -8210713072113287581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_102
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 711
+        width: 38
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6d33ce6ed655cd70800000000000000
+      internalID: 9062745338494008687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_103
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 711
+        width: 42
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3962231989f169f0800000000000000
+      internalID: -476825718397703878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_104
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 711
+        width: 62
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d358a0fe4289fc710800000000000000
+      internalID: 1715757267448137021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_105
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 707
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78c5cdf37f124df40800000000000000
+      internalID: 5752259969871010951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_106
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 651
+        width: 50
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fe2f1d7336d0fd20800000000000000
+      internalID: 3310381242748186357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_107
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 651
+        width: 50
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eddd7cb7d38caa90800000000000000
+      internalID: -7301315933270843932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_108
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 651
+        width: 50
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b22bae4923a5d0350800000000000000
+      internalID: 5984538653138530859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_109
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 663
+        width: 30
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18c993fad27aad030800000000000000
+      internalID: 3520309873398619265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_110
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 659
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b23f2ce3e6c39290800000000000000
+      internalID: -7884739840373214541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_111
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 655
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77dfcfb040b611f50800000000000000
+      internalID: 6850374173332405623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_112
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 583
+        width: 46
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d692520a34e496210800000000000000
+      internalID: 1326677617593887085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_113
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 447
+        width: 241
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8a1dc22c1a840b40800000000000000
+      internalID: 5405597306199022218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_114
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 531
+        width: 14
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e9a7270be2c88cd0800000000000000
+      internalID: -2555578473839613472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_115
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 463
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4aac8beeffb512320800000000000000
+      internalID: 2531405620338805412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_116
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 463
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb187c2f4a0b2ab90800000000000000
+      internalID: -7232023829109308993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_117
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 463
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1975f5ad2383633e0800000000000000
+      internalID: -2074408787294333039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_118
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 463
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bce122a82b98b4f90800000000000000
+      internalID: -6968324598511034677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_119
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 399
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a033113ebc8af6250800000000000000
+      internalID: 5940152027166356234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_120
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 399
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 165d1f9e8a1993800800000000000000
+      internalID: 592664980641404257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_121
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 399
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c1d4132fa6e2acd0800000000000000
+      internalID: -2548220799256047165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_122
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 399
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3df77ec2e7ebee550800000000000000
+      internalID: 6192095986809536467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_123
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 331
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de3e146eb40fc4ac0800000000000000
+      internalID: -3869453771041807379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_124
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 331
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0c9224c2690f7530800000000000000
+      internalID: 3854810125854481422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_125
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 331
+        width: 46
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c61ae4b549d65e00800000000000000
+      internalID: 1033252057939318473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_126
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 331
+        width: 46
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc4d303f873d74690800000000000000
+      internalID: -7617887728247253809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_127
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 271
+        width: 62
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddcd55e21fb5deae0800000000000000
+      internalID: -1518456407931364131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_128
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 271
+        width: 62
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e89b41938700adde0800000000000000
+      internalID: -1307732225443972722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_129
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 271
+        width: 62
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2be8c148905e87a50800000000000000
+      internalID: 6519212289652723378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_130
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 271
+        width: 62
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e284537bb04f70d0800000000000000
+      internalID: -3422946017940307225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_131
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 207
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fae5a93714017ec70800000000000000
+      internalID: 9000180253621640879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_132
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 207
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 284b3b96bbf64d780800000000000000
+      internalID: -8659173332803668862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_133
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 207
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14dcf5dab5a8f7e20800000000000000
+      internalID: 3350548774142332225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_134
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 155
+        width: 6
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d985e412b1140670800000000000000
+      internalID: 8503941452934777297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_135
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 163
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6154ad3d14bf9d5c0800000000000000
+      internalID: -4190041718145792746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_136
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 155
+        width: 22
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecee75b31ed75c0b0800000000000000
+      internalID: -5709018546305503538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_137
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 167
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f548bb01eed42e00800000000000000
+      internalID: 1019184473838208497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_138
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 143
+        width: 22
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c798562d280ca3e50800000000000000
+      internalID: 6789951056322595196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_139
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 151
+        width: 22
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da1d848ab47f92440800000000000000
+      internalID: 4911728772942188973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_140
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 139
+        width: 22
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2439bbb3643792ff0800000000000000
+      internalID: -60390374505737406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GoldCOin_141
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 135
+        width: 38
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8088de09a1a135a0800000000000000
+      internalID: -6543271036122005366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable: {}
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

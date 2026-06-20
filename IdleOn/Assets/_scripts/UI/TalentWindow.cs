@@ -16,6 +16,9 @@ namespace IdleOn.UI
         [SerializeField] private TMP_Text        pointsText;
         [SerializeField] private TalentInfoPanel infoPanel;
 
+        [Header("Motion (optional)")]
+        [SerializeField] private UIWindowMotion motion;
+
         [Header("Debug")]
         [SerializeField] private bool    enableDebugKey = true;
         [SerializeField] private KeyCode debugOpenKey   = KeyCode.T;
@@ -24,11 +27,12 @@ namespace IdleOn.UI
         private readonly Dictionary<TalentDefinition, TalentSlotUI> _slotsByDef = new Dictionary<TalentDefinition, TalentSlotUI>();
         private TalentSlotUI _selectedSlot;
 
-        public bool IsOpen => windowPanel.activeSelf;
+        public bool IsOpen => motion != null ? motion.IsOpen : windowPanel.activeSelf;
 
         void Awake()
         {
-            windowPanel.SetActive(false);
+            if (motion != null) motion.SetClosedImmediate();
+            else                windowPanel.SetActive(false);
             GameEvents.OnTalentChanged += RefreshAll;
         }
 
@@ -44,20 +48,22 @@ namespace IdleOn.UI
 
         public void Open()
         {
-            windowPanel.SetActive(true);
+            if (motion != null) motion.PlayOpen();
+            else                windowPanel.SetActive(true);
             ClearSelection();
             RefreshAll();
         }
 
         public void Close()
         {
-            windowPanel.SetActive(false);
+            if (motion != null) motion.PlayClose();
+            else                windowPanel.SetActive(false);
             ClearSelection();
         }
 
         public void Toggle()
         {
-            if (windowPanel.activeSelf) Close();
+            if (IsOpen) Close();
             else Open();
         }
 

@@ -1089,6 +1089,7 @@ GameObject:
   - component: {fileID: 866968441}
   - component: {fileID: 866968440}
   - component: {fileID: 866968442}
+  - component: {fileID: 2100000101}
   m_Layer: 0
   m_Name: LoadSaveButton
   m_TagString: Untagged
@@ -1491,6 +1492,7 @@ GameObject:
   - component: {fileID: 1544049699}
   - component: {fileID: 1544049701}
   - component: {fileID: 1544049698}
+  - component: {fileID: 2100000102}
   m_Layer: 0
   m_Name: NewCharacterButton
   m_TagString: Untagged
@@ -1770,6 +1772,7 @@ GameObject:
   - component: {fileID: 1764603450}
   - component: {fileID: 1764603452}
   - component: {fileID: 1764603449}
+  - component: {fileID: 2100000103}
   m_Layer: 0
   m_Name: NewSaveButton
   m_TagString: Untagged
@@ -2035,6 +2038,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1942016868}
   m_CullTransparentMesh: 1
+--- !u!114 &2100000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866968439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bd5c489d70afb46b8c4943e360a118, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  visualTarget: {fileID: 866968444}
+  selectable: {fileID: 866968440}
+  hoverScale: 1.06
+  hoverDuration: 0.08
+  pressScale: 0.96
+  pressDuration: 0.05
+--- !u!114 &2100000102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544049696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bd5c489d70afb46b8c4943e360a118, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  visualTarget: {fileID: 1544049697}
+  selectable: {fileID: 1544049701}
+  hoverScale: 1.06
+  hoverDuration: 0.08
+  pressScale: 0.96
+  pressDuration: 0.05
+--- !u!114 &2100000103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764603447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bd5c489d70afb46b8c4943e360a118, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  visualTarget: {fileID: 1764603448}
+  selectable: {fileID: 1764603452}
+  hoverScale: 1.06
+  hoverDuration: 0.08
+  pressScale: 0.96
+  pressDuration: 0.05
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
