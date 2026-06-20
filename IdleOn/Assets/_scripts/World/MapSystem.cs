@@ -14,6 +14,11 @@ namespace IdleOn.World
         public string        CurrentMapId  { get; private set; } = "grassland_1";
         public MapDefinition CurrentMapDef => GameDatabase.Instance?.Maps?.GetMap(CurrentMapId);
 
+        // Source map of the most recent explicit TravelTo, for MapContentController's
+        // spawn-near-back-portal logic. Empty/null on fresh load/teleport/debug-open — no prior
+        // travel happened, so the default spawn is used instead.
+        public string PreviousMapId { get; private set; }
+
         private List<MapProgressData> _progress = new List<MapProgressData>();
 
         void Awake()
@@ -42,6 +47,11 @@ namespace IdleOn.World
         {
             var save = SaveManager.Instance?.CurrentSave;
             if (save == null) return;
+
+            // Fresh/loaded session has no prior in-session travel — never carry over a stale
+            // PreviousMapId from an earlier character/session (would only matter if the new
+            // CurrentMapId happens to have a portal back to that stale id, but it's still wrong).
+            PreviousMapId = null;
 
             _progress = save.MapProgress ?? new List<MapProgressData>();
 
@@ -83,7 +93,8 @@ namespace IdleOn.World
             var prog = GetProgress(mapId);
             if (prog == null || !prog.IsUnlocked || mapId == CurrentMapId) return;
 
-            CurrentMapId = mapId;
+            PreviousMapId = CurrentMapId;
+            CurrentMapId  = mapId;
 
             var save = SaveManager.Instance?.CurrentSave;
             if (save != null) save.CurrentMapId = mapId;

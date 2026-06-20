@@ -91,7 +91,7 @@ MonoBehaviour:
   definition: {fileID: 11400000, guid: 89748108d781f584191e0645c0ad8953, type: 2}
   patrolLeftX: 0
   patrolRightX: 0
-  patrolSpeed: 1.5
+  patrolSpeed: 0.6
   attackRange: 1.2
   attackCooldown: 2
   attackDamageMin: 5

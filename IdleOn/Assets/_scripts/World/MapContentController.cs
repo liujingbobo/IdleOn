@@ -57,19 +57,64 @@ namespace IdleOn.World
                 e.Root.SetActive(e.MapId == mapId);
             }
 
-            // Move the persistent player to the current map's spawn.
-            if (player != null)
+            // Move the persistent player to the current map's spawn — near the portal back to the
+            // previous map if one exists in the destination root, otherwise the configured default.
+            if (player == null) return;
+
+            Vector2? spawnPos = null;
+            string previousMapId = ms?.PreviousMapId;
+            if (!string.IsNullOrEmpty(previousMapId))
+            {
+                foreach (var e in maps)
+                {
+                    if (e == null || e.MapId != mapId || e.Root == null) continue;
+                    var portal = FindBackPortal(e.Root, previousMapId);
+                    if (portal != null) spawnPos = SpawnNearPortal(portal);
+                    break;
+                }
+            }
+
+            if (spawnPos == null)
             {
                 foreach (var e in maps)
                 {
                     if (e == null || e.MapId != mapId) continue;
-                    var pos = player.position;
-                    pos.x = e.PlayerSpawn.x;
-                    pos.y = e.PlayerSpawn.y;
-                    player.position = pos;
+                    spawnPos = e.PlayerSpawn;
                     break;
                 }
             }
+
+            if (spawnPos != null)
+            {
+                var pos = player.position;
+                pos.x = spawnPos.Value.x;
+                pos.y = spawnPos.Value.y;
+                player.position = pos;
+            }
+        }
+
+        // Searches the destination root for a PortalInteractable whose own DestinationMapId points
+        // back to the map we just came from. PortalInteractable stays travel-only — this only reads
+        // its existing DestinationMapId, never adds fields to it.
+        private static PortalInteractable FindBackPortal(GameObject root, string previousMapId)
+        {
+            foreach (var portal in root.GetComponentsInChildren<PortalInteractable>(true))
+                if (portal.DestinationMapId == previousMapId) return portal;
+            return null;
+        }
+
+        // Small offset toward the map's interior (away from the edge the portal sits on) so the
+        // player doesn't spawn exactly on top of the portal collider. Clamped to the lane bounds.
+        private static Vector2 SpawnNearPortal(PortalInteractable portal)
+        {
+            const float offset = 1.5f;
+            float px = portal.transform.position.x;
+            float candidate = Mathf.Approximately(px, 0f) ? px + offset : px - Mathf.Sign(px) * offset;
+
+            var lane = GroundLane.Current;
+            float x = lane != null ? lane.ClampX(candidate) : candidate;
+            float y = lane != null ? lane.GroundY : portal.transform.position.y;
+            return new Vector2(x, y);
         }
     }
 }
