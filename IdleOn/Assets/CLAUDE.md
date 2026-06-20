@@ -839,7 +839,13 @@ On objective complete: sets `IsComplete=true`, unlocks next map (if `UnlocksMapI
 
 ### Travel
 
-`MapSystem.TravelTo(mapId)` — validates unlocked + not current, updates `save.CurrentMapId`, fires `OnMapChanged`.
+`MapSystem.TravelTo(mapId)` — validates unlocked + not current, updates `save.CurrentMapId`, fires `OnMapChanged`. Also records `PreviousMapId = CurrentMapId` (the map being left) before updating `CurrentMapId`.
+
+### Portal Return-Spawn (implemented 2026-06-20)
+
+`MapSystem.PreviousMapId` — the source map of the most recent explicit `TravelTo`. Reset to `null` inside `Initialize()` on every fresh load/new-account, so a stale value from an earlier session/character never leaks into a fresh map activation.
+
+`MapContentController.HandleMapChanged(mapId)`, after activating the destination root: if `PreviousMapId` is set, searches the destination root's `PortalInteractable`s for one whose `DestinationMapId == PreviousMapId`. If found, spawns the player at that portal's X offset 1.5 units toward the map interior (away from the edge the portal sits on), clamped to `GroundLane` bounds. If not found — or `PreviousMapId` is empty (fresh game, load, direct editor-open, debug travel) — falls back to the existing configured `MapEntry.PlayerSpawn` default. `PortalInteractable` is untouched by this: still travel-only, still stores only `destinationMapId`, no spawn/unlock fields added.
 
 ### Rules
 
@@ -848,6 +854,18 @@ On objective complete: sets `IsComplete=true`, unlocks next map (if `UnlocksMapI
 - `ObjectiveEnemyId = "slime"` for all three Grassland maps (single enemy type for now).
 - When adding a new map: add a `MapDefinition` asset, add it to `MapDatabase`, set `UnlocksMapId` on the previous last map.
 - Do NOT add a WorldMap scene. Travel is data-only — same scene, same spawner.
+
+---
+
+## Enemies
+
+### Movement Speed (changed 2026-06-20)
+
+`EnemyController.patrolSpeed` (used for both patrol and player-chase) is the real speed source — `EnemyDefinition.MoveSpeed` is a separate, unused field, not wired to anything. `Assets/_assets/Prefabs/Enemies/Slime.prefab` → `patrolSpeed` changed `1.5 → 0.6` (60% reduction). All scene slime instances inherit this from the prefab; no per-instance overrides exist or are needed.
+
+### Grassland3 Local Respawn (implemented 2026-06-20)
+
+`LocalEnemyRespawner` (`_scripts/Enemies/LocalEnemyRespawner.cs`) is attached only to `Map_grassland_3`. On `Awake()` it records each child `EnemyController`'s original position and subscribes to `OnKilled`; on death it waits `respawnDelay` (3s default) then repositions and re-`SetActive(true)`s the **same** enemy instance (no `Instantiate`). This is a **demo/local-only respawn mechanism** — it has no spawn-point pooling, scaling, or difficulty curve, and is not the final/general spawner architecture. The global `EnemySpawner` class is untouched and still unused in this multi-map-root slice (its own spawn-point/Instantiate model would duplicate or replace the hand-placed Grassland3 enemies, so it was deliberately not reused here). `Map_grassland_2` has no respawner — its one tutorial slime stays dead after the kill, by design.
 
 ---
 
@@ -1002,11 +1020,7 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 
 ## Known Limitations / TODOs
 
-- **Next planned bugfix pass (inspected/planned, NOT implemented yet):**
-  - **A. Grassland3 enemies do not respawn** after death — blocks reliable q6 grinding (kill 5 slimes + collect 5 slime_essence).
-  - **B. Enemy movement speed too fast** — demo enemies/slimes need ≥50% slowdown; player speed, attack cooldown, and damage values stay unchanged.
-  - **C. Portal destination spawn position** — map A→B travel always uses B's default spawn; should spawn near B's portal back to A when one exists (`MapSystem.PreviousMapId` + `MapContentController` lookup, falling back to default spawn on fresh load/teleport/debug or no matching back-portal). `PortalInteractable` stays travel-only.
-  - Do not mark A/B/C as done until a future session's code changes land and are verified.
+- **Bugfix pass complete (2026-06-20):** Grassland3 respawn, enemy speed, portal return-spawn — see "Map System" and "Enemies" sections below for detail. Next work is polish/regression/full Q1–Q12 manual run only, unless redirected. Do not implement Map4/Map5/boss yet.
 - **MP bar** in MainHUD now shows real current MP (`OnPlayerMPChanged` wired). No longer a placeholder.
 - **Player name** is hardcoded "Hero" in save data; the Name text object in MainHUD's CharacterPanel is static/manual, not script-driven. Add a `PlayerName` field to PlayerSaveData when character creation is built.
 - **Debug keys** T (Talent), C (Crafting), V (Vault), Tab (Inventory) are still active. They are guarded by `enableDebugKey` bools on each window. Remove or disable them once MainHUD buttons are the only entry point.

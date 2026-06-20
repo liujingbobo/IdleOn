@@ -39,7 +39,7 @@ The final release gate is one uninterrupted human Q1–Q12 playthrough with real
 | Offline progression | Not implemented |
 | Settings | Not implemented |
 
-**Next planned bugfix pass (inspected/planned, NOT implemented yet):** (A) Grassland3 enemies don't respawn after death — blocks reliable q6 grinding; (B) enemy/slime movement speed needs ≥50% slowdown (player speed, attack cooldown, damage unchanged); (C) portal travel should spawn the player near the destination map's portal back to the source map when one exists, falling back to default spawn otherwise (`PortalInteractable` stays travel-only). Do not treat these as done until implemented and verified in a future session.
+**Bugfix pass complete (2026-06-20):** (A) Grassland3 enemies now respawn locally (demo-only respawn, not the general spawner architecture) — q6 grinding works; (B) enemy/slime movement speed reduced 60% (`patrolSpeed` 1.5→0.6 on `Slime.prefab`); (C) portal travel now spawns the player near the destination map's portal back to the source map when one exists, falling back to default spawn on fresh load/teleport/debug/no-match (`PortalInteractable` stays travel-only). See "Map / Area Progression" and "Enemy Behavior" below for detail. Next work is polish/regression/full Q1–Q12 manual run only, unless redirected. Do not implement Map4/Map5/boss yet.
 
 ---
 
@@ -213,6 +213,10 @@ Enemies patrol between two points at their spawn position.
 When hit or when the player enters their attack range, enemies enter Combat state and chase the player.
 
 Enemies return to Patrol after a cooldown with no hit received (combatForgetTime).
+
+**Movement speed (reduced 2026-06-20):** demo slimes patrol/chase at `patrolSpeed = 0.6` (was `1.5`, a 60% reduction), set on `Slime.prefab`. Player movement speed, attack cooldown, damage, HP, and rewards are unchanged.
+
+**Grassland3 local respawn (added 2026-06-20):** Grassland3's 5 pre-placed slimes respawn ~3s after death via `LocalEnemyRespawner`, a small map-root-local component (not the general `EnemySpawner`) — it just re-enables the same enemy at its original spot after a delay, for demo grinding (q6: kill 5 slimes + collect 5 slime_essence). Grassland2's single tutorial slime does **not** respawn — kill once, stays dead, no infinite grind there.
 
 ## Damage Feedback
 
@@ -463,6 +467,8 @@ Talent points accumulate and can be spent in the Talent Window (T key or Talent 
 # Map / Area Progression
 
 > **Superseded 2026-06-19 — see "Quest/Portal/Map Architecture" session update near the bottom of this file.** Map unlocks are no longer kill-objective-per-map with auto-unlock-next; they're driven by each destination map's own `UnlockQuestId`/`UnlockEnemyId`/`UnlockKillCount` via `PortalGate`, tied into the Q1–Q12 quest chain. `ObjectiveHelper` is disabled (not deleted). The section below describes the original (now replaced) design intent; kept for history.
+
+> **Portal return-spawn (added 2026-06-20):** traveling map A → map B now spawns the player near B's portal back to A, if one exists, instead of always using B's default spawn. `MapSystem.PreviousMapId` tracks the source map of the last `TravelTo`; `MapContentController` looks for a matching `PortalInteractable.DestinationMapId` in the destination root. Falls back to the default spawn on fresh game/load/direct editor-open/debug travel or when no matching back-portal exists. `PortalInteractable` is unchanged — travel-only, stores only `destinationMapId`.
 
 ## Current Behavior (superseded)
 

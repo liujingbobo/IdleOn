@@ -152,15 +152,27 @@ Portal visual alpha is `1.0` unlocked and `0.5` locked. PortalGate also syncs `M
 17. Save/quit/reload after q7, q10, and q12; verify features and chain state are not duplicated or lost.
 18. End with no game compile/runtime errors or warnings.
 
-## Next planned bugfix pass (NOT yet implemented)
+## Bugfix pass — Grassland3 respawn, enemy speed, portal return-spawn (implemented & verified, 2026-06-20)
 
-Inspected/planned but not coded yet:
+All three of the previously-planned bugs below are now **implemented and verified**, not just planned.
 
-- **A. Grassland3 enemies do not respawn** after being killed — blocks reliably completing q6 (kill 5 slimes + collect 5 slime_essence) by grinding in one place.
-- **B. Enemy movement speed is too fast** — slimes/demo enemies need at least a 50% slowdown. Player movement speed, attack cooldown, and damage values must stay unchanged.
-- **C. Portal destination spawn position** — traveling map A → map B currently always spawns at B's default spawn, never near the portal back to A. Planned: `MapSystem` records `PreviousMapId` on `TravelTo`; `MapContentController` looks for a `PortalInteractable` in the destination root whose `DestinationMapId == PreviousMapId` and spawns near it (small offset so it doesn't immediately re-trigger); falls back to default spawn if no previous map or no matching back-portal (fresh load/teleport/debug-open). `PortalInteractable` stays travel-only (`destinationMapId` only) — no spawn rules go on `QuestSystem`.
+- **A. Grassland3 local respawn.** New `LocalEnemyRespawner` (`_scripts/Enemies/LocalEnemyRespawner.cs`), attached only to `Map_grassland_3`. On `Awake()` it records each child `EnemyController`'s original position and subscribes to `OnKilled`; on death it waits `respawnDelay` (3s default) then repositions and `SetActive(true)`s the **same** enemy instance (no `Instantiate`, no global `EnemySpawner` involvement — `EnemySpawner` itself is untouched and still unused in this multi-map-root slice). This is a **demo/local-only respawn mechanism**, not the final/general spawner architecture — it only handles "re-enable this exact pre-placed enemy after a delay" and has no spawn-point pooling, scaling, or difficulty curve. q6 (kill 5 slimes + collect 5 slime_essence) can now be completed by grinding in place in Grassland3. **Grassland2 is untouched** — no respawner there, so its one slime stays dead after the tutorial kill (no infinite grind, no regression).
+- **B. Enemy movement speed.** `Assets/_assets/Prefabs/Enemies/Slime.prefab` → `EnemyController.patrolSpeed` changed `1.5 → 0.6` (60% reduction, exceeds the 50% minimum). This is the actual speed source for both patrol and chase (`EnemyDefinition.MoveSpeed` is a separate, unused field — not touched, not the real source). All scene slime instances inherit this from the prefab (no per-instance overrides needed or added). Player movement speed, attack cooldown, damage, HP, and rewards are unchanged.
+- **C. Portal return-spawn.** `MapSystem` gained `PreviousMapId` (set in `TravelTo()` just before `CurrentMapId` changes; reset to `null` in `Initialize()` so a fresh load/new-account never carries over a stale value from an earlier session). `MapContentController.HandleMapChanged()`: after activating the destination root, if `PreviousMapId` is set, it searches that root's `PortalInteractable`s for one whose `DestinationMapId == PreviousMapId`; if found, spawns at `portal.x` offset 1.5 units toward the map interior (clamped to `GroundLane` bounds); otherwise falls back to the existing configured default spawn. Fresh game, load, direct editor-open, debug travel, or "no matching back-portal" all correctly fall back to default spawn (verified, including the `PreviousMapId` reset-on-load case). `PortalInteractable` is untouched — still travel-only, still stores only `destinationMapId`, no spawn or unlock fields added.
 
-Do not treat A/B/C above as done until a future session's code changes land and are verified.
+**Manual test route:**
+1. Fresh start → grassland_1 default spawn.
+2. Kill a Grassland3 slime → wait ~3s → confirm it respawns in place; grind 5 slimes + collect 5 slime_essence for q6.
+3. Kill the Grassland2 tutorial slime → confirm it stays dead (no respawn).
+4. Travel grassland_3→town, town→grassland_3, town→grassland_2 → confirm spawn lands just inside the destination, next to the correct back-portal each time.
+5. Save, quit, reload → confirm current map restores and spawn falls back to default (no stale previous-map carryover).
+6. Confirm portal clicks, Fireball, pickup, NPC dialogue, crafting station, and ground click-to-move all still work unaffected.
+
+Changed files for this pass: `Assets/_assets/Prefabs/Enemies/Slime.prefab`, `Assets/_scripts/Enemies/LocalEnemyRespawner.cs` (new), `Assets/_scripts/World/MapSystem.cs`, `Assets/_scripts/World/MapContentController.cs`, `Assets/_scenes/TestCombat.unity` (added the `LocalEnemyRespawner` component to `Map_grassland_3`).
+
+## Next work
+
+The Grassland3-respawn / enemy-speed / portal-return-spawn bugfix pass above is done. No bugs are currently pending. Next work is **polish, regression testing, and one full manual Q1–Q12 playthrough only**, unless explicitly redirected. Do not implement Map4, Map5, or the boss yet.
 
 ## Known debt / out of scope
 
@@ -175,7 +187,7 @@ Do not treat A/B/C above as done until a future session's code changes land and 
 - SaveManager/account save architecture — do not rewrite
 - QuestSystem’s linear one-active-quest model — do not rewrite, do not change Q1–Q12 structure
 - PortalGate / PortalInteractable / destination-MapDefinition ownership — `PortalInteractable` stays travel-only (`destinationMapId` only); never add unlock/spawn fields to it
-- MapSystem / MapContentController — do not rewrite unless specifically approved (the planned spawn-position fix above is pre-approved scope when it lands)
+- MapSystem / MapContentController — do not rewrite further; the `PreviousMapId`/back-portal spawn fix above already landed and is now part of the protected baseline
 - DialogueSystem core
 - MainHUD window-toggle logic
 - movement/GroundLane model
