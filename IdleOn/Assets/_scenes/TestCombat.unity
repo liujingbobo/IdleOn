@@ -10365,7 +10365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 1.5
   attackCooldown: 1
-  startAutoCombatOnPlay: 1
+  startAutoCombatOnPlay: 0
   enemySpawner: {fileID: 1684354788}
   dropLayerMask:
     serializedVersion: 2

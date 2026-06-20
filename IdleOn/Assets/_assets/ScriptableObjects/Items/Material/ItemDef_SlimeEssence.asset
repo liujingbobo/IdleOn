@@ -16,7 +16,7 @@ MonoBehaviour:
   DisplayName: Slime Essence
   Description: 'Concentrated slime residue. Used in quests and crafting.'
   ItemType: 2
-  Icon: {fileID: 0}
+  Icon: {fileID: 3000608211166667148, guid: a18976b5975e7e4479468935ef11029a, type: 3}
   SellValue: 0
   Rarity: 0
   EquipmentSlot: 0

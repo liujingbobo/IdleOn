@@ -16,7 +16,7 @@ MonoBehaviour:
   DisplayName: Slime Sword
   Description: 'A blade forged from hardened slime essence.'
   ItemType: 0
-  Icon: {fileID: 0}
+  Icon: {fileID: 1689007499683954151, guid: 01927b421433d8c44bf3c1acd8923598, type: 3}
   SellValue: 0
   Rarity: 1
   EquipmentSlot: 1

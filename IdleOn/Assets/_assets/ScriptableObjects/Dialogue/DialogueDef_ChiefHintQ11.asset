@@ -18,7 +18,8 @@ MonoBehaviour:
   Nodes:
   - NodeId: n1
     SpeakerNameOverride: 
-    Text: Open the Talents window and upgrade Fireball Training.
+    Text: Kill monsters to level up and earn a Talent Point. Then open Talents and
+      upgrade Fireball Training.
     Choices: []
     NextNodeId: 
     EndDialogue: 1

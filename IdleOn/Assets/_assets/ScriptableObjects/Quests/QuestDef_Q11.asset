@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: QuestDef_Q11
   m_EditorClassIdentifier: 
   QuestId: q11
-  Title: Master the Fireball
+  Title: Level Up and Train Fireball
   Objectives:
   - Type: 6
     TargetId: fireball_training

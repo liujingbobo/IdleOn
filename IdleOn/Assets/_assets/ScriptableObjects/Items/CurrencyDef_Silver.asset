@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrencyType: 0
   DisplayName: Silver Coin
-  Icon: {fileID: 0}
+  Icon: {fileID: -6051709103645849995, guid: f38f26e7e588f4c4e823d3782d3ccf95, type: 3}
