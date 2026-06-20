@@ -35,7 +35,7 @@ namespace IdleOn.UI
 
             levelText.text  = $"Lv. {level} / {_def.MaxLevel}";
             effectText.text = _def.GetCurrentEffectText(level);
-            costText.text   = maxed ? "MAX" : $"{vs.GetCost(_def)} Silver";
+            costText.text   = maxed ? "MAX" : $"{vs.GetCost(_def)} Gold";
 
             upgradeButton.interactable = canUpgrade;
         }

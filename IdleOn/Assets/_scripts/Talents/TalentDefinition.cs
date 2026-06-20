@@ -44,7 +44,7 @@ namespace IdleOn.Talents
             if (MaxMPPerLevel != 0)
                 sb.Append($"MaxMP +{Mathf.RoundToInt(lv * MaxMPPerLevel)}  ");
             if (CurrencyMultiplierPerLevel != 0)
-                sb.Append($"Silver +{Mathf.RoundToInt(lv * CurrencyMultiplierPerLevel * 100)}%  ");
+                sb.Append($"Gold +{Mathf.RoundToInt(lv * CurrencyMultiplierPerLevel * 100)}%  ");
             if (FireballDamagePerLevel != 0)
                 sb.Append($"Fireball +{Mathf.RoundToInt(lv * FireballDamagePerLevel)}  ");
             if (InventorySlotsPerLevel != 0)

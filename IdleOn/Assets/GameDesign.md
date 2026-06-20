@@ -10,7 +10,7 @@ The always-visible top-right Quest Window shows the active quest title and live 
 
 Tutorial persistence includes active quest, completed quests, active objective counts, unlocked feature flags, global enemy kill counts, and current map ID. Old saves normalize missing fields, imports do not replay quest rewards, and `EnemyKillTracker` uses saved per-character counts.
 
-`TestCombat` is a one-scene, four-root demo: grassland_1, grassland_2, town, and grassland_3. Portals are travel-only (`destinationMapId`), while destination `MapDefinition` assets own unlock requirements: none, q1, q3, and q5 respectively. Craft unlocks at Q7; Talents and AutoCombat at Q10; Vault and Map at Q12. AutoCombat starts off and is hidden before Q10.
+Normal flow is **two Unity scenes**: `BootScene` (entry/menu, build index 0) and `TestCombat` (the only gameplay scene, build index 1). `TestCombat` is a single gameplay scene with four map roots: grassland_1, grassland_2, town, and grassland_3. Portals are travel-only (`destinationMapId`), while destination `MapDefinition` assets own unlock requirements: none, q1, q3, and q5 respectively. Craft unlocks at Q7; Talents and AutoCombat at Q10; Vault and Map at Q12. AutoCombat starts off and is hidden before Q10.
 
 The final release gate is one uninterrupted human Q1–Q12 playthrough with real save/quit/reload checkpoints. `.claude/HANDOFF_CURRENT_STATE.md` is the authoritative test route. Older design sketches below are retained only as history where explicitly marked.
 

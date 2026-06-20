@@ -20,7 +20,6 @@ namespace IdleOn.UI
         [SerializeField] private TextMeshProUGUI mpText;
         [SerializeField] private Slider          xpSlider;
         [SerializeField] private TextMeshProUGUI xpText;
-        [SerializeField] private TextMeshProUGUI silverText;
         [SerializeField] private TextMeshProUGUI goldText;
 
         [Header("Windows")]
@@ -211,22 +210,20 @@ namespace IdleOn.UI
 
         private void OnHPChanged(float current, float max)
         {
-            hpSlider.value = max > 0f ? current / max : 0f;
-            hpText.text    = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+            if (hpSlider != null) hpSlider.value = max > 0f ? current / max : 0f;
+            if (hpText != null)   hpText.text    = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
         }
 
         private void OnMPChanged(float current, float max)
         {
-            mpSlider.value = max > 0f ? current / max : 0f;
-            mpText.text    = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+            if (mpSlider != null) mpSlider.value = max > 0f ? current / max : 0f;
+            if (mpText != null)   mpText.text    = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
         }
 
         private void OnCurrencyChanged(CurrencyType type, long newTotal)
         {
-            if (type == CurrencyType.Silver)
-                silverText.text = $"Silver: {newTotal}";
-            else
-                goldText.text   = $"Gold: {newTotal}";
+            if (type == CurrencyType.Gold && goldText != null)
+                goldText.text = $"Gold: {newTotal}";
         }
 
         private void OnExpGained(float delta)          => RefreshXP();
@@ -250,6 +247,7 @@ namespace IdleOn.UI
 
         private void RefreshNameLevel()
         {
+            if (nameLevelText == null) return;
             int level = playerProgression != null ? playerProgression.Level : 1;
             nameLevelText.text = $"Lv. {level}";
         }
@@ -259,8 +257,8 @@ namespace IdleOn.UI
             var stats = PlayerStats.Instance;
             float currentHP = stats != null ? stats.CurrentHP : 0f;
             float maxHP     = stats != null ? stats.MaxHP : 0f;
-            hpSlider.value = maxHP > 0f ? currentHP / maxHP : 0f;
-            hpText.text    = $"{Mathf.CeilToInt(currentHP)}/{Mathf.CeilToInt(maxHP)}";
+            if (hpSlider != null) hpSlider.value = maxHP > 0f ? currentHP / maxHP : 0f;
+            if (hpText != null)   hpText.text    = $"{Mathf.CeilToInt(currentHP)}/{Mathf.CeilToInt(maxHP)}";
         }
 
         private void RefreshMP()
@@ -268,8 +266,8 @@ namespace IdleOn.UI
             var stats = PlayerStats.Instance;
             float currentMP = stats != null ? stats.CurrentMP : 0f;
             float maxMP     = stats != null ? stats.FinalStats.MaxMP : 0f;
-            mpSlider.value = maxMP > 0f ? currentMP / maxMP : 0f;
-            mpText.text    = $"{Mathf.CeilToInt(currentMP)}/{Mathf.CeilToInt(maxMP)}";
+            if (mpSlider != null) mpSlider.value = maxMP > 0f ? currentMP / maxMP : 0f;
+            if (mpText != null)   mpText.text    = $"{Mathf.CeilToInt(currentMP)}/{Mathf.CeilToInt(maxMP)}";
         }
 
         private void RefreshXP()
@@ -277,16 +275,15 @@ namespace IdleOn.UI
             if (playerProgression == null) return;
             float current = playerProgression.CurrentExp;
             float cap     = playerProgression.ExpForNextLevel(playerProgression.Level);
-            xpSlider.value = cap > 0f ? Mathf.Clamp01(current / cap) : 0f;
-            xpText.text    = $"{Mathf.FloorToInt(current)}/{cap}";
+            if (xpSlider != null) xpSlider.value = cap > 0f ? Mathf.Clamp01(current / cap) : 0f;
+            if (xpText != null)   xpText.text    = $"{Mathf.FloorToInt(current)}/{cap}";
         }
 
         private void RefreshCurrency()
         {
             var cs = CurrencySystem.Instance;
-            if (cs == null) return;
-            silverText.text = $"Silver: {cs.GetAmount(CurrencyType.Silver)}";
-            goldText.text   = $"Gold: {cs.GetAmount(CurrencyType.Gold)}";
+            if (cs == null || goldText == null) return;
+            goldText.text = $"Gold: {cs.GetAmount(CurrencyType.Gold)}";
         }
 
         private void RefreshAutoCombat()

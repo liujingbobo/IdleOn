@@ -21,7 +21,7 @@ MonoBehaviour:
     MaxQuantity: 2
   - DropType: 1
     ItemDefinition: {fileID: 0}
-    CurrencyType: 0
+    CurrencyType: 1
     DropChance: 1
     MinQuantity: 5
     MaxQuantity: 15

@@ -85,7 +85,7 @@ namespace IdleOn.UI
 
         private void OnCurrencyChanged(CurrencyType type, long newTotal)
         {
-            if (type == CurrencyType.Silver)
+            if (type == CurrencyType.Gold)
                 RefreshAllRows();
         }
     }

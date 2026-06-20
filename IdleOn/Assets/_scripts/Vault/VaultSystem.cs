@@ -36,13 +36,13 @@ namespace IdleOn.Vault
         {
             if (def == null || Save == null) return false;
             if (GetLevel(def) >= def.MaxLevel) return false;
-            return CurrencySystem.Instance?.GetAmount(CurrencyType.Silver) >= GetCost(def);
+            return CurrencySystem.Instance?.GetAmount(CurrencyType.Gold) >= GetCost(def);
         }
 
         public bool Upgrade(VaultUpgradeDefinition def)
         {
             if (!CanUpgrade(def)) return false;
-            if (!CurrencySystem.Instance.Spend(CurrencyType.Silver, GetCost(def))) return false;
+            if (!CurrencySystem.Instance.Spend(CurrencyType.Gold, GetCost(def))) return false;
 
             Save.SetLevel(def.UpgradeId, GetLevel(def) + 1);
 

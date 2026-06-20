@@ -17,20 +17,21 @@ namespace IdleOn.Inventory
 
         private PlayerSaveData Save => SaveManager.Instance?.CurrentSave;
 
+        // Silver is unused — demo tracks/saves Gold only. CurrencyType.Silver is kept only
+        // for ordinal stability of existing serialized data (Gold must stay ordinal 1).
         public long GetAmount(CurrencyType type)
         {
             var save = Save;
-            if (save == null) return 0;
-            return type == CurrencyType.Silver ? save.SilverCoins : save.GoldCoins;
+            if (save == null || type != CurrencyType.Gold) return 0;
+            return save.GoldCoins;
         }
 
         public void Add(CurrencyType type, long amount)
         {
             var save = Save;
-            if (save == null) return;
+            if (save == null || type != CurrencyType.Gold) return;
 
-            if (type == CurrencyType.Silver) save.SilverCoins += amount;
-            else                             save.GoldCoins   += amount;
+            save.GoldCoins += amount;
 
             GameEvents.RaiseCurrencyChanged(type, GetAmount(type));
         }
@@ -38,10 +39,9 @@ namespace IdleOn.Inventory
         public bool Spend(CurrencyType type, long amount)
         {
             var save = Save;
-            if (save == null || GetAmount(type) < amount) return false;
+            if (save == null || type != CurrencyType.Gold || GetAmount(type) < amount) return false;
 
-            if (type == CurrencyType.Silver) save.SilverCoins -= amount;
-            else                             save.GoldCoins   -= amount;
+            save.GoldCoins -= amount;
 
             GameEvents.RaiseCurrencyChanged(type, GetAmount(type));
             return true;

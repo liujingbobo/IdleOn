@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: CurrencyDatabase
   m_EditorClassIdentifier: 
   currencies:
-  - {fileID: 11400000, guid: 174ddad7b57150a49a6dc5bfcd74ac90, type: 2}
   - {fileID: 11400000, guid: 6560dec2c39d7ca479727e1ee6e21743, type: 2}
