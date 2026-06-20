@@ -1,22 +1,10 @@
 fileFormatVersion: 2
-guid: f17677c219b50d6468bb1857c95215ae
+guid: 467c03ea686a1f547adb764940937620
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6549793444401180961
-    second: merchant_0
-  - first:
-      213: 65063161555740034
-    second: merchant_1
-  - first:
-      213: 1614086757527820424
-    second: merchant_2
-  - first:
-      213: -8227650458184809490
-    second: merchant_3
-  - first:
-      213: -3352636522432418542
-    second: merchant_4
+      213: 8166879569266119240
+    second: Generated image 1 (1)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -87,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -138,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: merchant_0
+      name: Generated image 1 (1)_0
       rect:
         serializedVersion: 2
-        x: 2
+        x: 0
         y: 0
-        width: 30
-        height: 31
+        width: 2073
+        height: 758
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,96 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 121f6b57f6a85ea50800000000000000
-      internalID: 6549793444401180961
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: merchant_1
-      rect:
-        serializedVersion: 2
-        x: 36
-        y: 0
-        width: 27
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2856e78c99627e000800000000000000
-      internalID: 65063161555740034
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: merchant_2
-      rect:
-        serializedVersion: 2
-        x: 68
-        y: 0
-        width: 27
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8889b1baa53666610800000000000000
-      internalID: 1614086757527820424
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: merchant_3
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 0
-        width: 27
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ee380df008381dd80800000000000000
-      internalID: -8227650458184809490
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: merchant_4
-      rect:
-        serializedVersion: 2
-        x: 130
-        y: 0
-        width: 30
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 21d2a6b88da0971d0800000000000000
-      internalID: -3352636522432418542
+      spriteID: 8429081c2b5965170800000000000000
+      internalID: 8166879569266119240
       vertices: []
       indices: 
       edges: []
@@ -260,12 +160,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      merchant_0: 6549793444401180961
-      merchant_1: 65063161555740034
-      merchant_2: 1614086757527820424
-      merchant_3: -8227650458184809490
-      merchant_4: -3352636522432418542
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
