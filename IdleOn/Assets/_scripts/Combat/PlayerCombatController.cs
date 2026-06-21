@@ -53,6 +53,7 @@ namespace IdleOn.Combat
         private float          _desiredVelocityX;
 
         public bool        IsAutoCombatActive { get; private set; }
+        public bool        IsMoving           => Mathf.Abs(_desiredVelocityX) > 0.0001f;
         public CombatState State              { get; private set; } = CombatState.Idle;
         public Transform FacingTarget
         {

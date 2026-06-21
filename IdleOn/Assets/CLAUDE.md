@@ -22,6 +22,13 @@ Inventory is always available. Q7 unlocks Craft, Q10 unlocks Talents and AutoCom
 
 The remaining release gate is one uninterrupted human Q1–Q12 playthrough with real save/quit/reload checkpoints. Use `.claude/HANDOFF_CURRENT_STATE.md` for the authoritative route and current debt. Any contradictory implementation note below is historical and superseded by this section.
 
+### Current movement and loot presentation polish
+
+* Player Run and Slime Move animation state follows each controller's read-only horizontal movement intent (`IsMoving`), rather than relying on an `Update`-frame position delta from `FixedUpdate` movement.
+* `SpriteFeetAligner` is attached to the Player root and `Slime.prefab`. In `LateUpdate` it adjusts only the `Sprite` visual child's local Y so the current rendered frame's bottom remains aligned to the feet-root. Root transforms, Rigidbody2D, and colliders remain unchanged.
+* World drops spawn directly on `GroundLane.GroundY`. Multiple loot entries preserve result order and use a centered, symmetric layout with `dropSpacing = 0.4`; near lane edges the whole layout shifts together instead of clamping individual drops into overlaps.
+* WorldDrop sprite width normalization remains presentation-only and targets `0.32` world units while preserving the visual child's original scale ratio and signs.
+
 ## Project Overview
 
 This project is a Unity take-home assessment inspired by IdleOn.
@@ -242,6 +249,18 @@ WorldDrop prefab is on the "Drop" physics layer (index 8).
 WorldDrop is passive — no self-input logic. All pickup input lives in PlayerCombatController.
 
 No auto-pickup. No despawn timer.
+
+`DropManager.Spawn()` places drops at `GroundLane.Current.GroundY` (falling back to the supplied origin Y if no lane exists). It does not add gravity, bounce, or random vertical offsets.
+
+For multiple entries, spawn X is stable and symmetric around the death/origin X:
+
+```csharp
+offsetX = (index - (count - 1) * 0.5f) * dropSpacing;
+```
+
+`dropSpacing` defaults to `0.4`. Near `GroundLane.MinX` / `MaxX`, the entire group center is shifted so spacing and entry order are preserved; drops are not individually clamped into overlaps.
+
+The WorldDrop root and collider are never scaled for artwork. `WorldDrop.Setup()` normalizes only the `SpriteRenderer` visual child to a target width of 32 pixels at 100 reference pixels/unit (`0.32` world units), recalculating after every pooled sprite change and preserving the visual child's original scale ratio and signs.
 
 ### Pickup
 
@@ -512,7 +531,8 @@ Player name is still hardcoded as "Hero" in save data — the Name text object i
 - **`GroundLane` (`_scripts/World/GroundLane.cs`)** is the single source of truth for the lane. `GroundLane.Current` (static) exposes `GroundY`, `MinX`, `MaxX`, and `ClampX(x)`. One instance per scene; it registers in `OnEnable` and clears `Current` in `OnDisable` (covers both disable and destroy). Current scene values: `GroundY = -2.0`, `MinX = -9.5`, `MaxX = 10.5` (Tilemap worldX [-10, 11], 0.5 inset).
 - **Rigidbody2D = Kinematic, `gravityScale = 0`** on both Player (scene instance) and `Slime.prefab`. Movement uses `Rigidbody2D.MovePosition` in `FixedUpdate` only — **no velocity writes, no `transform.position` writes for movement** (don't mix paradigms).
 - **Root = feet / ground-contact point.** Player root.y = `-2.0` (feet). `Slime.prefab` root is feet. Each `FixedUpdate` forces `position.y = GroundLane.GroundY` and X-only horizontal motion; X is clamped to `[MinX, MaxX]`.
-- **Pivots:** do **not** change imported sprite pivots. Use the `Sprite` child `localPosition` offset to keep the visual where it was (Player Sprite child localY = `+0.41`; Slime Sprite child localY `+0.152`).
+- **Pivots / frame cropping:** do **not** change imported sprite pivots. Player and Slime use `SpriteFeetAligner` on the feet-root. After the Animator swaps the frame, `LateUpdate` adjusts only the visual `Sprite` child local Y until `SpriteRenderer.bounds.min.y` matches the root Y plus optional `groundVisualOffset` (currently `0`). It does not move the root, Rigidbody2D, or collider and does not accumulate drift.
+- **Animation movement state:** `PlayerCombatController.IsMoving` and `EnemyController.IsMoving` expose read-only horizontal movement intent from `_desiredVelocityX`. Animator drivers use this as the authoritative Run/Move signal, avoiding `Update` / `FixedUpdate` sampling flicker. Position delta remains presentation-only for facing/fallback.
 - **Click-to-move:** ignores clicked Y entirely; resolves to `GroundLane.ClampX(clickWorldPos.x)` on the lane.
 - **Enemy patrol/chase** stays on the lane: patrol bounds are clamped to `[MinX, MaxX]` in `Start`; Y is forced to `GroundY` every `FixedUpdate`.
 - **Enemy hitbox** must be **at least 1 tile tall measured from the feet upward** (Slime BoxCollider2D: offset.y `0.5`, size.y `1` → feet → +1 tile). This guarantees low projectiles connect.
@@ -1060,7 +1080,7 @@ Other open items:
 - **Multiple windows** can be open simultaneously. No WindowManager exists. Add one only if needed.
 - **Click-to-move Y** — under the lane model, Y is always `GroundLane.GroundY`; there is no vertical movement and no pathfinding.
 - **`groundLayerMask`/`maxGroundSearchDistance`** on `PlayerCombatController` are legacy fields from the pre-lane raycast movement, currently unused but left in place — harmless.
-- **Player / Enemy animations** are implemented (Animator + sprite-swap clips, driver components own facing).
+- **Player / Enemy animations** are implemented (Animator + sprite-swap clips). Driver components own facing and read controller movement intent; `SpriteFeetAligner` keeps differently cropped frames grounded without touching gameplay transforms.
 - **RemoveItem/Equip are itemId-based, not slot-index-based.** If the same item exists in multiple slots, only the first match is affected. Future task: add `RemoveItemAt(slotIndex)`, `EquipFromSlot(slotIndex)`, `MoveItem(fromSlot, toSlot)` for exact-slot drag/drop and equip.
 - **Full QA pass still needed** across save/load, inventory, talents, hotbar, crafting, and MainHUD together in one play session — the authoritative manual route lives in `.claude/HANDOFF_CURRENT_STATE.md`.
 - **Fireball needs a polish pass:** final icon asset, visual feedback (projectile or hit effect — currently damage is applied directly with no visual), and feedback when MP is insufficient to cast (currently silently does nothing).

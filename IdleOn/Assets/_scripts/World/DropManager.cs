@@ -21,6 +21,9 @@ namespace IdleOn.World
         [Header("Pool")]
         [SerializeField] private int preWarmCount = 10;
 
+        [Header("Spawn Layout")]
+        [SerializeField, Min(0f)] private float dropSpacing = 0.4f;
+
         private readonly Queue<WorldDrop> _pool = new Queue<WorldDrop>();
 
         void Awake()
@@ -41,15 +44,28 @@ namespace IdleOn.World
         {
             if (result == null || result.IsEmpty) return;
 
-            foreach (var entry in result.Entries)
+            int count = result.Entries.Count;
+            var lane  = GroundLane.Current;
+            float groundY = lane != null ? lane.GroundY : origin.y;
+            float halfSpan = (count - 1) * dropSpacing * 0.5f;
+            float centerX = origin.x;
+
+            if (lane != null)
             {
+                float laneHalfWidth = (lane.MaxX - lane.MinX) * 0.5f;
+                centerX = halfSpan <= laneHalfWidth
+                    ? Mathf.Clamp(centerX, lane.MinX + halfSpan, lane.MaxX - halfSpan)
+                    : (lane.MinX + lane.MaxX) * 0.5f;
+            }
+
+            for (int index = 0; index < count; index++)
+            {
+                var entry = result.Entries[index];
                 var drop = GetFromPool();
                 var icon = ResolveIcon(entry);
                 drop.Setup(entry, icon);
-                drop.transform.position = new Vector3(
-                    origin.x + Random.Range(-0.6f, 0.6f),
-                    origin.y + Random.Range(0f,    0.4f),
-                    0f);
+                float offsetX = (index - (count - 1) * 0.5f) * dropSpacing;
+                drop.transform.position = new Vector3(centerX + offsetX, groundY, 0f);
                 drop.gameObject.SetActive(true);
             }
         }

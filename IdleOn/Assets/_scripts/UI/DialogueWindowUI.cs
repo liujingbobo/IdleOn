@@ -14,6 +14,7 @@ namespace IdleOn.UI
         [SerializeField] private TMP_Text   speakerNameText;
         [SerializeField] private TMP_Text   dialogueText;
         [SerializeField] private Button     fullScreenButton;
+        [SerializeField] private Image dialoguePortrait;
 
         private bool _subscribed;
         private bool _warnedMissing;

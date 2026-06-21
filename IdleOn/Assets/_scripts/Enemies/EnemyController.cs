@@ -49,6 +49,8 @@ namespace IdleOn.Enemies
         private float      _desiredVelocityX;
 
         public bool           IsAlive    => _health != null && _health.IsAlive;
+        public bool           IsMoving   => _state != EnemyState.Dead &&
+                                            Mathf.Abs(_desiredVelocityX) > 0.0001f;
         public EnemyState     State      => _state;
         public EnemyDefinition Definition => definition;
         public Transform      PlayerTarget => _playerTransform;

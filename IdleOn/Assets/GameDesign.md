@@ -18,6 +18,12 @@ Implementation paths, field tables, component names, and code-level detail live 
 
 ---
 
+### Current movement and loot polish
+
+Player Run and Slime Move animation state is stable during FixedUpdate-driven movement. Player and enemy roots remain feet-roots fixed to the lane; a presentation-only frame alignment pass adjusts only the Sprite visual child so differently cropped center-pivot frames remain grounded.
+
+World drops have no gravity and spawn directly on the active ground lane. One entry appears at the source X. Multiple entries preserve loot order and are arranged symmetrically around that X at 0.4-unit spacing; near a lane edge, the whole group shifts inward together so spacing is retained. Drop artwork is normalized to a visible width of `0.32` world units without changing the root, collider, pooling, collection, or fly-to-HUD behavior.
+
 ## Goal
 
 Build a polished vertical slice inspired by the early-game experience of IdleOn.
@@ -186,6 +192,10 @@ Same-lane interactable objects: crafting stations, portals, and NPCs. Click one 
 ## Movement
 
 The player and enemies move along a single ground lane — no gravity, no jumping. Click-to-move ignores the clicked Y and clamps the clicked X to the lane bounds. Enemies patrol and chase within the same lane bounds. Projectiles (Fireball) travel horizontally on the lane.
+
+Run/Move animation follows the character controller's actual horizontal movement intent, so rendering frames that fall between physics ticks do not briefly return to Idle. Stopping or entering attack range clears movement intent and returns to the appropriate Idle/Attack animation.
+
+Player and enemy roots remain feet-roots fixed to the lane. A presentation-only frame alignment pass adjusts only the Sprite visual child after each sprite-frame update, keeping differently cropped center-pivot frames grounded without moving gameplay roots or colliders.
 
 **Not implemented yet:** multiple platforms/lanes, ladders, portals, jumping, pathfinding. Future cross-platform travel uses explicit ladder/portal transitions (a same-lane walk-to-interact step first), never physics jumping.
 
@@ -364,6 +374,10 @@ All loot sources (enemies, chests, trees) use the same pipeline: evaluate the so
 Loot tables are reusable — multiple enemies can share one table. Each entry defines drop type (item or currency), which item/currency, drop chance, and min/max quantity. Multiple entries can drop from one kill, evaluated independently.
 
 World drops are pooled and stay in the world indefinitely until collected — no despawn timer.
+
+World drops have no gravity and spawn directly on the active ground lane. One entry appears at the source X. Multiple entries preserve loot order and are arranged symmetrically around that X at 0.4-unit spacing; near a lane edge, the whole group shifts inward together so spacing is retained.
+
+Drop artwork is normalized to a visible width of 32 pixels at the map's 100 pixels/unit reference (`0.32` world units). Only the Sprite visual child is scaled; the WorldDrop root, collider, pooling, collection, and fly-to-HUD behavior are unchanged.
 
 If inventory is full on item collect attempt: the drop stays in the world, an inventory-full notification fires, and a short cooldown suppresses repeated attempts.
 

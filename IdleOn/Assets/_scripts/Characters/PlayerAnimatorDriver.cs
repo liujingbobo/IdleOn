@@ -4,8 +4,9 @@ using IdleOn.Combat;
 namespace IdleOn.Characters
 {
     /// <summary>
-    /// Presentation-only driver. Reads <see cref="PlayerCombatController.State"/> and the
-    /// per-frame position delta, then sets Animator parameters on the Sprite child.
+    /// Presentation-only driver. Reads <see cref="PlayerCombatController.State"/> and movement
+    /// intent, then sets Animator parameters on the Sprite child. Position delta is only used
+    /// for facing and as a fallback if the controller is unavailable.
     /// Contains no gameplay logic and never writes back to the combat controller.
     /// </summary>
     [RequireComponent(typeof(PlayerCombatController))]
@@ -51,7 +52,9 @@ namespace IdleOn.Characters
             _lastPosition     = pos;
 
             float       speed     = Time.deltaTime > 0f ? moved / Time.deltaTime : 0f;
-            bool        moving    = speed > moveSpeedThreshold;
+            bool        moving    = _controller != null
+                ? _controller.IsMoving
+                : speed > moveSpeedThreshold;
             CombatState state     = _controller.State;
             bool        attacking = !moving &&
                                     (state == CombatState.Attacking || state == CombatState.ManualAttack);

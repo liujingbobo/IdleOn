@@ -3,9 +3,9 @@ using UnityEngine;
 namespace IdleOn.Enemies
 {
     /// <summary>
-    /// Presentation-only driver. Reads <see cref="EnemyController.State"/> and the per-frame
-    /// position delta, then sets Animator parameters on the Sprite child and faces the sprite
-    /// toward travel direction. Contains no gameplay logic.
+    /// Presentation-only driver. Reads <see cref="EnemyController.State"/> and movement intent,
+    /// then sets Animator parameters on the Sprite child. Position delta is only used for facing
+    /// and as a fallback if the controller is unavailable. Contains no gameplay logic.
     /// </summary>
     [RequireComponent(typeof(EnemyController))]
     public class EnemyAnimatorDriver : MonoBehaviour
@@ -70,7 +70,9 @@ namespace IdleOn.Enemies
 
             animator.SetBool(IsDeadHash, false);
 
-            bool moving = speed > moveSpeedThreshold;
+            bool moving = _controller != null
+                ? _controller.IsMoving
+                : speed > moveSpeedThreshold;
             // Patrol always moves; in Combat, standing still means attacking in range.
             bool attacking = !moving && state == EnemyState.Combat;
 
