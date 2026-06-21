@@ -19,8 +19,8 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 
 ## 3. Current architecture summary
 
-- Scene retains four baked map roots as fallbacks: `Map_grassland_1`, `Map_grassland_2`, `Map_town`, `Map_grassland_3`.
-- All four current `MapDefinition` assets now reference matching map prefabs, so normal travel instantiates runtime copies while baked roots remain available as fallback.
+- `TestCombat` no longer contains baked map roots. All four current `MapDefinition` assets reference
+  matching map prefabs, and runtime travel instantiates those prefabs.
 - `MapSystem` owns `CurrentMapId`/`PreviousMapId` and `TravelTo`/`RespawnAtDefault`.
 - `PortalGate` handles unlock gating off the destination `MapDefinition`.
 - `MapWindowUI` handles map point display/travel; `HasMapContent` currently scans `SceneManager.GetActiveScene().GetRootGameObjects()` by name (`"Map_" + mapId`) — this coupling must change when roots stop being permanent scene children.
@@ -118,6 +118,21 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
   - No scene, script, or loader file changed. Console contained only MCP transport noise.
   - Known risk: baked roots remain intentionally present as fallback; VFX are still unscoped.
 
+- **Scene cleanup** — removed the four obsolete baked roots from `TestCombat`.
+  - Removed `Map_grassland_1`, `Map_grassland_2`, `Map_town`, and `Map_grassland_3`.
+  - Cleared only the four `MapContentController.maps[*].Root` references; all `MapId` and
+    `PlayerSpawn` values remain unchanged.
+  - Verification: fresh start loaded one Grassland1 prefab instance; portal travel
+    g1→g2→town→g3 and reverse back-spawn worked; MapWindow travel worked; save/load-style current-map
+    restore loaded Town; Town retained NPC/CraftingStation; Grassland3 respawn returned the killed
+    slime alive in Patrol; drops/projectiles cleared on travel; runtime scan found zero Missing Script
+    and zero Missing Reference.
+  - Only `Assets/_scenes/TestCombat.unity` and this tracking doc changed. No code, prefab, or
+    MapDefinition changed.
+  - Known risk: prefab-instantiation failure no longer has baked content fallback for current maps;
+    the loader logs a warning and leaves no active content. All four assigned prefab references were
+    verified valid before cleanup.
+
 ## 5. Planned phases
 
 - ~~**Phase 1B**~~ — done, see section 4 above.
@@ -132,8 +147,10 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 
 ## 6. Risk notes
 
-- Do not destroy old scene roots until `MapContentController`/`MapWindowUI` references are fully replaced — a dangling `Root` reference silently no-ops `SetActive`.
-- `MapWindowUI.HasMapContent` currently relies on scene roots existing by name; must be swapped to a prefab/lookup-based check before roots stop being permanent scene children.
+- `MapContentController` still contains nullable baked-root fallback code, but all current Root
+  references are intentionally null and all current maps are prefab-backed.
+- `MapWindowUI.HasMapContent` accepts assigned `MapPrefab` references; its scene-root scan remains
+  only as legacy fallback.
 - `LocalEnemyRespawner` runs coroutines on its host GameObject — destroying that root mid-wait kills the pending respawn silently.
 - `DropManager`'s pool currently persists across map switches; if pooled-but-inactive drops end up parented under a map root, destroying that map on travel would shrink/break the pool. Needs a deliberate pool-vs-spawn-parent split (see Phase 0 audit, Phase 4 notes).
 - Portal back-spawn (`MapContentController.FindBackPortal`/`SpawnNearPortal`) must be revalidated after any map-load mechanism change — it currently assumes portals are baked children of the activated root.
@@ -161,4 +178,4 @@ Every future prompt for this migration must:
 **Phase 2A:** done — see section 4. `Map_grassland_2.prefab` exists and is verified clean, not yet wired into loading.
 
 **Next:** Phase 4C should identify transient VFX spawn paths and scope only those objects under
-`VFXRoot`. Removing baked scene roots should remain a separate, explicitly approved cleanup phase.
+`VFXRoot`.
