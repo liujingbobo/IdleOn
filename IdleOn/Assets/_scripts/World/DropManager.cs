@@ -62,6 +62,8 @@ namespace IdleOn.World
             {
                 var entry = result.Entries[index];
                 var drop = GetFromPool();
+                var dropsRoot = MapRuntimeContext.Current?.DropsRoot;
+                drop.transform.SetParent(dropsRoot != null ? dropsRoot : transform, false);
                 var icon = ResolveIcon(entry);
                 drop.Setup(entry, icon);
                 float offsetX = (index - (count - 1) * 0.5f) * dropSpacing;
@@ -139,7 +141,14 @@ namespace IdleOn.World
         private void ReturnToPool(WorldDrop drop)
         {
             drop.gameObject.SetActive(false);
+            drop.transform.SetParent(transform, false);
             _pool.Enqueue(drop);
+        }
+
+        internal void RecycleForMapUnload(WorldDrop drop)
+        {
+            if (drop == null) return;
+            ReturnToPool(drop);
         }
 
         private WorldDrop CreateInstance()

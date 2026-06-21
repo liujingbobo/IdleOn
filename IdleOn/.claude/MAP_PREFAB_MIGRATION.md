@@ -24,7 +24,8 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 - `MapSystem` owns `CurrentMapId`/`PreviousMapId` and `TravelTo`/`RespawnAtDefault`.
 - `PortalGate` handles unlock gating off the destination `MapDefinition`.
 - `MapWindowUI` handles map point display/travel; `HasMapContent` currently scans `SceneManager.GetActiveScene().GetRootGameObjects()` by name (`"Map_" + mapId`) — this coupling must change when roots stop being permanent scene children.
-- `DropManager` parents pooled drops under the `DropManager` singleton, not under any map root.
+- Inactive pooled drops remain under the persistent `DropManager`; active world drops are parented
+  under `MapRuntimeContext.Current.DropsRoot` and returned to the pool when that map unloads.
 - Fireball/projectiles spawn with no parent (scene root) — not parented under a map runtime root yet.
 - Grassland2 tutorial slime is pre-placed and does not respawn (by design).
 - Grassland3 uses `LocalEnemyRespawner` (re-enables the same disabled instance after a delay; demo/local-only, not the final architecture).
@@ -66,6 +67,24 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
   - Unity script validation and EditMode test passed; Console was clean after excluding MCP transport noise. No scene, prefab, MapDefinition, MapSystem, MapRuntimeContext, or portal file changed.
   - Known risks: drops/projectiles/VFX are not parented to `MapRuntimeContext` yet, so Phase 3A only unloads objects that are children of the map prefab. Direct-open TestCombat still retains its pre-existing no-selected-save MapProgress limitation.
 
+- **Phase 4A** — map-scoped world drops enabled.
+  - Changed files: `Assets/_scripts/World/MapRuntimeContext.cs`,
+    `Assets/_scripts/World/MapContentController.cs`, `Assets/_scripts/World/DropManager.cs`, and this
+    tracking doc.
+  - Spawned drops are reparented to `MapRuntimeContext.Current.DropsRoot`; if no active context exists,
+    they retain the previous `DropManager` parent fallback.
+  - Before switching content, `MapContentController` asks the old active context to clear its drops.
+    World drops are disabled, reparented to `DropManager`, and returned to the existing pool. This
+    works for both destroyed prefab maps and deactivated baked roots without shrinking the pool.
+  - Verification: Grassland2 runtime-prefab and Grassland3 baked-root drops both spawned under their
+    own `DropsRoot`, disappeared on travel, and returned to the pool (`10 → 9 → 10` observed).
+    Returning to Grassland2 did not restore an old drop. Gold pickup still updated immediately and
+    started one HUD fly animation. Grassland2 tutorial slime remained dead after four seconds;
+    Grassland3 slime respawned alive in Patrol after four seconds.
+  - Unity validation completed with zero script errors/warnings. No scene or prefab changed.
+  - Known risk: projectiles and VFX remain unscoped. Runtime children under `DropsRoot` that are not
+    `WorldDrop` instances are disabled/destroyed as a defensive fallback.
+
 ## 5. Planned phases
 
 - ~~**Phase 1B**~~ — done, see section 4 above.
@@ -73,7 +92,9 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 - ~~**Phase 2B**~~ — data reference added to `MapDefinition` and assigned for Grassland2 only. No live loader wiring; see section 4.
 - ~~**Phase 3A**~~ — hybrid loader live for Grassland2 with baked fallback; see section 4.
 - **Phase 3B** — extract and data-wire the remaining current map prefabs one at a time, retaining baked fallback until each prefab is verified.
-- **Phase 4** — parent drops/projectiles/VFX under the current map's runtime root at spawn time.
+- ~~**Phase 4A**~~ — map-scope active world drops and recycle them on map unload; see section 4.
+- **Phase 4B** — parent projectiles under the current map's `ProjectilesRoot` and clear them on unload.
+- **Phase 4C** — parent transient VFX under `VFXRoot` and clear them on unload.
 - **Phase 5** — unify enemy spawn points / decide future replacement for `LocalEnemyRespawner` and the unused global `EnemySpawner`. Not currently approved; treat as out of scope until explicitly requested.
 
 ## 6. Risk notes
@@ -106,4 +127,6 @@ Every future prompt for this migration must:
 
 **Phase 2A:** done — see section 4. `Map_grassland_2.prefab` exists and is verified clean, not yet wired into loading.
 
-**Next:** Phase 3B should migrate one remaining map at a time (recommended Grassland1 first), assign its `MapDefinition.MapPrefab`, and verify the existing hybrid loader without removing any baked roots. Phase 4 runtime drop/projectile/VFX parenting remains separate.
+**Next:** Phase 3B can migrate one remaining map at a time (recommended Grassland1 first), retaining
+baked fallback. If runtime cleanup is prioritized first, Phase 4B should scope Fireball/projectiles
+under `ProjectilesRoot` without changing projectile gameplay.

@@ -19,6 +19,11 @@ namespace IdleOn.World
         public Transform ProjectilesRoot => projectilesRoot != null ? projectilesRoot : transform;
         public Transform VFXRoot         => vfxRoot         != null ? vfxRoot         : transform;
 
+        public void ClearDrops()
+        {
+            ClearRuntimeChildren(DropsRoot);
+        }
+
         void OnEnable()
         {
             Current = this;
@@ -28,6 +33,29 @@ namespace IdleOn.World
         void OnDisable()
         {
             if (Current == this) Current = null;
+        }
+
+        private static void ClearRuntimeChildren(Transform root)
+        {
+            if (root == null) return;
+
+            for (int i = root.childCount - 1; i >= 0; i--)
+            {
+                var child = root.GetChild(i);
+                if (child == null) continue;
+
+                var drop = child.GetComponent<WorldDrop>();
+                if (drop != null && DropManager.Instance != null)
+                {
+                    DropManager.Instance.RecycleForMapUnload(drop);
+                    continue;
+                }
+
+                // Destroy is deferred in Play mode. Disable first so stale drops cannot still render
+                // or receive clicks during the map-switch frame.
+                child.gameObject.SetActive(false);
+                Destroy(child.gameObject);
+            }
         }
     }
 }

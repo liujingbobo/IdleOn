@@ -69,6 +69,7 @@ namespace IdleOn.World
 
         private void SwitchContent(MapEntry entry)
         {
+            ClearActiveMapDrops();
             UnloadActivePrefab();
 
             // Baked roots are fallback content and are never destroyed.
@@ -126,6 +127,14 @@ namespace IdleOn.World
 
             _activeMapId = contentRoot != null ? entry.MapId : null;
             _activeContentRoot = contentRoot;
+        }
+
+        private void ClearActiveMapDrops()
+        {
+            if (_activeContentRoot == null) return;
+
+            var context = _activeContentRoot.GetComponent<MapRuntimeContext>();
+            context?.ClearDrops();
         }
 
         private void UnloadActivePrefab()
