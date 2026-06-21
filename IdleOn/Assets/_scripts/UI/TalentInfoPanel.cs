@@ -19,6 +19,12 @@ namespace IdleOn.UI
         [SerializeField] private Image    levelFiller;
         [SerializeField] private TMP_Text levelText;
 
+        [Header("Effects")]
+        [SerializeField] private TMP_Text   currentEffectText;
+        [SerializeField] private GameObject currentSeparatorRoot;
+        [SerializeField] private TMP_Text   nextEffectText;
+        [SerializeField] private GameObject nextSeparatorRoot;
+
         [Header("Upgrade")]
         [SerializeField] private Button upgradeButton;
 
@@ -26,6 +32,7 @@ namespace IdleOn.UI
 
         void Awake()
         {
+            ResolveEffectReferences();
             panel.SetActive(false);
             GameEvents.OnTalentChanged += Refresh;
             upgradeButton?.onClick.AddListener(OnUpgradeClicked);
@@ -67,9 +74,61 @@ namespace IdleOn.UI
             if (levelText != null)
                 levelText.text = maxed ? "Max" : $"Lv. {level} / {_talent.MaxLevel}";
 
+            SetEffectVisible(
+                currentEffectText,
+                currentSeparatorRoot,
+                level > 0,
+                _talent.GetEffectText(level));
+
+            SetEffectVisible(
+                nextEffectText,
+                nextSeparatorRoot,
+                !maxed,
+                _talent.GetEffectText(level + 1));
+
             if (upgradeButton != null)
                 upgradeButton.interactable = TalentSystem.Instance != null
                     && TalentSystem.Instance.CanUpgrade(_talent);
+        }
+
+        private static void SetEffectVisible(
+            TMP_Text text,
+            GameObject separatorRoot,
+            bool visible,
+            string content)
+        {
+            if (text != null)
+            {
+                text.text = content;
+                text.gameObject.SetActive(visible);
+            }
+
+            separatorRoot?.SetActive(visible);
+        }
+
+        private void ResolveEffectReferences()
+        {
+            if (currentEffectText == null || nextEffectText == null)
+            {
+                foreach (var text in GetComponentsInChildren<TMP_Text>(true))
+                {
+                    if (currentEffectText == null && text.gameObject.name == "CurrentEffect")
+                        currentEffectText = text;
+                    else if (nextEffectText == null && text.gameObject.name == "NextEffect")
+                        nextEffectText = text;
+                }
+            }
+
+            if (currentSeparatorRoot == null || nextSeparatorRoot == null)
+            {
+                foreach (var child in GetComponentsInChildren<Transform>(true))
+                {
+                    if (currentSeparatorRoot == null && child.name == "CurrentSeparater")
+                        currentSeparatorRoot = child.gameObject;
+                    else if (nextSeparatorRoot == null && child.name == "NextSeparater")
+                        nextSeparatorRoot = child.gameObject;
+                }
+            }
         }
 
         private void OnUpgradeClicked() => TalentSystem.Instance?.Upgrade(_talent);
