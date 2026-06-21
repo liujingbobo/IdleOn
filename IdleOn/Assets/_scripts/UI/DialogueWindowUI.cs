@@ -98,6 +98,12 @@ namespace IdleOn.UI
                 speakerNameText.text = sys.CurrentSpeakerName ?? string.Empty;
             if (dialogueText != null)
                 dialogueText.text = sys.CurrentText ?? string.Empty;
+            if (dialoguePortrait != null)
+            {
+                Sprite portrait = sys.CurrentPortrait;
+                dialoguePortrait.sprite = portrait;
+                dialoguePortrait.enabled = portrait != null;
+            }
         }
 
         private void Show()

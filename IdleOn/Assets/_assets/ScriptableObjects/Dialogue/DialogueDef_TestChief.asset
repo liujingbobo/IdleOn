@@ -18,18 +18,21 @@ MonoBehaviour:
   Nodes:
   - NodeId: n1
     SpeakerNameOverride: 
+    Portrait: {fileID: -3629139751447027812, guid: ce2e0e8ca57f98943b0d54afc173fbda, type: 3}
     Text: Hello, traveler.
     Choices: []
     NextNodeId: n2
     EndDialogue: 0
   - NodeId: n2
     SpeakerNameOverride: 
+    Portrait: {fileID: -3629139751447027812, guid: ce2e0e8ca57f98943b0d54afc173fbda, type: 3}
     Text: This is a test dialogue.
     Choices: []
     NextNodeId: n3
     EndDialogue: 0
   - NodeId: n3
     SpeakerNameOverride: 
+    Portrait: {fileID: -3629139751447027812, guid: ce2e0e8ca57f98943b0d54afc173fbda, type: 3}
     Text: Come back later.
     Choices: []
     NextNodeId: 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace IdleOn.Dialogue
 {
@@ -8,6 +9,7 @@ namespace IdleOn.Dialogue
     {
         public string NodeId;
         public string SpeakerNameOverride;
+        public Sprite Portrait;
         public string Text;
         public List<DialogueChoice> Choices = new List<DialogueChoice>();
         public string NextNodeId;

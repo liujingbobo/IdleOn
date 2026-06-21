@@ -18,6 +18,7 @@ MonoBehaviour:
   Nodes:
   - NodeId: n1
     SpeakerNameOverride: 
+    Portrait: {fileID: -3629139751447027812, guid: ce2e0e8ca57f98943b0d54afc173fbda, type: 3}
     Text: Welcome to town, traveler. Head to Grassland 3 and bring me 5 Slime Essence.
     Choices: []
     NextNodeId: 

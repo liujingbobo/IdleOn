@@ -8455,7 +8455,7 @@ MonoBehaviour:
   speakerNameText: {fileID: 1870977085}
   dialogueText: {fileID: 1843009477}
   fullScreenButton: {fileID: 688950932}
-  dialoguePortrait: {fileID: 0}
+  dialoguePortrait: {fileID: 339171671}
 --- !u!114 &530448107
 MonoBehaviour:
   m_ObjectHideFlags: 0

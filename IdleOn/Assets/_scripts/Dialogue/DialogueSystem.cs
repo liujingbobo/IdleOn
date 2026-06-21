@@ -36,6 +36,17 @@ namespace IdleOn.Dialogue
         }
 
         public string CurrentText => _session.CurrentNode?.Text;
+        public Sprite CurrentPortrait
+        {
+            get
+            {
+                DialogueNode node = _session.CurrentNode;
+                if (node == null) return null;
+                return node.Portrait != null
+                    ? node.Portrait
+                    : _session.Definition?.Portrait;
+            }
+        }
 
         void Awake()
         {
