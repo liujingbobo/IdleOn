@@ -196,6 +196,10 @@ Both player and slime now play real Hurt/Death sprite animations instead of any 
 
 **Changed/added files this pass:** `Player_Hurt.anim(.meta)`, `Player_Death.anim(.meta)`, `Slime_Hurt.anim(.meta)` (new); `PlayerAnimator.controller`, `SlimeAnimator.controller`, `PlayerAnimatorDriver.cs`, `EnemyAnimatorDriver.cs`, `HealthComponent.cs`, `PlayerCombatController.cs`, `EnemyController.cs` (edited). No scene/prefab/UI/HUD/docs files touched.
 
+## Map prefab migration (in progress, tracked separately)
+
+Long-running migration from scene-baked map roots to runtime-loaded map prefabs is tracked in `.claude/MAP_PREFAB_MIGRATION.md` — read and update that file for any work on this migration. Phase 0 (audit) and Phase 1A (`MapRuntimeContext` foundation class) are done; no live behavior has changed yet.
+
 ## Next work
 
 Claude session is handing off to Codex with a token budget exhausted. **No further Claude implementation this pass — docs only.** See the backlog below for the queued bugs/features and recommended order. Do not implement Map4, Map5, or the boss.
