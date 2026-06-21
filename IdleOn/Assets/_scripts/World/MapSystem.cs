@@ -102,6 +102,25 @@ namespace IdleOn.World
             GameEvents.RaiseMapChanged(mapId);
         }
 
+        // Death-respawn path: forces CurrentMapId to mapId and clears PreviousMapId so
+        // MapContentController's back-portal spawn lookup is skipped and the map's configured
+        // default spawn is used instead. Bypasses TravelTo's IsUnlocked/same-map guards on purpose —
+        // a death respawn must always land at the default spawn, even mid-death-in-town or before
+        // the destination map is quest-unlocked.
+        public void RespawnAtDefault(string mapId)
+        {
+            var prog = GetProgress(mapId);
+            if (prog == null) return;
+
+            PreviousMapId = null;
+            CurrentMapId  = mapId;
+
+            var save = SaveManager.Instance?.CurrentSave;
+            if (save != null) save.CurrentMapId = mapId;
+
+            GameEvents.RaiseMapChanged(mapId);
+        }
+
         // Kill counting per current map is kept (read by MapRowUI), but no longer grants rewards or
         // auto-unlocks the next map — portal unlocking now lives entirely in PortalGate, driven by the
         // destination MapDefinition's own unlock requirements. See PortalGate.cs.

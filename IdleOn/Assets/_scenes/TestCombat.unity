@@ -8455,6 +8455,7 @@ MonoBehaviour:
   speakerNameText: {fileID: 1870977085}
   dialogueText: {fileID: 1843009477}
   fullScreenButton: {fileID: 688950932}
+  dialoguePortrait: {fileID: 0}
 --- !u!114 &530448107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10391,6 +10392,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   maxGroundSearchDistance: 2.5
+  deathRespawnMapId: town
+  deathAnimationFallbackDuration: 1.2
   debugCombatState: 1
   debugTargets: 1
   debugMovement: 1
@@ -18227,7 +18230,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1182613862}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -36,6 +37,11 @@ namespace IdleOn.Combat
         [SerializeField] private LayerMask groundLayerMask;
         [SerializeField] private float     maxGroundSearchDistance = 2.5f;
 
+        [Header("Death")]
+        [SerializeField] private string deathRespawnMapId = "town";
+        [Tooltip("No player death animation exists yet — this is the conservative fallback wait before respawn.")]
+        [SerializeField] private float  deathAnimationFallbackDuration = 1.2f;
+
         [Header("Debug")]
         [SerializeField] private bool debugCombatState;
         [SerializeField] private bool debugTargets;
@@ -45,15 +51,19 @@ namespace IdleOn.Combat
         private PlayerStats    _stats;
         private Rigidbody2D    _rb;
         private SpriteRenderer _spriteRenderer;
+        private HealthComponent _health;
+        private PlayerAnimatorDriver _animatorDriver;
         private EnemyController _currentTarget;
         private float          _attackTimer;
         private readonly Dictionary<string, float> _skillReadyTimes = new Dictionary<string, float>();
         private Vector2        _manualMoveTarget;
         private WorldInteractable _pendingInteractable;
         private float          _desiredVelocityX;
+        private bool           _isDead;
 
         public bool        IsAutoCombatActive { get; private set; }
         public bool        IsMoving           => Mathf.Abs(_desiredVelocityX) > 0.0001f;
+        public bool        IsDead             => _isDead;
         public CombatState State              { get; private set; } = CombatState.Idle;
         public Transform FacingTarget
         {
@@ -67,8 +77,10 @@ namespace IdleOn.Combat
 
         void Awake()
         {
-            _stats = GetComponent<PlayerStats>();
-            _rb    = GetComponent<Rigidbody2D>();
+            _stats          = GetComponent<PlayerStats>();
+            _rb             = GetComponent<Rigidbody2D>();
+            _health         = GetComponent<HealthComponent>();
+            _animatorDriver = GetComponent<PlayerAnimatorDriver>();
 
             var sprite = transform.Find("Sprite");
             if (sprite != null) _spriteRenderer = sprite.GetComponent<SpriteRenderer>();
@@ -78,6 +90,21 @@ namespace IdleOn.Combat
         {
             if (startAutoCombatOnPlay)
                 SetAutoCombat(true);
+
+            if (_health != null)
+            {
+                _health.OnDied    += HandleDeath;
+                _health.OnDamaged += HandleDamaged;
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (_health != null)
+            {
+                _health.OnDied    -= HandleDeath;
+                _health.OnDamaged -= HandleDamaged;
+            }
         }
 
         public void SetAutoCombat(bool active)
@@ -172,6 +199,8 @@ namespace IdleOn.Combat
 
         void Update()
         {
+            if (_isDead) return;
+
             _attackTimer -= Time.deltaTime;
 
             // Drop pickup takes priority over all other LMB input
@@ -454,6 +483,41 @@ namespace IdleOn.Combat
             }
 
             SetState(IsAutoCombatActive ? CombatState.Seeking : CombatState.Idle, reason);
+        }
+
+        // ── Damage / Death ───────────────────────────────────────────────────
+
+        private void HandleDamaged()
+        {
+            if (_isDead) return;
+            _animatorDriver?.PlayHurt();
+        }
+
+        private void HandleDeath()
+        {
+            if (_isDead) return;
+            _isDead = true;
+
+            _currentTarget       = null;
+            _pendingInteractable = null;
+            SetDesiredVelocityX(0f, "player death");
+            SetState(CombatState.Idle, "player death");
+
+            StartCoroutine(DeathSequence());
+        }
+
+        private IEnumerator DeathSequence()
+        {
+            // PlayerAnimatorDriver plays the real Death clip (0.75s) off _isDead/IsDead as soon as
+            // HandleDeath sets it above. This wait is the serialized fallback that gives it room to
+            // finish (and play out the last held frame) before respawn.
+            if (deathAnimationFallbackDuration > 0f)
+                yield return new WaitForSeconds(deathAnimationFallbackDuration);
+
+            MapSystem.Instance?.RespawnAtDefault(deathRespawnMapId);
+            _health?.Revive();
+
+            _isDead = false;
         }
 
         private void SetState(CombatState nextState, string reason)

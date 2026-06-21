@@ -28,8 +28,10 @@ namespace IdleOn.Characters
         private PlayerCombatController _controller;
         private Vector3 _lastPosition;
 
-        private static readonly int IsMovingHash   = Animator.StringToHash("IsMoving");
+        private static readonly int IsMovingHash    = Animator.StringToHash("IsMoving");
         private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
+        private static readonly int IsDeadHash      = Animator.StringToHash("IsDead");
+        private static readonly int HurtHash        = Animator.StringToHash("Hurt");
 
         void Awake()
         {
@@ -50,8 +52,18 @@ namespace IdleOn.Characters
             float   dx        = pos.x - _lastPosition.x;
             float   moved     = (pos - _lastPosition).magnitude;
             _lastPosition     = pos;
+            float   speed     = Time.deltaTime > 0f ? moved / Time.deltaTime : 0f;
 
-            float       speed     = Time.deltaTime > 0f ? moved / Time.deltaTime : 0f;
+            if (_controller != null && _controller.IsDead)
+            {
+                animator.SetBool(IsDeadHash, true);
+                animator.SetBool(IsMovingHash, false);
+                animator.SetBool(IsAttackingHash, false);
+                return;   // no facing changes while dead
+            }
+
+            animator.SetBool(IsDeadHash, false);
+
             bool        moving    = _controller != null
                 ? _controller.IsMoving
                 : speed > moveSpeedThreshold;
@@ -68,6 +80,14 @@ namespace IdleOn.Characters
                 ApplyFacing(facingTarget.position.x - transform.position.x, speed, state, "target");
             else if (moving)
                 ApplyFacing(dx, speed, state, "movement");
+        }
+
+        // Called by PlayerCombatController on non-lethal damage. Animator's AnyState->Hurt
+        // transition is gated on IsDead==false, so this is a no-op once the player is dead.
+        public void PlayHurt()
+        {
+            if (animator != null)
+                animator.SetTrigger(HurtHash);
         }
 
         private void ApplyFacing(float dx, float speed, CombatState state, string source)

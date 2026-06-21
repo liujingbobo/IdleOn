@@ -10,6 +10,7 @@ namespace IdleOn.Characters
         public bool  IsAlive   => CurrentHP > 0f;
 
         public event Action           OnDied;
+        public event Action           OnDamaged;   // fires on non-lethal TakeDamage only
         public event Action<float, float> OnHPChanged;
 
         // First-time init: resets CurrentHP to full.
@@ -38,12 +39,22 @@ namespace IdleOn.Characters
 
             if (CurrentHP <= 0f)
                 OnDied?.Invoke();
+            else
+                OnDamaged?.Invoke();
         }
 
         public void Heal(float amount)
         {
             if (!IsAlive) return;
             CurrentHP = Mathf.Min(MaxHP, CurrentHP + amount);
+            OnHPChanged?.Invoke(CurrentHP, MaxHP);
+        }
+
+        // Death-respawn: restores HP to full so gameplay can resume safely after a revive.
+        // Unlike Heal(), this works while dead (IsAlive false) — that's the whole point.
+        public void Revive()
+        {
+            CurrentHP = MaxHP;
             OnHPChanged?.Invoke(CurrentHP, MaxHP);
         }
     }

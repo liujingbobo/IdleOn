@@ -41,6 +41,7 @@ namespace IdleOn.Enemies
         private HealthComponent _playerHealth;
         private Transform       _playerTransform;
         private Rigidbody2D     _rb;
+        private EnemyAnimatorDriver _animatorDriver;
 
         private EnemyState _state;
         private float      _patrolDir;
@@ -59,8 +60,9 @@ namespace IdleOn.Enemies
 
         void Awake()
         {
-            _health = GetComponent<HealthComponent>();
-            _rb     = GetComponent<Rigidbody2D>();
+            _health         = GetComponent<HealthComponent>();
+            _rb             = GetComponent<Rigidbody2D>();
+            _animatorDriver = GetComponent<EnemyAnimatorDriver>();
         }
 
         void Start()
@@ -96,7 +98,8 @@ namespace IdleOn.Enemies
 
             if (_health == null) return;
             _health.Initialize(definition != null ? definition.MaxHP : 1f);
-            _health.OnDied += HandleDied;
+            _health.OnDied    += HandleDied;
+            _health.OnDamaged += HandleDamaged;
 
             _state            = EnemyState.Patrol;
             _patrolDir        = 1f;
@@ -110,7 +113,15 @@ namespace IdleOn.Enemies
         {
             SetDesiredVelocityX(0f, "OnDisable");
             if (_health != null)
-                _health.OnDied -= HandleDied;
+            {
+                _health.OnDied    -= HandleDied;
+                _health.OnDamaged -= HandleDamaged;
+            }
+        }
+
+        private void HandleDamaged()
+        {
+            _animatorDriver?.PlayHurt();
         }
 
         void FixedUpdate()

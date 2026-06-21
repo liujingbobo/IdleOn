@@ -26,9 +26,10 @@ namespace IdleOn.Enemies
         private EnemyController _controller;
         private Vector3 _lastPosition;
 
-        private static readonly int IsMovingHash   = Animator.StringToHash("IsMoving");
+        private static readonly int IsMovingHash    = Animator.StringToHash("IsMoving");
         private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
         private static readonly int IsDeadHash      = Animator.StringToHash("IsDead");
+        private static readonly int HurtHash        = Animator.StringToHash("Hurt");
 
         void Awake()
         {
@@ -85,6 +86,14 @@ namespace IdleOn.Enemies
                 ApplyFacing(playerTarget.position.x - transform.position.x, speed, state, "target");
             else if (moving)
                 ApplyFacing(dx, speed, state, "movement");
+        }
+
+        // Called by EnemyController on non-lethal damage. AnyState->Hurt is gated on IsDead==false
+        // in SlimeAnimator.controller, so this is a no-op once the slime is dead.
+        public void PlayHurt()
+        {
+            if (animator != null)
+                animator.SetTrigger(HurtHash);
         }
 
         private void ApplyFacing(float dx, float speed, EnemyState state, string source)

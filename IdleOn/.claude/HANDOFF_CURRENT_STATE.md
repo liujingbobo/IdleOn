@@ -170,6 +170,32 @@ All three of the previously-planned bugs below are now **implemented and verifie
 
 Changed files for this pass: `Assets/_assets/Prefabs/Enemies/Slime.prefab`, `Assets/_scripts/Enemies/LocalEnemyRespawner.cs` (new), `Assets/_scripts/World/MapSystem.cs`, `Assets/_scripts/World/MapContentController.cs`, `Assets/_scenes/TestCombat.unity` (added the `LocalEnemyRespawner` component to `Map_grassland_3`).
 
+## Hurt/Death animation pass — player + slime (implemented & verified, 2026-06-20)
+
+Both player and slime now play real Hurt/Death sprite animations instead of any freeze-based placeholder. Manually tested and confirmed working: player Hurt, player Death + respawn, slime Hurt, slime Death + drop/disable/respawn, and no regression to idle/run/attack/cast/fireball.
+
+**Death flow (player):**
+- `HealthComponent.TakeDamage()` fires `OnDied` on a lethal hit (unchanged) and the new `OnDamaged` on a non-lethal hit (added this pass).
+- `PlayerCombatController.HandleDeath()` (subscribed to `OnDied`) is unchanged: sets `_isDead = true`, clears target/interactable, zeroes velocity, starts `DeathSequence()`.
+- `DeathSequence()` waits `deathAnimationFallbackDuration` (1.2s, unchanged value) — long enough to cover the new 0.75s `Player_Death.anim` — then calls `MapSystem.Instance.RespawnAtDefault(deathRespawnMapId)` (`deathRespawnMapId = "town"`) and `HealthComponent.Revive()`, then clears `_isDead`.
+- Death respawn does **not** go through `PreviousMapId`/back-portal spawn at all — `RespawnAtDefault` is a separate, unconditional path from the portal-return-spawn feature documented above. `PreviousMapId` is irrelevant to death and is left exactly as the travel system last set it.
+- `PlayerAnimatorDriver` reads `PlayerCombatController.IsDead` every frame and drives the Animator's `IsDead` bool; `PlayHurt()` (called from a new `HandleDamaged` handler on non-lethal hits) triggers the `Hurt` parameter, gated off while dead.
+
+**Player animation assets:**
+- `Player_Hurt.anim` — 6 frames from ADVENTURER `06-Hurt`, non-looping, 12fps.
+- `Player_Death.anim` — 9 frames from ADVENTURER `07-Dead`, non-looping, 12fps, 0.75s, holds last frame.
+- `PlayerAnimator.controller` — added `IsDead` (bool) and `Hurt` (trigger) params, `Hurt`/`Death` states, an `AnyState→Death` transition (priority) and an `AnyState→Hurt` transition gated by `IsDead==false` (so Death always wins, Hurt can never re-trigger after death). Existing `Idle`/`Run`/`Attack` states and their own transitions were not modified — the new wiring lives entirely in the controller's `AnyState` transition list.
+- `PlayerAnimatorDriver.PlayHurt()` is the only new public entry point; called from `PlayerCombatController.HandleDamaged()`.
+
+**Slime animation (mirrors the player pattern):**
+- `Slime_Hurt.anim` — 6 frames from `SLIME04/04-Hurt`, non-looping, 12fps. The existing `Slime_Dead.anim`/death flow is untouched.
+- `SlimeAnimator.controller` — added `Hurt` (trigger) param, `Hurt` state, `AnyState→Hurt` gated by `IsDead==false`. Existing `AnyState→Dead` transition (priority, added in an earlier pass) is unchanged.
+- `EnemyAnimatorDriver.PlayHurt()` (new) triggers `Hurt`; `EnemyController.HandleDamaged()` (subscribed to the new `HealthComponent.OnDamaged`) calls it only on non-lethal hits.
+- `EnemyController.HandleDied()` (lethal hit, unchanged) still does all of: freeze velocity/physics, fire kill XP/loot exactly once, fire `OnKilled`, then `DisableAfterDeath()` waits `deathDisableDelay` (0.5s, unchanged) so `Slime_Dead.anim` plays before `SetActive(false)`. Loot is only spawned in `HandleDied` — Hurt never touches loot, so drops cannot duplicate.
+- `LocalEnemyRespawner` (Grassland3 only) still re-enables the same instance after `respawnDelay` off the same `OnKilled` event — unaffected by this pass. Grassland2's tutorial slime still has no respawner attached and stays dead.
+
+**Changed/added files this pass:** `Player_Hurt.anim(.meta)`, `Player_Death.anim(.meta)`, `Slime_Hurt.anim(.meta)` (new); `PlayerAnimator.controller`, `SlimeAnimator.controller`, `PlayerAnimatorDriver.cs`, `EnemyAnimatorDriver.cs`, `HealthComponent.cs`, `PlayerCombatController.cs`, `EnemyController.cs` (edited). No scene/prefab/UI/HUD/docs files touched.
+
 ## Next work
 
 The Grassland3-respawn / enemy-speed / portal-return-spawn bugfix pass above is done. No bugs are currently pending. Next work is **polish, regression testing, and one full manual Q1–Q12 playthrough only**, unless explicitly redirected. Do not implement Map4, Map5, or the boss yet.
@@ -197,3 +223,7 @@ The Grassland3-respawn / enemy-speed / portal-return-spawn bugfix pass above is 
 - ObjectiveHelper disabled state — do not reactivate
 - BootScene menu flow / scene-authored UI — do not restore the old runtime-generated `StartupMenu` UI path, do not redesign UI unless asked
 - Map4/Map5/boss — do not implement
+- Player/slime Death — never fake with a freeze; real `Player_Death.anim`/`Slime_Dead.anim` exist and play. Death always overrides Hurt in both Animator controllers.
+- Player death respawn — always `MapSystem.RespawnAtDefault("town")`; never route it through `PreviousMapId`/back-portal spawn.
+- Grassland2 tutorial slime — must not respawn; do not add a respawner to it.
+- Grassland3 `LocalEnemyRespawner` — stays a demo/local-only mechanism (re-enable same instance), not the final/general spawner architecture.

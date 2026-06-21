@@ -22,6 +22,15 @@ Inventory is always available. Q7 unlocks Craft, Q10 unlocks Talents and AutoCom
 
 The remaining release gate is one uninterrupted human Q1–Q12 playthrough with real save/quit/reload checkpoints. Use `.claude/HANDOFF_CURRENT_STATE.md` for the authoritative route and current debt. Any contradictory implementation note below is historical and superseded by this section.
 
+### Hurt/Death animation (player + slime)
+
+Both Player and Slime have real Hurt and Death sprite animations — not freeze-based placeholders.
+
+- **Player:** `HealthComponent.OnDamaged` (new event, fires on non-lethal `TakeDamage` only, sibling of the existing lethal-only `OnDied`) is consumed by `PlayerCombatController.HandleDamaged()`, which calls `PlayerAnimatorDriver.PlayHurt()` (`Animator.SetTrigger("Hurt")`). `PlayerAnimatorDriver` also reads `PlayerCombatController.IsDead` every frame to drive the Animator's `IsDead` bool. `PlayerAnimator.controller` has `Hurt`(trigger)/`IsDead`(bool) params, `Hurt`/`Death` states wired from `AnyState` (Death always takes priority; `AnyState→Hurt` is gated `IsDead==false` so Death overrides Hurt and Hurt can never fire after death). Clips: `Player_Hurt.anim` (6 frames, ADVENTURER `06-Hurt`), `Player_Death.anim` (9 frames, ADVENTURER `07-Dead`), both non-looping, 12fps. Existing `Idle`/`Run`/`Attack` states/transitions were not touched — the new wiring lives only in the controller's `AnyState` transition list.
+- **Slime:** identical pattern. `EnemyController.HandleDamaged()` (subscribed to `HealthComponent.OnDamaged`) calls `EnemyAnimatorDriver.PlayHurt()`. `SlimeAnimator.controller` gained `Hurt`(trigger) + a `Hurt` state, `AnyState→Hurt` gated `IsDead==false`; the existing `AnyState→Dead` transition/`Slime_Dead.anim`/death flow are unchanged. Clip: `Slime_Hurt.anim` (6 frames, `SLIME04/04-Hurt`), non-looping, 12fps.
+- **Death respawn (player) stays a separate, unconditional path:** `PlayerCombatController.DeathSequence()` waits `deathAnimationFallbackDuration` (1.2s — covers the 0.75s Death clip), then calls `MapSystem.Instance.RespawnAtDefault(deathRespawnMapId)` (`"town"`) and `HealthComponent.Revive()`. This does **not** read or clear `MapSystem.PreviousMapId` — death respawn is unrelated to the portal-return-spawn feature; `PreviousMapId` is left exactly as travel last set it.
+- **Slime death stays exactly as before:** `EnemyController.HandleDied()` (lethal hit only) freezes physics, fires kill XP/loot/`OnKilled` once, then `DisableAfterDeath()` waits `deathDisableDelay` (0.5s) so `Slime_Dead.anim` plays before `SetActive(false)`. Loot only ever spawns from `HandleDied`, so Hurt animation work cannot duplicate drops. `LocalEnemyRespawner` (Grassland3 only) and the no-respawner Grassland2 tutorial slime are both unaffected.
+
 ### Current movement and loot presentation polish
 
 * Player Run and Slime Move animation state follows each controller's read-only horizontal movement intent (`IsMoving`), rather than relying on an `Update`-frame position delta from `FixedUpdate` movement.
@@ -1052,6 +1061,7 @@ These systems are complete and stable. Do not refactor, rename, or add to them u
 - `PlayerStats.Recalculate()` — stat pipeline (only extend at the end with new bonuses)
 - `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow` — window UI logic (buttons and events are wired). `CraftingWindow`/`CraftingDetailPanel`/`CraftingRecipeSlotUI`/`IngredientRowUI` were intentionally modified once under explicit instruction to adapt to a manual UI redesign — still protected going forward.
 - `ObjectiveHelperUI` — disabled (not deleted) in-scene for the quest demo; still protected if re-enabled.
+- Player/Slime Hurt/Death animation wiring — real clips exist for both; never fake death with a freeze, never let Hurt override Death, never route player death respawn through `PreviousMapId`/back-portal spawn.
 - `TalentWindow`, `TalentInfoPanel`, `SkillHotbarUI`, `SkillSlotUI` — talent and hotbar UI logic (wired and verified)
 - `QuestSystem`, `MapSystem` (again, emphasized) — never add branching, multi-active-quest, or auto-unlock-next-map logic. Unlocks are destination-MapDef-driven only (`PortalGate`), not `QuestSystem`/`MapSystem`-driven.
 - `PortalInteractable` — travel-only. Never give it unlock-requirement fields, and never give it spawn-position fields — `destinationMapId` only.
@@ -1080,7 +1090,7 @@ Other open items:
 - **Multiple windows** can be open simultaneously. No WindowManager exists. Add one only if needed.
 - **Click-to-move Y** — under the lane model, Y is always `GroundLane.GroundY`; there is no vertical movement and no pathfinding.
 - **`groundLayerMask`/`maxGroundSearchDistance`** on `PlayerCombatController` are legacy fields from the pre-lane raycast movement, currently unused but left in place — harmless.
-- **Player / Enemy animations** are implemented (Animator + sprite-swap clips). Driver components own facing and read controller movement intent; `SpriteFeetAligner` keeps differently cropped frames grounded without touching gameplay transforms.
+- **Player / Enemy animations** are implemented (Animator + sprite-swap clips), including real Hurt and Death clips for both Player and Slime (see "Hurt/Death animation" above) — no animation is faked with a freeze. Driver components own facing and read controller movement intent; `SpriteFeetAligner` keeps differently cropped frames grounded without touching gameplay transforms.
 - **RemoveItem/Equip are itemId-based, not slot-index-based.** If the same item exists in multiple slots, only the first match is affected. Future task: add `RemoveItemAt(slotIndex)`, `EquipFromSlot(slotIndex)`, `MoveItem(fromSlot, toSlot)` for exact-slot drag/drop and equip.
 - **Full QA pass still needed** across save/load, inventory, talents, hotbar, crafting, and MainHUD together in one play session — the authoritative manual route lives in `.claude/HANDOFF_CURRENT_STATE.md`.
 - **Fireball needs a polish pass:** final icon asset, visual feedback (projectile or hit effect — currently damage is applied directly with no visual), and feedback when MP is insufficient to cast (currently silently does nothing).

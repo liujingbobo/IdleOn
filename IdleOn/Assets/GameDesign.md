@@ -217,6 +217,14 @@ All damage (player → enemy, enemy → player) shows a floating damage number.
 
 Physical damage: orange. Magic damage: blue. Heal: green. Critical: larger text.
 
+Taking non-fatal damage plays a Hurt animation on the player or the slime. A fatal hit always plays the Death animation instead — Death never gets interrupted or overridden by a Hurt trigger.
+
+## Death and Respawn
+
+When the player dies: movement and combat input stop, the Death animation plays, the player respawns at Town's default spawn point (not at a portal/back-spawn point), HP is restored, and normal control resumes.
+
+When a slime dies: the Death animation plays before it disappears, then any loot drops once. Grassland 3's slimes respawn after a short delay for grinding; Grassland 2's tutorial slime does not respawn.
+
 ## Skills
 
 ### Fireball
