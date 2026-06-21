@@ -13,6 +13,9 @@ namespace IdleOn.UI
         [SerializeField] private Transform         recipeListContent;
         [SerializeField] private CraftingRecipeSlotUI recipeSlotPrefab;
 
+        [Header("Motion (optional)")]
+        [SerializeField] private UIWindowMotion motion;
+
         // TEMPORARY: debug key for opening this window before MainUI is built.
         // Remove this block once MainUI buttons call Open() / Toggle() directly.
         [Header("Debug (remove once MainUI is wired)")]
@@ -22,11 +25,12 @@ namespace IdleOn.UI
         private readonly List<CraftingRecipeSlotUI> _slots = new List<CraftingRecipeSlotUI>();
         private CraftRecipeDefinition _selectedRecipe;
 
-        public bool IsOpen => windowPanel.activeSelf;
+        public bool IsOpen => motion != null ? motion.IsOpen : windowPanel.activeSelf;
 
         void Awake()
         {
-            windowPanel.SetActive(false);
+            if (motion != null) motion.SetClosedImmediate();
+            else                windowPanel.SetActive(false);
             GameEvents.OnInventoryChanged += OnInventoryChanged;
         }
 
@@ -49,7 +53,8 @@ namespace IdleOn.UI
         // Called by MainUI buttons.
         public void Open()
         {
-            windowPanel.SetActive(true);
+            if (motion != null) motion.PlayOpen();
+            else                windowPanel.SetActive(true);
             RefreshAllSlots();
             if (_selectedRecipe != null)
                 detailPanel.Refresh();
@@ -58,13 +63,14 @@ namespace IdleOn.UI
         // Called by MainUI buttons or the window's own close button.
         public void Close()
         {
-            windowPanel.SetActive(false);
+            if (motion != null) motion.PlayClose();
+            else                windowPanel.SetActive(false);
         }
 
         // Called by MainUI buttons.
         public void Toggle()
         {
-            if (windowPanel.activeSelf) Close();
+            if (IsOpen) Close();
             else Open();
         }
 
@@ -105,7 +111,7 @@ namespace IdleOn.UI
 
         private void OnInventoryChanged()
         {
-            if (!windowPanel.activeSelf) return;
+            if (!IsOpen) return;
             RefreshAllSlots();
         }
 

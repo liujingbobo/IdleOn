@@ -3050,6 +3050,7 @@ GameObject:
   m_Component:
   - component: {fileID: 174006978}
   - component: {fileID: 174006977}
+  - component: {fileID: 174006979}
   m_Layer: 0
   m_Name: InventoryPanel
   m_TagString: Untagged
@@ -3085,6 +3086,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &174006979
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174006975}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &174200903
 GameObject:
   m_ObjectHideFlags: 0
@@ -8300,6 +8313,7 @@ GameObject:
   - component: {fileID: 530448106}
   - component: {fileID: 530448107}
   - component: {fileID: 530448108}
+  - component: {fileID: 530448109}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -8425,6 +8439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowPanel: {fileID: 174006975}
+  motion: {fileID: 530448109}
   equipmentSlots:
   - {fileID: 1675977410}
   - {fileID: 969216889}
@@ -8456,6 +8471,12 @@ MonoBehaviour:
   dialogueText: {fileID: 1843009477}
   fullScreenButton: {fileID: 688950932}
   dialoguePortrait: {fileID: 339171671}
+  hudCanvasGroup: {fileID: 1676772971}
+  hudFadeDuration: 0.16
+  charactersPerSecond: 45
+  portraitRect: {fileID: 339171670}
+  portraitEnterOffset: 120
+  portraitEnterDuration: 0.18
 --- !u!114 &530448107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8496,6 +8517,25 @@ MonoBehaviour:
   popScale: 1.2
   shrinkDuration: 0.1
   prewarmCount: 8
+--- !u!114 &530448109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530448098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 254ce2ea227149949a32f3894fa98723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRoot: {fileID: 174006975}
+  canvasGroup: {fileID: 174006979}
+  scaleTarget: {fileID: 758034906}
+  openStartScale: 0.94
+  openDuration: 0.16
+  closeEndScale: 0.96
+  closeDuration: 0.12
 --- !u!1 &536218130
 GameObject:
   m_ObjectHideFlags: 0
@@ -11730,6 +11770,11 @@ RectTransform:
 --- !u!224 &758034905 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7162429941255870757, guid: 5511b9ac186b5c7429ac7d5648a7d117, type: 3}
+  m_PrefabInstance: {fileID: 758034902}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &758034906 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 92291836707492831, guid: 5511b9ac186b5c7429ac7d5648a7d117, type: 3}
   m_PrefabInstance: {fileID: 758034902}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &759773817
@@ -22407,6 +22452,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1530160285}
   - component: {fileID: 1530160286}
+  - component: {fileID: 1530160288}
+  - component: {fileID: 1530160287}
   m_Layer: 0
   m_Name: CraftingWindow
   m_TagString: Untagged
@@ -22450,8 +22497,40 @@ MonoBehaviour:
   detailPanel: {fileID: 1753390595}
   recipeListContent: {fileID: 1941691797}
   recipeSlotPrefab: {fileID: 5794783035125847862, guid: e2df5ef098278004eb9e4b2ccbe17155, type: 3}
+  motion: {fileID: 1530160287}
   enableDebugKey: 1
   debugOpenKey: 99
+--- !u!114 &1530160287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530160284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 254ce2ea227149949a32f3894fa98723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowRoot: {fileID: 1822493792}
+  canvasGroup: {fileID: 1530160288}
+  scaleTarget: {fileID: 1822493793}
+  openStartScale: 0.94
+  openDuration: 0.16
+  closeEndScale: 0.96
+  closeDuration: 0.12
+--- !u!225 &1530160288
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530160284}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1531283328
 GameObject:
   m_ObjectHideFlags: 0
@@ -25824,6 +25903,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1676772969}
   - component: {fileID: 1676772970}
+  - component: {fileID: 1676772971}
   m_Layer: 0
   m_Name: MainHUD
   m_TagString: Untagged
@@ -25890,6 +25970,18 @@ MonoBehaviour:
   mapButton: {fileID: 1622610313}
   buttonOnSprite: {fileID: -4651692013538541605, guid: def7f9934fbfdae4a9357fec183eb960, type: 3}
   buttonOffSprite: {fileID: 8576575937056572535, guid: 6e6799732dd26ca40b55525ff3bbe3e4, type: 3}
+--- !u!225 &1676772971
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676772968}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1682463994
 GameObject:
   m_ObjectHideFlags: 0
@@ -27543,6 +27635,11 @@ RectTransform:
 --- !u!1 &1822493792 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 19195907903370881, guid: 5511b9ac186b5c7429ac7d5648a7d117, type: 3}
+  m_PrefabInstance: {fileID: 1822493788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1822493793 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 92291836707492831, guid: 5511b9ac186b5c7429ac7d5648a7d117, type: 3}
   m_PrefabInstance: {fileID: 1822493788}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1827101469
@@ -31095,6 +31192,7 @@ GameObject:
   - component: {fileID: 2104222245}
   - component: {fileID: 2104222244}
   - component: {fileID: 2104222243}
+  - component: {fileID: 2104222247}
   m_Layer: 0
   m_Name: CraftButton
   m_TagString: Untagged
@@ -31224,6 +31322,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2104222241}
   m_CullTransparentMesh: 1
+--- !u!114 &2104222247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104222241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bd5c489d70afb46b8c4943e360a118, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualTarget: {fileID: 2104222242}
+  selectable: {fileID: 2104222244}
+  hoverScale: 1.06
+  hoverDuration: 0.08
+  pressScale: 0.96
+  pressDuration: 0.05
 --- !u!1 &2113188409
 GameObject:
   m_ObjectHideFlags: 0

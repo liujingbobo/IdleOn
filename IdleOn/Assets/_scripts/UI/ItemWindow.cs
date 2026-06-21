@@ -9,6 +9,7 @@ namespace IdleOn.UI
     {
         [Header("Window")]
         [SerializeField] private GameObject windowPanel;
+        [SerializeField] private UIWindowMotion motion;
 
         [Header("Equipment")]
         [SerializeField] private EquipmentSlotUI[] equipmentSlots;
@@ -28,11 +29,12 @@ namespace IdleOn.UI
         private InventorySlotUI[] _inventorySlots;
         private int _currentPage;
 
-        public bool IsOpen => windowPanel.activeSelf;
+        public bool IsOpen => motion != null ? motion.IsOpen : windowPanel.activeSelf;
 
         void Awake()
         {
-            windowPanel.SetActive(false);
+            if (motion != null) motion.SetClosedImmediate();
+            else                windowPanel.SetActive(false);
             GameEvents.OnInventoryChanged += RefreshInventory;
             GameEvents.OnEquipmentChanged += RefreshEquipment;
         }
@@ -59,15 +61,30 @@ namespace IdleOn.UI
             if (Input.GetKeyDown(KeyCode.Tab))
                 ToggleWindow();
 
-            if (windowPanel.activeSelf && Input.GetMouseButtonDown(0))
+            if (IsOpen && Input.GetMouseButtonDown(0))
                 if (EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject())
                     itemInfoPanel.Hide();
         }
 
         // Called by MainHUD buttons.
-        public void Open()   { windowPanel.SetActive(true);  _currentPage = 0; RefreshInventory(); RefreshEquipment(); }
-        public void Close()  { windowPanel.SetActive(false); itemInfoPanel.Hide(); dragHandler.Cancel(); }
-        public void Toggle() { if (windowPanel.activeSelf) Close(); else Open(); }
+        public void Open()
+        {
+            if (motion != null) motion.PlayOpen();
+            else                windowPanel.SetActive(true);
+            _currentPage = 0;
+            RefreshInventory();
+            RefreshEquipment();
+        }
+
+        public void Close()
+        {
+            if (motion != null) motion.PlayClose();
+            else                windowPanel.SetActive(false);
+            itemInfoPanel.Hide();
+            dragHandler.Cancel();
+        }
+
+        public void Toggle() { if (IsOpen) Close(); else Open(); }
 
         // Called by NextPageBtn/PrevPageBtn onClick.
         public void NextPage() { _currentPage++; RefreshInventory(); }
@@ -75,25 +92,12 @@ namespace IdleOn.UI
 
         private void ToggleWindow()
         {
-            bool open = !windowPanel.activeSelf;
-            windowPanel.SetActive(open);
-
-            if (open)
-            {
-                _currentPage = 0;
-                RefreshInventory();
-                RefreshEquipment();
-            }
-            else
-            {
-                itemInfoPanel.Hide();
-                dragHandler.Cancel();
-            }
+            Toggle();
         }
 
         private void RefreshInventory()
         {
-            if (!windowPanel.activeSelf || _inventorySlots == null) return;
+            if (!IsOpen || _inventorySlots == null) return;
 
             var inv = InventorySystem.Instance;
             if (inv == null) return;
@@ -128,7 +132,7 @@ namespace IdleOn.UI
 
         private void RefreshEquipment()
         {
-            if (!windowPanel.activeSelf) return;
+            if (!IsOpen) return;
             foreach (var slot in equipmentSlots)
                 slot.Refresh();
         }
