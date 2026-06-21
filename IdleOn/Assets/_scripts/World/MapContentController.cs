@@ -4,12 +4,10 @@ using IdleOn.Core;
 
 namespace IdleOn.World
 {
-    // Single-scene multi-map driver. One persistent Player plus a shared GroundLane / Canvas / systems;
-    // each map's portals, enemies, and NPCs live under a map-root GameObject. Reacts to MapSystem's
-    // OnMapChanged: activates only the current map root, moves the player to that map's spawn, and marks
-    // every configured map's MapProgress unlocked so PortalInteractable.TravelTo succeeds. PortalGate
-    // (quest-driven) remains the real gate on each portal. Does not modify MapSystem / PortalGate /
-    // PortalInteractable / WorldInteractable.
+    // Single-scene hybrid map driver. A MapDefinition prefab is instantiated when assigned; maps
+    // without one continue using their existing baked scene roots. One persistent Player plus the
+    // shared GroundLane / Canvas / systems remain outside map content. PortalGate (quest-driven)
+    // remains the real destination gate.
     public class MapContentController : MonoBehaviour
     {
         [Serializable]
@@ -22,6 +20,10 @@ namespace IdleOn.World
 
         [SerializeField] private MapEntry[] maps = new MapEntry[0];
         [SerializeField] private Transform  player;
+
+        private string     _activeMapId;
+        private GameObject _activeContentRoot;
+        private GameObject _activePrefabInstance;
 
         void OnEnable()  => GameEvents.OnMapChanged += HandleMapChanged;
         void OnDisable() => GameEvents.OnMapChanged -= HandleMapChanged;
@@ -36,61 +38,136 @@ namespace IdleOn.World
 
         private void HandleMapChanged(string mapId)
         {
-            var ms = MapSystem.Instance;
-
-            // Pre-unlock every configured map's progress so portals can travel; the quest-driven
-            // PortalGate is what actually decides whether each portal is usable.
-            if (ms != null)
+            var mapSystem = MapSystem.Instance;
+            var entry = FindEntry(mapId);
+            if (entry == null)
             {
-                foreach (var e in maps)
+                Debug.LogWarning($"[MapContentController] No map entry configured for '{mapId}'.", this);
+                return;
+            }
+
+            // Keep the legacy MapProgress travel flags available. PortalGate remains the real
+            // destination-requirement gate and MapSystem remains unchanged.
+            if (mapSystem != null)
+            {
+                foreach (var configuredEntry in maps)
                 {
-                    if (e == null || string.IsNullOrEmpty(e.MapId)) continue;
-                    var p = ms.GetProgress(e.MapId);
-                    if (p != null) p.IsUnlocked = true;
+                    if (configuredEntry == null || string.IsNullOrEmpty(configuredEntry.MapId)) continue;
+                    var progress = mapSystem.GetProgress(configuredEntry.MapId);
+                    if (progress != null) progress.IsUnlocked = true;
                 }
             }
 
-            // Activate only the current map root.
-            foreach (var e in maps)
+            // Repeated initialization/map events for the same destination reuse the current content.
+            if (_activeMapId != mapId || _activeContentRoot == null)
+                SwitchContent(entry);
+            else if (!_activeContentRoot.activeSelf)
+                _activeContentRoot.SetActive(true);
+
+            PlacePlayer(entry, mapSystem);
+        }
+
+        private void SwitchContent(MapEntry entry)
+        {
+            UnloadActivePrefab();
+
+            // Baked roots are fallback content and are never destroyed.
+            foreach (var configuredEntry in maps)
             {
-                if (e == null || e.Root == null) continue;
-                e.Root.SetActive(e.MapId == mapId);
+                if (configuredEntry == null || configuredEntry.Root == null) continue;
+                configuredEntry.Root.SetActive(false);
             }
 
-            // Move the persistent player to the current map's spawn — near the portal back to the
-            // previous map if one exists in the destination root, otherwise the configured default.
-            if (player == null) return;
+            GameObject contentRoot = null;
+            var mapDef = GameDatabase.Instance?.Maps?.GetMap(entry.MapId);
+            if (mapDef != null && mapDef.MapPrefab != null)
+            {
+                try
+                {
+                    _activePrefabInstance = Instantiate(mapDef.MapPrefab);
+                    if (_activePrefabInstance != null)
+                    {
+                        _activePrefabInstance.SetActive(true);
+                        contentRoot = _activePrefabInstance;
+                    }
+                    else
+                    {
+                        Debug.LogWarning(
+                            $"[MapContentController] Prefab instantiation returned null for " +
+                            $"'{entry.MapId}'; using baked fallback.",
+                            this);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogWarning(
+                        $"[MapContentController] Failed to instantiate prefab for '{entry.MapId}'; " +
+                        $"using baked fallback. {exception.Message}",
+                        this);
+                    _activePrefabInstance = null;
+                }
+            }
+
+            if (contentRoot == null)
+            {
+                if (entry.Root != null)
+                {
+                    entry.Root.SetActive(true);
+                    contentRoot = entry.Root;
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        $"[MapContentController] Map '{entry.MapId}' has neither a usable prefab " +
+                        "nor a baked fallback root.",
+                        this);
+                }
+            }
+
+            _activeMapId = contentRoot != null ? entry.MapId : null;
+            _activeContentRoot = contentRoot;
+        }
+
+        private void UnloadActivePrefab()
+        {
+            if (_activePrefabInstance == null) return;
+
+            // Destroy is deferred in Play mode. Disable first so the source map stops participating
+            // before the destination map activates in the same frame.
+            _activePrefabInstance.SetActive(false);
+            Destroy(_activePrefabInstance);
+            _activePrefabInstance = null;
+            _activeContentRoot = null;
+            _activeMapId = null;
+        }
+
+        private void PlacePlayer(MapEntry entry, MapSystem mapSystem)
+        {
+            if (player == null || _activeContentRoot == null) return;
 
             Vector2? spawnPos = null;
-            string previousMapId = ms?.PreviousMapId;
+            string previousMapId = mapSystem?.PreviousMapId;
             if (!string.IsNullOrEmpty(previousMapId))
             {
-                foreach (var e in maps)
-                {
-                    if (e == null || e.MapId != mapId || e.Root == null) continue;
-                    var portal = FindBackPortal(e.Root, previousMapId);
-                    if (portal != null) spawnPos = SpawnNearPortal(portal);
-                    break;
-                }
+                var portal = FindBackPortal(_activeContentRoot, previousMapId);
+                if (portal != null) spawnPos = SpawnNearPortal(portal);
             }
 
             if (spawnPos == null)
-            {
-                foreach (var e in maps)
-                {
-                    if (e == null || e.MapId != mapId) continue;
-                    spawnPos = e.PlayerSpawn;
-                    break;
-                }
-            }
+                spawnPos = entry.PlayerSpawn;
 
-            if (spawnPos != null)
-            {
-                var pos = player.position;
-                pos.x = spawnPos.Value.x;
-                pos.y = spawnPos.Value.y;
-                player.position = pos;
-            }
+            var pos = player.position;
+            pos.x = spawnPos.Value.x;
+            pos.y = spawnPos.Value.y;
+            player.position = pos;
+        }
+
+        private MapEntry FindEntry(string mapId)
+        {
+            foreach (var entry in maps)
+                if (entry != null && entry.MapId == mapId)
+                    return entry;
+            return null;
         }
 
         // Searches the destination root for a PortalInteractable whose own DestinationMapId points

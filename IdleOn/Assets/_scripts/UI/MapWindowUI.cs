@@ -111,6 +111,10 @@ namespace IdleOn.UI
 
         private static bool HasMapContent(string mapId)
         {
+            var mapDef = GameDatabase.Instance?.Maps?.GetMap(mapId);
+            if (mapDef != null && mapDef.MapPrefab != null)
+                return true;
+
             string expectedRoot = "Map_" + mapId;
             var roots = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
             foreach (var root in roots)

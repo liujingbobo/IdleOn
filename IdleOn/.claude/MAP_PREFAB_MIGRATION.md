@@ -20,7 +20,7 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 ## 3. Current architecture summary
 
 - Scene has four map roots: `Map_grassland_1`, `Map_grassland_2`, `Map_town`, `Map_grassland_3`. `Map_grassland_2` is now a prefab instance of `Map_grassland_2.prefab`; live travel still treats all four as scene roots.
-- `MapContentController` activates/deactivates these existing roots on `OnMapChanged` — never destroys/instantiates.
+- `MapContentController` now uses hybrid loading: a destination with `MapDefinition.MapPrefab` instantiates a runtime copy; null-prefab maps keep using their baked roots. Only Grassland2 currently uses runtime prefab loading.
 - `MapSystem` owns `CurrentMapId`/`PreviousMapId` and `TravelTo`/`RespawnAtDefault`.
 - `PortalGate` handles unlock gating off the destination `MapDefinition`.
 - `MapWindowUI` handles map point display/travel; `HasMapContent` currently scans `SceneManager.GetActiveScene().GetRootGameObjects()` by name (`"Map_" + mapId`) — this coupling must change when roots stop being permanent scene children.
@@ -56,12 +56,23 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
   - Verification: Unity script validation/compilation completed without game-code errors; Grassland2 resolves to the expected prefab; all other current MapDefinitions resolve null; map IDs and unlock requirements are unchanged; no scene or prefab diff.
   - Known risk: the new field is intentionally dormant. Runtime loading, fallback behavior, back-spawn, save/load restore, and MapWindow content detection still require a later explicitly approved phase.
 
+- **Phase 3A** — hybrid loading enabled for Grassland2 only.
+  - Changed files: `Assets/_scripts/World/MapContentController.cs`, `Assets/_scripts/UI/MapWindowUI.cs`, and this tracking doc.
+  - `MapContentController` tracks one active content root and one optional runtime prefab instance. Assigned prefabs are instantiated at scene root; null-prefab maps activate their existing baked `MapEntry.Root`.
+  - Runtime prefab content is disabled before deferred `Destroy`; baked roots are only disabled and are never destroyed. Repeated same-map events reuse the active content and do not create duplicate instances.
+  - Player placement reuses the existing `MapEntry.PlayerSpawn` default and searches the resolved active content root for the portal back to `MapSystem.PreviousMapId`.
+  - Prefab instantiation failure falls back to the baked root and logs a warning. `MapWindowUI.HasMapContent` now accepts either an assigned prefab or a matching baked scene root.
+  - Verification: Grassland1/Town/Grassland3 used baked roots; Grassland2 used exactly one runtime clone while its baked root remained inactive; g1→g2→town→g3 and reverse portal spawning worked; MapWindow travel worked; repeated map events did not duplicate Grassland2; save-current-map restore created one Grassland2 instance at the default spawn; null-prefab fallback activated the baked Grassland2 root; Grassland2 slime stayed dead after four seconds; Grassland3 local respawn still worked.
+  - Unity script validation and EditMode test passed; Console was clean after excluding MCP transport noise. No scene, prefab, MapDefinition, MapSystem, MapRuntimeContext, or portal file changed.
+  - Known risks: drops/projectiles/VFX are not parented to `MapRuntimeContext` yet, so Phase 3A only unloads objects that are children of the map prefab. Direct-open TestCombat still retains its pre-existing no-selected-save MapProgress limitation.
+
 ## 5. Planned phases
 
 - ~~**Phase 1B**~~ — done, see section 4 above.
 - ~~**Phase 2A**~~ — done, see section 4 above.
 - ~~**Phase 2B**~~ — data reference added to `MapDefinition` and assigned for Grassland2 only. No live loader wiring; see section 4.
-- **Phase 3** — migrate all four current maps and switch `MapContentController`/new `MapLoader` flow live in `TestCombat`. Requires explicit go-ahead — this touches a protected system.
+- ~~**Phase 3A**~~ — hybrid loader live for Grassland2 with baked fallback; see section 4.
+- **Phase 3B** — extract and data-wire the remaining current map prefabs one at a time, retaining baked fallback until each prefab is verified.
 - **Phase 4** — parent drops/projectiles/VFX under the current map's runtime root at spawn time.
 - **Phase 5** — unify enemy spawn points / decide future replacement for `LocalEnemyRespawner` and the unused global `EnemySpawner`. Not currently approved; treat as out of scope until explicitly requested.
 
@@ -95,4 +106,4 @@ Every future prompt for this migration must:
 
 **Phase 2A:** done — see section 4. `Map_grassland_2.prefab` exists and is verified clean, not yet wired into loading.
 
-**Next:** audit and design the live loader transition using `MapDefinition.MapPrefab`, including fallback behavior for maps whose prefab reference is still null. Do not modify `MapContentController`, remove scene roots, or switch travel behavior without explicit approval.
+**Next:** Phase 3B should migrate one remaining map at a time (recommended Grassland1 first), assign its `MapDefinition.MapPrefab`, and verify the existing hybrid loader without removing any baked roots. Phase 4 runtime drop/projectile/VFX parenting remains separate.
