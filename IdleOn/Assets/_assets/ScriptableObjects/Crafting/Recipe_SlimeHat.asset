@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6588242faf2dd947b483e7c50ee0bb8, type: 3}
-  m_Name: Recipe_BasicHat
+  m_Name: Recipe_SlimeHat
   m_EditorClassIdentifier: 
   RecipeId: recipe_basic_hat
   ResultItem: {fileID: 11400000, guid: 56b97ef12e2b98c49b2d766a4cee9d04, type: 2}
   ResultQuantity: 1
   RequiredIngredients:
-  - Item: {fileID: 11400000, guid: 3834f2ff1abc585458ef127207cd9475, type: 2}
-    Quantity: 3
+  - Item: {fileID: 11400000, guid: 504741d8a736492997bab1715795eee0, type: 2}
+    Quantity: 5
   RequiredLevel: 1

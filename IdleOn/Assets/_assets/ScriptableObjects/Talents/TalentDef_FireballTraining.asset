@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2410571d8c9f3644f97c55fd04755daf, type: 3}
   m_Name: TalentDef_FireballTraining
   m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 8ccd4fbf63108b34f92c55b80b4c3e7e, type: 3}
   TalentId: fireball_training
   DisplayName: Fireball Training
   Description: Increases Fireball damage. Unlocks Fireball at Lv.1.
@@ -23,3 +24,4 @@ MonoBehaviour:
   MaxMPPerLevel: 0
   CurrencyMultiplierPerLevel: 0
   FireballDamagePerLevel: 1
+  InventorySlotsPerLevel: 0

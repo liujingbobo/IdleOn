@@ -14,12 +14,8 @@ namespace IdleOn.UI
         [SerializeField] private Button   button;
         [SerializeField] private Image    background;
 
-        [Header("Colors")]
-        [SerializeField] private Color selectedColor   = new Color(0.3f, 0.5f, 0.8f, 1f);
-        [SerializeField] private Color normalColor     = new Color(0.15f, 0.15f, 0.15f, 1f);
-        [SerializeField] private Color canCraftColor   = Color.green;
-        [SerializeField] private Color cannotCraftColor = Color.grey;
-
+        [SerializeField] private GameObject selectedGroup;
+        
         [Header("Background Sprites")]
         [SerializeField] private Sprite craftableSprite;
         [SerializeField] private Sprite notCraftableSprite;
@@ -42,7 +38,6 @@ namespace IdleOn.UI
             if (Recipe == null) return;
 
             bool canCraft = CraftingSystem.Instance != null && CraftingSystem.Instance.CanCraft(Recipe);
-            canCraftDot.color = canCraft ? canCraftColor : cannotCraftColor;
 
             if (background != null && craftableSprite != null && notCraftableSprite != null)
                 background.sprite = canCraft ? craftableSprite : notCraftableSprite;
@@ -55,8 +50,8 @@ namespace IdleOn.UI
 
         public void SetSelected(bool selected)
         {
-            if (background != null)
-                background.color = selected ? selectedColor : normalColor;
+            if(selectedGroup != null)
+                selectedGroup.SetActive(selected);
         }
 
         private static Sprite GetPlaceholder()

@@ -13,12 +13,6 @@ MonoBehaviour:
   m_Name: SlimeLootTable
   m_EditorClassIdentifier: 
   entries:
-  - DropType: 0
-    ItemDefinition: {fileID: 11400000, guid: 3834f2ff1abc585458ef127207cd9475, type: 2}
-    CurrencyType: 0
-    DropChance: 0.85
-    MinQuantity: 1
-    MaxQuantity: 2
   - DropType: 1
     ItemDefinition: {fileID: 0}
     CurrencyType: 1
@@ -26,14 +20,8 @@ MonoBehaviour:
     MinQuantity: 5
     MaxQuantity: 15
   - DropType: 0
-    ItemDefinition: {fileID: 11400000, guid: 56b97ef12e2b98c49b2d766a4cee9d04, type: 2}
-    CurrencyType: 0
-    DropChance: 0.05
-    MinQuantity: 1
-    MaxQuantity: 1
-  - DropType: 0
     ItemDefinition: {fileID: 11400000, guid: 504741d8a736492997bab1715795eee0, type: 2}
     CurrencyType: 0
-    DropChance: 1
+    DropChance: 0.8
     MinQuantity: 1
     MaxQuantity: 1
