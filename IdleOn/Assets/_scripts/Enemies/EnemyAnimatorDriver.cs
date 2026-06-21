@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace IdleOn.Enemies
@@ -19,12 +20,16 @@ namespace IdleOn.Enemies
         [SerializeField] private float moveSpeedThreshold = 0.05f;
         [Tooltip("Enable if the sprite art faces LEFT by default (flips the facing logic). No rotate/scale.")]
         [SerializeField] private bool invertFacing = false;
+        [SerializeField, Min(0f)] private float hitFlashDuration = 0.1f;
 
         [Header("Debug")]
         [SerializeField] private bool debugFacing;
 
         private EnemyController _controller;
         private Vector3 _lastPosition;
+        private Color _originalSpriteColor;
+        private bool _spriteColorCached;
+        private Coroutine _hitFlashRoutine;
 
         private static readonly int IsMovingHash    = Animator.StringToHash("IsMoving");
         private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
@@ -39,6 +44,12 @@ namespace IdleOn.Enemies
             if (animator == null && sprite != null)       animator       = sprite.GetComponent<Animator>();
             if (spriteRenderer == null && sprite != null) spriteRenderer = sprite.GetComponent<SpriteRenderer>();
 
+            if (spriteRenderer != null)
+            {
+                _originalSpriteColor = spriteRenderer.color;
+                _spriteColorCached = true;
+            }
+
             _lastPosition = transform.position;
         }
 
@@ -47,6 +58,11 @@ namespace IdleOn.Enemies
         void OnEnable()
         {
             _lastPosition = transform.position;
+        }
+
+        void OnDisable()
+        {
+            StopHitFlash();
         }
 
         void Update()
@@ -63,6 +79,7 @@ namespace IdleOn.Enemies
 
             if (state == EnemyState.Dead)
             {
+                StopHitFlash();
                 animator.SetBool(IsDeadHash, true);
                 animator.SetBool(IsMovingHash, false);
                 animator.SetBool(IsAttackingHash, false);
@@ -94,6 +111,41 @@ namespace IdleOn.Enemies
         {
             if (animator != null)
                 animator.SetTrigger(HurtHash);
+
+            RestartHitFlash();
+        }
+
+        private void RestartHitFlash()
+        {
+            StopHitFlash();
+            if (spriteRenderer == null || hitFlashDuration <= 0f) return;
+
+            spriteRenderer.color = new Color(1f, 0f, 0f, _originalSpriteColor.a);
+            _hitFlashRoutine = StartCoroutine(RestoreColorAfterDelay());
+        }
+
+        private IEnumerator RestoreColorAfterDelay()
+        {
+            yield return new WaitForSeconds(hitFlashDuration);
+            _hitFlashRoutine = null;
+            RestoreSpriteColor();
+        }
+
+        private void StopHitFlash()
+        {
+            if (_hitFlashRoutine != null)
+            {
+                StopCoroutine(_hitFlashRoutine);
+                _hitFlashRoutine = null;
+            }
+
+            RestoreSpriteColor();
+        }
+
+        private void RestoreSpriteColor()
+        {
+            if (_spriteColorCached && spriteRenderer != null)
+                spriteRenderer.color = _originalSpriteColor;
         }
 
         private void ApplyFacing(float dx, float speed, EnemyState state, string source)
