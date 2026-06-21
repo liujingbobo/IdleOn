@@ -106,11 +106,13 @@ namespace IdleOn.Enemies
             _attackTimer      = attackCooldown;
             _timeSinceLastHit = 0f;
 
+            EnemyTargetRegistry.Register(this);
             LogLifecycle($"OnEnable id={EnemyIdForLog()} stateReset={_state} pos={transform.position} rbSimBefore={simulatedBefore} rbSimAfter={(_rb != null && _rb.simulated)}");
         }
 
         void OnDisable()
         {
+            EnemyTargetRegistry.Unregister(this);
             SetDesiredVelocityX(0f, "OnDisable");
             if (_health != null)
             {

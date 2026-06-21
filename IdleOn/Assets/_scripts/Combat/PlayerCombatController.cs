@@ -389,9 +389,8 @@ namespace IdleOn.Combat
 
         private void SeekTarget()
         {
-            if (enemySpawner == null) return;
             var previous = _currentTarget;
-            _currentTarget = enemySpawner.GetNearestEnemy(transform.position);
+            _currentTarget = EnemyTargetRegistry.GetNearestValidEnemy(transform.position);
             if (!IsValidTarget(_currentTarget))
             {
                 LogTarget("Current target rejected by SeekTarget", _currentTarget);
