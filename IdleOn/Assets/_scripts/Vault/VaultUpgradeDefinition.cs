@@ -19,6 +19,8 @@ namespace IdleOn.Vault
         public float BonusPerLevel  = 1f;  // ATKMin for BiggerDamage; 0.05 for MonsterTax; 1 for NaturalTalent
         public float BonusPerLevel2 = 0f;  // ATKMax for BiggerDamage (unused by other types)
 
+        public string Description;
+
         public Sprite Icon;
         public long GetCost(int currentLevel)
             => (long)(BaseCost * Mathf.Pow(CostGrowthRate, currentLevel));

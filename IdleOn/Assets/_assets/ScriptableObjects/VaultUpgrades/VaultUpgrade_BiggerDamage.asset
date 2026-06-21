@@ -20,3 +20,5 @@ MonoBehaviour:
   CostGrowthRate: 1.5
   BonusPerLevel: 1
   BonusPerLevel2: 2
+  Description: Deal more damage to monsters.
+  Icon: {fileID: 256948692887864917, guid: 6ae442fb55d1f7b4a8a804c65779e182, type: 3}

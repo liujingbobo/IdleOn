@@ -20,3 +20,5 @@ MonoBehaviour:
   CostGrowthRate: 1.5
   BonusPerLevel: 0.05
   BonusPerLevel2: 0
+  Description: 'Gain more coin from killing '
+  Icon: {fileID: 7216809120891807888, guid: a7be0015dd6e814499d09de640a5915a, type: 3}

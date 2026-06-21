@@ -20,3 +20,5 @@ MonoBehaviour:
   CostGrowthRate: 1.6
   BonusPerLevel: 1
   BonusPerLevel2: 0
+  Description: 'Gain more talent point. '
+  Icon: {fileID: 6821955968688173095, guid: ecce955e41c49eb48be2d873021cdf5e, type: 3}

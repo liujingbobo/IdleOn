@@ -1,4 +1,5 @@
 using IdleOn.Core;
+using IdleOn.Items;
 using IdleOn.Vault;
 using TMPro;
 using UnityEngine;
@@ -65,7 +66,7 @@ namespace IdleOn.UI
             bool maxed = level >= _def.MaxLevel;
 
             nameText.text        = _def.DisplayName;
-            descriptionText.text = string.Empty; // VaultUpgradeDefinition has no Description field
+            descriptionText.text = _def.Description; // VaultUpgradeDefinition has no Description field
 
             if (iconImage != null)
             {
