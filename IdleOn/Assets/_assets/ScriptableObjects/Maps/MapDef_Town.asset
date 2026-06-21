@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   MapId: town
   DisplayName: Town
+  MapPrefab: {fileID: 4092824068812064498, guid: bd3ecc84e579a264496a80efa58a93b8, type: 3}
   UnlockQuestId: q3
   UnlockEnemyId:
   UnlockKillCount: 0

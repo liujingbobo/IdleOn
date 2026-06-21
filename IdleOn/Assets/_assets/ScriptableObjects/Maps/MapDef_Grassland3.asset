@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   MapId: grassland_3
   DisplayName: Grassland 3
+  MapPrefab: {fileID: 6562604409686041050, guid: efaa50e76ac0c3a49afed84c5aea64fc, type: 3}
   UnlockQuestId: q5
   UnlockEnemyId:
   UnlockKillCount: 0

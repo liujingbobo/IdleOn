@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   MapId: grassland_1
   DisplayName: Grassland 1
+  MapPrefab: {fileID: 1943057385288814175, guid: 31e63bbb0c770244d827de669a047be7, type: 3}
   UnlockQuestId:
   UnlockEnemyId:
   UnlockKillCount: 0

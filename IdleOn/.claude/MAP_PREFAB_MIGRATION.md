@@ -19,8 +19,8 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 
 ## 3. Current architecture summary
 
-- Scene has four map roots: `Map_grassland_1`, `Map_grassland_2`, `Map_town`, `Map_grassland_3`. `Map_grassland_2` is now a prefab instance of `Map_grassland_2.prefab`; live travel still treats all four as scene roots.
-- `MapContentController` now uses hybrid loading: a destination with `MapDefinition.MapPrefab` instantiates a runtime copy; null-prefab maps keep using their baked roots. Only Grassland2 currently uses runtime prefab loading.
+- Scene retains four baked map roots as fallbacks: `Map_grassland_1`, `Map_grassland_2`, `Map_town`, `Map_grassland_3`.
+- All four current `MapDefinition` assets now reference matching map prefabs, so normal travel instantiates runtime copies while baked roots remain available as fallback.
 - `MapSystem` owns `CurrentMapId`/`PreviousMapId` and `TravelTo`/`RespawnAtDefault`.
 - `PortalGate` handles unlock gating off the destination `MapDefinition`.
 - `MapWindowUI` handles map point display/travel; `HasMapContent` currently scans `SceneManager.GetActiveScene().GetRootGameObjects()` by name (`"Map_" + mapId`) — this coupling must change when roots stop being permanent scene children.
@@ -104,13 +104,27 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
     warning. No scene or prefab changed.
   - Known risk: VFX remain unscoped. Projectiles are not pooled, so unload cleanup destroys them.
 
+- **Phase 3B** — remaining current maps migrated to prefab-backed data.
+  - Created `Map_grassland_1.prefab`, `Map_town.prefab`, and `Map_grassland_3.prefab` from their
+    existing scene root subtrees without connecting or modifying the baked roots.
+  - Assigned the new prefabs to `MapDef_Grassland1`, `MapDef_Town`, and `MapDef_Grassland3`.
+  - Each prefab retains its own `MapRuntimeContext` and local `DropsRoot`/`ProjectilesRoot`/`VFXRoot`
+    references. Portal references are prefab-local; Town retains its NPC and CraftingStation;
+    Grassland3 retains five enemies and `LocalEnemyRespawner`.
+  - Verification: fresh start loaded one Grassland1 runtime instance; g1→g2→town→g3 and reverse
+    portal travel used one active runtime context with no duplicate instances; MapWindow travel
+    reached Grassland1; Town NPC/CraftingStation remained present; Grassland3 respawn returned the
+    killed slime alive in Patrol after four seconds; drops/projectiles cleared on map switch.
+  - No scene, script, or loader file changed. Console contained only MCP transport noise.
+  - Known risk: baked roots remain intentionally present as fallback; VFX are still unscoped.
+
 ## 5. Planned phases
 
 - ~~**Phase 1B**~~ — done, see section 4 above.
 - ~~**Phase 2A**~~ — done, see section 4 above.
 - ~~**Phase 2B**~~ — data reference added to `MapDefinition` and assigned for Grassland2 only. No live loader wiring; see section 4.
 - ~~**Phase 3A**~~ — hybrid loader live for Grassland2 with baked fallback; see section 4.
-- **Phase 3B** — extract and data-wire the remaining current map prefabs one at a time, retaining baked fallback until each prefab is verified.
+- ~~**Phase 3B**~~ — remaining current maps extracted and data-wired; baked fallback retained.
 - ~~**Phase 4A**~~ — map-scope active world drops and recycle them on map unload; see section 4.
 - ~~**Phase 4B**~~ — map-scope Fireball projectiles and clear them on map unload; see section 4.
 - **Phase 4C** — parent transient VFX under `VFXRoot` and clear them on unload.
@@ -146,6 +160,5 @@ Every future prompt for this migration must:
 
 **Phase 2A:** done — see section 4. `Map_grassland_2.prefab` exists and is verified clean, not yet wired into loading.
 
-**Next:** Phase 3B can migrate one remaining map at a time (recommended Grassland1 first), retaining
-baked fallback. If runtime cleanup is prioritized first, Phase 4C should identify transient VFX
-spawn paths and scope only those objects under `VFXRoot`.
+**Next:** Phase 4C should identify transient VFX spawn paths and scope only those objects under
+`VFXRoot`. Removing baked scene roots should remain a separate, explicitly approved cleanup phase.
