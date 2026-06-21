@@ -36,10 +36,14 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
   - Exposes `DropsRoot`, `ProjectilesRoot`, `VFXRoot` (each falls back to own `transform` if unset).
   - Static `Current`, self-registers `OnEnable`, clears `OnDisable` only if `Current == this`.
   - No existing system references it. No scene/prefab edits. No behavior change.
+- **Phase 1B** — `Assets/_scenes/TestCombat.unity` only. Added a `MapRuntimeContext` MonoBehaviour component to each of the four map roots (`Map_grassland_1`, `Map_grassland_2`, `Map_grassland_3`, `Map_town`), plus a new `Runtime` child Transform under each root containing `DropsRoot`/`ProjectilesRoot`/`VFXRoot` empty child Transforms. Each root's `MapRuntimeContext` has its `dropsRoot`/`projectilesRoot`/`vfxRoot` fields assigned to the matching new child. No existing GameObject (floor/portals/enemies/spawn points/visuals) was moved, renamed, or reparented; no `m_IsActive` flags changed; no code files touched. fileIDs used: `9100001000001`–`9100001000009` (grassland_1), `9100002000001`–`9100002000009` (grassland_2), `9100003000001`–`9100003000009` (grassland_3), `9100004000001`–`9100004000009` (town) — verified unique within the scene (112 occurrences = 4 × 28 references, no collisions). `git diff --stat` shows only `TestCombat.unity` changed, 576 insertions, 0 deletions.
+  - Verification done: confirmed all four `MapRuntimeContext` components reference the correct root GameObject and the correct three child Transforms; confirmed `Map_grassland_3`'s existing `LocalEnemyRespawner` component (fileID `965281053`) was left untouched, only appended after in the root's `m_Component` list. Verification NOT done (requires Unity Editor, unavailable in this session): opening the scene in-editor to confirm no Missing Script/Missing Reference errors, and a live play-through of map travel/portal back-spawn/Grassland2 tutorial slime/Grassland3 respawn. Since nothing references `MapRuntimeContext` yet and no existing component/hierarchy was altered, behavior risk is low, but in-editor open + play-test is still recommended before treating this phase as fully verified.
+  - Known risks: none introduced to existing systems (additive-only change — new components/GameObjects, no existing references altered). Residual risk is purely "unverified in Editor" rather than "known to break something."
+  - Not committed — left as a working-tree change per instructions.
 
 ## 5. Planned phases
 
-- **Phase 1B** — add `Runtime`/`DropsRoot`/`ProjectilesRoot`/`VFXRoot` containers and a `MapRuntimeContext` component to the *current* four scene map roots, scene-only wiring if possible. Do not change `MapContentController` behavior yet.
+- ~~**Phase 1B**~~ — done, see section 4 above.
 - **Phase 2** — migrate one map prefab first (`grassland_2` recommended — smallest, single enemy, no respawner), without switching live travel yet.
 - **Phase 3** — migrate all four current maps and switch `MapContentController`/new `MapLoader` flow live in `TestCombat`. Requires explicit go-ahead — this touches a protected system.
 - **Phase 4** — parent drops/projectiles/VFX under the current map's runtime root at spawn time.
@@ -71,10 +75,6 @@ Every future prompt for this migration must:
 
 ## 8. Next recommended step
 
-**Phase 1B only:**
+**Before Phase 2:** open `TestCombat` in Unity Editor and confirm no Missing Script/Missing Reference errors, then play-test map travel, portal back-spawn, Grassland2 tutorial slime, and Grassland3 respawn to close out Phase 1B verification.
 
-- Scene-only or minimal scene wiring.
-- Add `MapRuntimeContext` to the current four map roots.
-- Create/assign `Runtime` child containers (`DropsRoot`/`ProjectilesRoot`/`VFXRoot`).
-- Do not change `MapContentController` behavior yet.
-- Verify no gameplay behavior changes.
+**Phase 2:** migrate one map prefab first (`grassland_2` recommended — smallest, single enemy, no respawner), without switching live travel yet.
