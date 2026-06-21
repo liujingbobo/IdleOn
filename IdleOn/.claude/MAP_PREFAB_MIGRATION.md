@@ -19,7 +19,7 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 
 ## 3. Current architecture summary
 
-- Scene has four baked roots: `Map_grassland_1`, `Map_grassland_2`, `Map_town`, `Map_grassland_3`.
+- Scene has four map roots: `Map_grassland_1`, `Map_grassland_2`, `Map_town`, `Map_grassland_3`. `Map_grassland_2` is now a prefab instance of `Map_grassland_2.prefab`; live travel still treats all four as scene roots.
 - `MapContentController` activates/deactivates these existing roots on `OnMapChanged` — never destroys/instantiates.
 - `MapSystem` owns `CurrentMapId`/`PreviousMapId` and `TravelTo`/`RespawnAtDefault`.
 - `PortalGate` handles unlock gating off the destination `MapDefinition`.
@@ -39,21 +39,28 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 - **Phase 1B** — `Assets/_scenes/TestCombat.unity` only. Added a `MapRuntimeContext` MonoBehaviour component to each of the four map roots (`Map_grassland_1`, `Map_grassland_2`, `Map_grassland_3`, `Map_town`), plus a new `Runtime` child Transform under each root containing `DropsRoot`/`ProjectilesRoot`/`VFXRoot` empty child Transforms. Each root's `MapRuntimeContext` has its `dropsRoot`/`projectilesRoot`/`vfxRoot` fields assigned to the matching new child. No existing GameObject (floor/portals/enemies/spawn points/visuals) was moved, renamed, or reparented; no `m_IsActive` flags changed; no code files touched. fileIDs used: `9100001000001`–`9100001000009` (grassland_1), `9100002000001`–`9100002000009` (grassland_2), `9100003000001`–`9100003000009` (grassland_3), `9100004000001`–`9100004000009` (town) — verified unique within the scene (112 occurrences = 4 × 28 references, no collisions). `git diff --stat` shows only `TestCombat.unity` changed, 576 insertions, 0 deletions.
   - Verification done: confirmed all four `MapRuntimeContext` components reference the correct root GameObject and the correct three child Transforms; confirmed `Map_grassland_3`'s existing `LocalEnemyRespawner` component (fileID `965281053`) was left untouched, only appended after in the root's `m_Component` list. Verification NOT done (requires Unity Editor, unavailable in this session): opening the scene in-editor to confirm no Missing Script/Missing Reference errors, and a live play-through of map travel/portal back-spawn/Grassland2 tutorial slime/Grassland3 respawn. Since nothing references `MapRuntimeContext` yet and no existing component/hierarchy was altered, behavior risk is low, but in-editor open + play-test is still recommended before treating this phase as fully verified.
   - Known risks: none introduced to existing systems (additive-only change — new components/GameObjects, no existing references altered). Residual risk is purely "unverified in Editor" rather than "known to break something."
-  - Not committed — left as a working-tree change per instructions.
+  - Committed in `2946651` (`Map rework: wire map runtime contexts`).
 
 - **Phase 2A** — created `Assets/_assets/Prefabs/Maps/Map_grassland_2.prefab` from the existing `TestCombat` scene root `Map_grassland_2` (instanceID 264208), via `manage_prefabs.create_from_gameobject`. Prefab-extraction only, no loader wiring.
   - Tool note: `create_from_gameobject` requires the source GameObject to be locatable by `GameObject.Find`, which does not see inactive roots. Worked around by temporarily setting `Map_grassland_2.activeSelf = true`, running the prefab creation, then setting it back to `false` immediately after. Verified the original scene root (instanceID 264208) was preserved unchanged afterward — same instanceID, same 4 children, `activeSelf` restored to `false`. `MapContentController.maps[1].Root` still resolves to instanceID 264208 (unaffected).
-  - This active-toggle round-trip (plus Unity's internal prefab-instance link bookkeeping during creation) left `TestCombat.unity` dirty in the open Editor session. **Not saved** — `git status`/`git diff --stat` confirm the on-disk scene file is untouched; only the new prefab folder is untracked. The in-memory dirty flag will clear on next scene reload/discard and was never written to disk.
+  - The extraction pass initially left `TestCombat.unity` dirty in memory. A later committed scene update (`24dde47`) saved the existing `Map_grassland_2` root as an instance of the extracted prefab. The root remains present and `MapContentController` still references it; no runtime loading behavior was introduced.
   - Prefab contents verified (via `open_prefab_stage`, read-only, closed without saving): root `Map_grassland_2` has `MapRuntimeContext` with `dropsRoot`/`projectilesRoot`/`vfxRoot` correctly pointing to its own `Runtime/DropsRoot`/`ProjectilesRoot`/`VFXRoot` children. Both portals (`Portal_back_to_grassland_1`, `Portal_to_town`) carry `PortalInteractable`+`PortalGate`, with `PortalGate.visual`/`portalCollider`/`requirementText` correctly self-referencing their own `Visual`/`RequirementText`/collider children — these came in as nested prefab instances of `Portal.prefab`. `Slime_g2` (nested instance of `Slime.prefab`) has all 8 expected components; `EnemyHealthBar.barRoot`/`backgroundRenderer`/`fillRenderer` correctly point to its own `HealthBar`/`Background`/`Fill` children. No Missing Script / Missing Reference anywhere in the prefab (16 objects total).
   - `MapDefinition` (`MapDef_Grassland2.asset`) was **not** touched — no `mapPrefab` field added, no reference to the new prefab anywhere yet. `MapContentController` still drives the map exclusively from the scene-baked root. Current gameplay/travel behavior is unchanged.
-  - Known risks: none introduced to existing systems — extraction only, scene root preserved, no MapContentController/MapDefinition wiring added. Residual note: the open Editor session currently shows `TestCombat.unity` as dirty (harmless, unsaved); if the Editor is later saved for an unrelated reason before this is reviewed, double-check no unintended scene state lands in the commit.
-  - Not committed — new prefab + meta files left as untracked working-tree additions.
+  - Known risks: none introduced to existing systems — scene root preserved and no MapContentController loader wiring added.
+  - Committed in `810cfb6` (`Map rework: extract grassland 2 map prefab`); the later scene prefab-instance update is committed in `24dde47`.
+
+- **Phase 2B** — data wiring completed. Added `MapDefinition.MapPrefab` (`GameObject`) and assigned only `MapDef_Grassland2.asset` to `Assets/_assets/Prefabs/Maps/Map_grassland_2.prefab`.
+  - Changed files: `Assets/_scripts/World/MapDefinition.cs`, `Assets/_assets/ScriptableObjects/Maps/MapDef_Grassland2.asset`, and this tracking doc.
+  - Grassland1, Town, and Grassland3 retain null prefab references until their prefabs exist.
+  - No runtime system consumes `MapPrefab` yet. `MapContentController`, `MapSystem`, `MapWindowUI`, portals, the scene, and the prefab were not modified; current travel behavior remains unchanged.
+  - Verification: Unity script validation/compilation completed without game-code errors; Grassland2 resolves to the expected prefab; all other current MapDefinitions resolve null; map IDs and unlock requirements are unchanged; no scene or prefab diff.
+  - Known risk: the new field is intentionally dormant. Runtime loading, fallback behavior, back-spawn, save/load restore, and MapWindow content detection still require a later explicitly approved phase.
 
 ## 5. Planned phases
 
 - ~~**Phase 1B**~~ — done, see section 4 above.
 - ~~**Phase 2A**~~ — done, see section 4 above.
-- **Phase 2B** — wire the new prefab into `MapDefinition`/`MapContentController` loading path (not yet started — explicit go-ahead required, touches a protected system).
+- ~~**Phase 2B**~~ — data reference added to `MapDefinition` and assigned for Grassland2 only. No live loader wiring; see section 4.
 - **Phase 3** — migrate all four current maps and switch `MapContentController`/new `MapLoader` flow live in `TestCombat`. Requires explicit go-ahead — this touches a protected system.
 - **Phase 4** — parent drops/projectiles/VFX under the current map's runtime root at spawn time.
 - **Phase 5** — unify enemy spawn points / decide future replacement for `LocalEnemyRespawner` and the unused global `EnemySpawner`. Not currently approved; treat as out of scope until explicitly requested.
@@ -88,4 +95,4 @@ Every future prompt for this migration must:
 
 **Phase 2A:** done — see section 4. `Map_grassland_2.prefab` exists and is verified clean, not yet wired into loading.
 
-**Phase 2B:** decide and implement how the prefab gets used at runtime (e.g. add `MapDefinition.MapPrefab` field + a load path in/alongside `MapContentController`), without removing the scene-baked roots yet. Requires explicit go-ahead before touching `MapContentController`/`MapDefinition`.
+**Next:** audit and design the live loader transition using `MapDefinition.MapPrefab`, including fallback behavior for maps whose prefab reference is still null. Do not modify `MapContentController`, remove scene roots, or switch travel behavior without explicit approval.

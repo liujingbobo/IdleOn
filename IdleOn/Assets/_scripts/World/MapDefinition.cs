@@ -9,6 +9,9 @@ namespace IdleOn.World
         public string MapId;
         public string DisplayName;
 
+        [Header("Content")]
+        public GameObject MapPrefab;
+
         [Header("Unlock Requirements (all optional, ANDed)")]
         public string UnlockQuestId;             // empty = no quest requirement
         public string UnlockEnemyId;              // empty = no kill requirement
