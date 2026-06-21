@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.25, g: 0.35, b: 0.55, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -239,10 +239,7 @@ MonoBehaviour:
   canCraftDot: {fileID: 8270923665470539977}
   button: {fileID: 144053716650348379}
   background: {fileID: 3831486863750281110}
-  selectedColor: {r: 0.3, g: 0.5, b: 0.8, a: 1}
-  normalColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
-  canCraftColor: {r: 0, g: 1, b: 0, a: 1}
-  cannotCraftColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  selectedGroup: {fileID: 7923673662092477138}
   craftableSprite: {fileID: 8339872742759580977, guid: 9932f9c4d9054e648af8ca20a759b259, type: 3}
   notCraftableSprite: {fileID: -1336967974202410108, guid: 8c694829f4c742344b7cba1d98f34544, type: 3}
 --- !u!1 &5713789057271969780
@@ -585,7 +582,7 @@ GameObject:
   - component: {fileID: 5544109104156055557}
   - component: {fileID: 7888184636979921260}
   m_Layer: 0
-  m_Name: Image
+  m_Name: SelectedGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

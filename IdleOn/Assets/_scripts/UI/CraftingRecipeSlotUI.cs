@@ -44,7 +44,7 @@ namespace IdleOn.UI
 
             var icon = Recipe.ResultItem?.Icon;
             itemIcon.sprite = icon != null ? icon : GetPlaceholder();
-            itemIcon.color  = icon != null ? Color.white : new Color(0.4f, 0.4f, 0.4f);
+            // itemIcon.color  = icon != null ? Color.white : new Color(0.4f, 0.4f, 0.4f);
             itemName.text   = Recipe.ResultItem?.DisplayName ?? Recipe.RecipeId;
         }
 

@@ -11,12 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af658e6ee8a02444ab49a326290d8369, type: 3}
   m_Name: ItemDef_SlimeSword
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   ItemId: slime_sword
   DisplayName: Slime Sword
-  Description: 'A blade forged from hardened slime essence.'
+  Description: A blade forged from hardened slime essence.
   ItemType: 0
-  Icon: {fileID: 1689007499683954151, guid: 01927b421433d8c44bf3c1acd8923598, type: 3}
+  Icon: {fileID: -1550047888590412834, guid: e070b82eefb58b34684df3527ce5a0b6, type: 3}
   SellValue: 0
   Rarity: 1
   EquipmentSlot: 1
