@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -21,6 +22,22 @@ namespace IdleOn.UI
         [SerializeField] private Slider          xpSlider;
         [SerializeField] private TextMeshProUGUI xpText;
         [SerializeField] private TextMeshProUGUI goldText;
+
+        [Header("Stats Popup")]
+        [SerializeField] private CanvasGroup     statsGroup;
+        [SerializeField] private TextMeshProUGUI statStrText;
+        [SerializeField] private TextMeshProUGUI statAgiText;
+        [SerializeField] private TextMeshProUGUI statWisText;
+        [SerializeField] private TextMeshProUGUI statLukText;
+        [SerializeField] private TextMeshProUGUI statMaxHPText;
+        [SerializeField] private TextMeshProUGUI statMaxMPText;
+        [SerializeField] private TextMeshProUGUI statAtkMinText;
+        [SerializeField] private TextMeshProUGUI statAtkMaxText;
+        [SerializeField] private TextMeshProUGUI statDefText;
+        [SerializeField] private TextMeshProUGUI statAccText;
+        [SerializeField] private TextMeshProUGUI statCritChanceText;
+        [SerializeField] private TextMeshProUGUI statMoveSpeedText;
+        [SerializeField] private float           statsFadeDuration = 0.12f;
 
         [Header("Windows")]
         [SerializeField] private ItemWindow     itemWindow;
@@ -60,8 +77,17 @@ namespace IdleOn.UI
         private Image _talentButtonBg;
         private Image _mapButtonBg;
 
+        private Coroutine _statsFadeRoutine;
+
         void Awake()
         {
+            if (statsGroup != null)
+            {
+                statsGroup.alpha          = 0f;
+                statsGroup.interactable   = false;
+                statsGroup.blocksRaycasts = false;
+            }
+
             if (autoCombatButton != null) _autoCombatBg   = autoCombatButton.GetComponent<Image>();
             if (invButton != null)        _invButtonBg    = invButton.GetComponent<Image>();
             if (craftButton != null)      _craftButtonBg  = craftButton.GetComponent<Image>();
@@ -133,6 +159,56 @@ namespace IdleOn.UI
         public void OnQuestButtonClicked()    => Debug.Log("[MainHUD] Quest not implemented yet.");
         public void OnMapButtonClicked()      => ToggleWindow(WindowType.Map);
         public void OnSettingsButtonClicked() => Debug.Log("[MainHUD] Settings not implemented yet.");
+
+        // ── Stats popup (wired in Inspector via EventTrigger on CharacterPanel) ──
+
+        public void OnCharacterPanelPointerEnter()
+        {
+            RefreshStatsGroup();
+            FadeStatsGroup(1f);
+        }
+
+        public void OnCharacterPanelPointerExit() => FadeStatsGroup(0f);
+
+        private void FadeStatsGroup(float target)
+        {
+            if (statsGroup == null) return;
+            if (_statsFadeRoutine != null) StopCoroutine(_statsFadeRoutine);
+            _statsFadeRoutine = StartCoroutine(FadeStatsGroupRoutine(target));
+        }
+
+        private IEnumerator FadeStatsGroupRoutine(float target)
+        {
+            float start = statsGroup.alpha;
+            float elapsed = 0f;
+            while (elapsed < statsFadeDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                statsGroup.alpha = Mathf.Lerp(start, target, Mathf.Clamp01(elapsed / statsFadeDuration));
+                yield return null;
+            }
+            statsGroup.alpha = target;
+            _statsFadeRoutine = null;
+        }
+
+        private void RefreshStatsGroup()
+        {
+            var sheet = PlayerStats.Instance != null ? PlayerStats.Instance.FinalStats : null;
+            if (sheet == null) return;
+
+            if (statStrText != null)        statStrText.text        = $"STR: {sheet.STR}";
+            if (statAgiText != null)        statAgiText.text        = $"AGI: {sheet.AGI}";
+            if (statWisText != null)        statWisText.text        = $"WIS: {sheet.WIS}";
+            if (statLukText != null)        statLukText.text        = $"LUK: {sheet.LUK}";
+            if (statMaxHPText != null)      statMaxHPText.text      = $"MAXHP: {sheet.MaxHP:0.#}";
+            if (statMaxMPText != null)      statMaxMPText.text      = $"MAXMP: {sheet.MaxMP:0.#}";
+            if (statAtkMinText != null)     statAtkMinText.text     = $"ATKMin: {sheet.ATKMin:0.#}";
+            if (statAtkMaxText != null)     statAtkMaxText.text     = $"ATKMax: {sheet.ATKMax:0.#}";
+            if (statDefText != null)        statDefText.text        = $"DEF: {sheet.DEF:0.#}";
+            if (statAccText != null)        statAccText.text        = $"ACC: {sheet.ACC:0.#}";
+            if (statCritChanceText != null) statCritChanceText.text = $"CRITChance: {sheet.CRITChance:0.#}";
+            if (statMoveSpeedText != null)  statMoveSpeedText.text  = $"MoveSpeed: {sheet.MoveSpeed:0.#}";
+        }
 
         // ── Window switching ─────────────────────────────────────────────────
 
