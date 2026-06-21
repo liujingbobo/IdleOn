@@ -1,43 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 using IdleOn.Core;
-using IdleOn.Items;
+using IdleOn.Vault;
 
 namespace IdleOn.UI
 {
     public class VaultWindow : MonoBehaviour
     {
         [Header("Panels")]
-        [SerializeField] private GameObject        windowPanel;
-        [SerializeField] private Transform         rowContainer;
-        [SerializeField] private VaultUpgradeRowUI rowPrefab;
+        [SerializeField] private GameObject     windowPanel;
+        [SerializeField] private Transform      slotContainer;
+        [SerializeField] private VaultSlotUI    slotPrefab;
+        [SerializeField] private VaultInfoPanel infoPanel;
 
-        // TEMPORARY: debug key — remove once MainUI buttons call Open() / Toggle()
-        [Header("Debug (remove once MainUI is wired)")]
+        [Header("Motion (optional)")]
+        [SerializeField] private UIWindowMotion motion;
+
+        [Header("Debug")]
         [SerializeField] private bool    enableDebugKey = true;
         [SerializeField] private KeyCode debugOpenKey   = KeyCode.V;
 
-        private readonly List<VaultUpgradeRowUI> _rows = new List<VaultUpgradeRowUI>();
+        private readonly List<VaultSlotUI> _slots = new List<VaultSlotUI>();
+        private readonly Dictionary<VaultUpgradeDefinition, VaultSlotUI> _slotsByDef = new Dictionary<VaultUpgradeDefinition, VaultSlotUI>();
+        private VaultSlotUI _selectedSlot;
 
-        public bool IsOpen => windowPanel.activeSelf;
+        public bool IsOpen => motion != null ? motion.IsOpen : windowPanel.activeSelf;
 
         void Awake()
         {
-            windowPanel.SetActive(false);
-            GameEvents.OnVaultChanged    += RefreshAllRows;
-            GameEvents.OnCurrencyChanged += OnCurrencyChanged;
+            if (motion != null) motion.SetClosedImmediate();
+            else                windowPanel.SetActive(false);
+            GameEvents.OnVaultChanged += RefreshAll;
         }
 
-        void OnDestroy()
-        {
-            GameEvents.OnVaultChanged    -= RefreshAllRows;
-            GameEvents.OnCurrencyChanged -= OnCurrencyChanged;
-        }
+        void OnDestroy() => GameEvents.OnVaultChanged -= RefreshAll;
 
-        void Start()
-        {
-            PopulateRows();
-        }
+        void Start() => PopulateSlots();
 
         void Update()
         {
@@ -47,22 +45,33 @@ namespace IdleOn.UI
 
         public void Open()
         {
-            windowPanel.SetActive(true);
-            RefreshAllRows();
+            if (motion != null) motion.PlayOpen();
+            else                windowPanel.SetActive(true);
+            ClearSelection();
+            RefreshAll();
         }
 
         public void Close()
         {
-            windowPanel.SetActive(false);
+            if (motion != null) motion.PlayClose();
+            else                windowPanel.SetActive(false);
+            ClearSelection();
         }
 
         public void Toggle()
         {
-            if (windowPanel.activeSelf) Close();
+            if (IsOpen) Close();
             else Open();
         }
 
-        private void PopulateRows()
+        private void ClearSelection()
+        {
+            _selectedSlot?.SetSelected(false);
+            _selectedSlot = null;
+            infoPanel?.Hide();
+        }
+
+        private void PopulateSlots()
         {
             var db = GameDatabase.Instance?.Vault;
             if (db == null) return;
@@ -70,23 +79,28 @@ namespace IdleOn.UI
             foreach (var def in db.Upgrades)
             {
                 if (def == null) continue;
-                var row = Instantiate(rowPrefab, rowContainer);
-                row.Initialize(def);
-                _rows.Add(row);
+                var slot = Instantiate(slotPrefab, slotContainer);
+                slot.Initialize(def, OnSlotClicked);
+                _slots.Add(slot);
+                _slotsByDef[def] = slot;
             }
         }
 
-        private void RefreshAllRows()
+        private void OnSlotClicked(VaultUpgradeDefinition def)
         {
-            if (!windowPanel.activeSelf) return;
-            foreach (var row in _rows)
-                row.Refresh();
+            _selectedSlot?.SetSelected(false);
+            _selectedSlot = _slotsByDef.TryGetValue(def, out var slot) ? slot : null;
+            _selectedSlot?.SetSelected(true);
+
+            infoPanel?.Show(def);
         }
 
-        private void OnCurrencyChanged(CurrencyType type, long newTotal)
+        private void RefreshAll()
         {
-            if (type == CurrencyType.Gold)
-                RefreshAllRows();
+            if (!windowPanel.activeSelf) return;
+
+            foreach (var slot in _slots) slot.Refresh();
+            infoPanel?.Refresh();
         }
     }
 }
