@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2030610533312326149}
   - component: {fileID: 3374367582175771344}
   - component: {fileID: 8647333453948149170}
-  - component: {fileID: 8610447590215002355}
   m_Layer: 0
   m_Name: EarningsSlotUI
   m_TagString: Untagged
@@ -38,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3374367582175771344
 CanvasRenderer:
@@ -78,21 +77,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8610447590215002355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4516391760082546493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c8e69ec8772d19408d4d6f5f1cf0208, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  iconImage: {fileID: 4089348711281282868}
-  levelText: {fileID: 4088816007513558555}
-  selectedIndicator: {fileID: 0}
 --- !u!1 &6948794385599742431
 GameObject:
   m_ObjectHideFlags: 0

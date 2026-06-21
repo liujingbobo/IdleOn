@@ -13,6 +13,10 @@ namespace IdleOn.World
         public override void Interact(GameObject player)
         {
             if (mainHUD == null)
+                // TODO: Replace this temporary prefab fallback with explicit UI/service injection after map prefab migration cleanup.
+                mainHUD = Object.FindFirstObjectByType<MainHUD>();
+
+            if (mainHUD == null)
             {
                 Debug.LogWarning("[CraftingStation] MainHUD reference not set — cannot open Crafting.", this);
                 return;

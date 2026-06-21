@@ -367,6 +367,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8572402961245939716}
   - component: {fileID: 9046956534393960348}
+  - component: {fileID: 9200004000001}
   m_Layer: 0
   m_Name: Map_town
   m_TagString: Untagged
@@ -475,6 +476,20 @@ Transform:
   - {fileID: 9190263979143015012}
   m_Father: {fileID: 8572402961245939716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9200004000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4092824068812064498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c4e7b21d6a84f3aa1c8e5f0b3d27e64, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  feature: 2
+  target: {fileID: 7443578673820795967}
 --- !u!1 &7443578673820795967
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,7 +507,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8189477687547971503
 Transform:
   m_ObjectHideFlags: 0

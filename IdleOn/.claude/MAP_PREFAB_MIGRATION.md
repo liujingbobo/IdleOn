@@ -133,6 +133,26 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
     the loader logs a warning and leaves no active content. All four assigned prefab references were
     verified valid before cleanup.
 
+- **Post-migration fix — `Map_town` CraftingStation gating + MainHUD prefab ref.**
+  - `CraftingStation` was visible by default after the prefab migration (its baked-scene gate was lost
+    in extraction) and `CraftingStationInteractable.mainHUD` was unset (prefab assets can't serialize a
+    scene `MainHUD` ref).
+  - Changed files: `Assets/_assets/Prefabs/Maps/Map_town.prefab`,
+    `Assets/_scripts/World/CraftingStationInteractable.cs`, this tracking doc.
+  - `Map_town.prefab`: `CraftingStation` (fileID `7443578673820795967`) default `m_IsActive` set to `0`.
+    Added a `FeatureGatedGameObject` component (fileID `9200004000001`) on the always-active `Map_town`
+    root (fileID `4092824068812064498`), `feature: Craft`, `target` = `CraftingStation`. No baked
+    scene gate referencing the old deleted CraftingStation existed in `TestCombat.unity` — nothing to remove there.
+  - `CraftingStationInteractable.cs`: `Interact` lazily falls back to `FindFirstObjectByType<MainHUD>()`
+    when the serialized `mainHUD` is null, caching the result on the instance. Marked with a `// TODO`
+    comment as temporary debt — **do not extend this pattern**; replace with explicit UI/service
+    injection in a later pass.
+  - Verification: Unity recompiled with zero console errors/warnings (transport noise only); active
+    scene unaffected, not dirty, 26 root objects unchanged. Static check confirmed `MapDef_Town` ->
+    `Map_town.prefab` guid still resolves correctly and no other file changed.
+  - Known risk: the `FindFirstObjectByType` fallback is intentional temporary debt, not a long-term
+    pattern — flagged in code per the TODO comment.
+
 ## 5. Planned phases
 
 - ~~**Phase 1B**~~ — done, see section 4 above.
