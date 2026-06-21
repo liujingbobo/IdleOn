@@ -24,6 +24,11 @@ namespace IdleOn.World
             ClearRuntimeChildren(DropsRoot);
         }
 
+        public void ClearProjectiles()
+        {
+            ClearRuntimeChildren(ProjectilesRoot);
+        }
+
         void OnEnable()
         {
             Current = this;

@@ -195,7 +195,10 @@ namespace IdleOn.Combat
             float spawnY  = lane != null ? lane.GroundY + projectileHeight : transform.position.y;
             Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
 
-            FireballProjectile projectile = Instantiate(fireballProjectilePrefab, spawnPos, Quaternion.identity);
+            var projectileRoot = MapRuntimeContext.Current?.ProjectilesRoot;
+            FireballProjectile projectile = projectileRoot != null
+                ? Instantiate(fireballProjectilePrefab, spawnPos, Quaternion.identity, projectileRoot)
+                : Instantiate(fireballProjectilePrefab, spawnPos, Quaternion.identity);
             projectile.Init(direction, damage);
         }
 

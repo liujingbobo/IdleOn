@@ -26,7 +26,8 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 - `MapWindowUI` handles map point display/travel; `HasMapContent` currently scans `SceneManager.GetActiveScene().GetRootGameObjects()` by name (`"Map_" + mapId`) — this coupling must change when roots stop being permanent scene children.
 - Inactive pooled drops remain under the persistent `DropManager`; active world drops are parented
   under `MapRuntimeContext.Current.DropsRoot` and returned to the pool when that map unloads.
-- Fireball/projectiles spawn with no parent (scene root) — not parented under a map runtime root yet.
+- Fireball projectiles are parented under `MapRuntimeContext.Current.ProjectilesRoot`; if no current
+  context exists, they retain the previous scene-root fallback.
 - Grassland2 tutorial slime is pre-placed and does not respawn (by design).
 - Grassland3 uses `LocalEnemyRespawner` (re-enables the same disabled instance after a delay; demo/local-only, not the final architecture).
 
@@ -85,6 +86,24 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
   - Known risk: projectiles and VFX remain unscoped. Runtime children under `DropsRoot` that are not
     `WorldDrop` instances are disabled/destroyed as a defensive fallback.
 
+- **Phase 4B** — map-scoped Fireball projectiles enabled.
+  - Changed files: `Assets/_scripts/World/MapRuntimeContext.cs`,
+    `Assets/_scripts/World/MapContentController.cs`,
+    `Assets/_scripts/Combat/PlayerCombatController.cs`, and this tracking doc.
+  - Fireball instantiation uses `MapRuntimeContext.Current.ProjectilesRoot` when available and keeps
+    the former no-parent scene-root behavior when no active context exists.
+  - Before switching content, `MapContentController` clears both drops and projectile children under
+    the old active context. This runs before either destroying a prefab map or deactivating a baked map.
+  - Verification: Grassland2 runtime-prefab and Grassland3 baked-root Fireballs both spawned under
+    their own `ProjectilesRoot` and were gone immediately after travel. The no-context fallback
+    produced a normal scene-root projectile. Left and right directions remained horizontal
+    (`(-1, 0)` and `(1, 0)` observed), spawn height remained `groundY + 0.6`, and a two-enemy trigger
+    test dealt 10 damage to the first target and zero to the second while disabling the hit collider.
+  - Unity validation completed with no compilation errors. `PlayerCombatController` retains one
+    pre-existing analyzer warning about string concatenation in `Update`; Phase 4B introduced no new
+    warning. No scene or prefab changed.
+  - Known risk: VFX remain unscoped. Projectiles are not pooled, so unload cleanup destroys them.
+
 ## 5. Planned phases
 
 - ~~**Phase 1B**~~ — done, see section 4 above.
@@ -93,7 +112,7 @@ Canonical tracking doc for migrating from scene-baked map roots (current `TestCo
 - ~~**Phase 3A**~~ — hybrid loader live for Grassland2 with baked fallback; see section 4.
 - **Phase 3B** — extract and data-wire the remaining current map prefabs one at a time, retaining baked fallback until each prefab is verified.
 - ~~**Phase 4A**~~ — map-scope active world drops and recycle them on map unload; see section 4.
-- **Phase 4B** — parent projectiles under the current map's `ProjectilesRoot` and clear them on unload.
+- ~~**Phase 4B**~~ — map-scope Fireball projectiles and clear them on map unload; see section 4.
 - **Phase 4C** — parent transient VFX under `VFXRoot` and clear them on unload.
 - **Phase 5** — unify enemy spawn points / decide future replacement for `LocalEnemyRespawner` and the unused global `EnemySpawner`. Not currently approved; treat as out of scope until explicitly requested.
 
@@ -128,5 +147,5 @@ Every future prompt for this migration must:
 **Phase 2A:** done — see section 4. `Map_grassland_2.prefab` exists and is verified clean, not yet wired into loading.
 
 **Next:** Phase 3B can migrate one remaining map at a time (recommended Grassland1 first), retaining
-baked fallback. If runtime cleanup is prioritized first, Phase 4B should scope Fireball/projectiles
-under `ProjectilesRoot` without changing projectile gameplay.
+baked fallback. If runtime cleanup is prioritized first, Phase 4C should identify transient VFX
+spawn paths and scope only those objects under `VFXRoot`.
