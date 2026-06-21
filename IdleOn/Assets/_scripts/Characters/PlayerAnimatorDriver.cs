@@ -33,6 +33,16 @@ namespace IdleOn.Characters
         private static readonly int IsDeadHash      = Animator.StringToHash("IsDead");
         private static readonly int HurtHash        = Animator.StringToHash("Hurt");
 
+        public float FacingDirectionX
+        {
+            get
+            {
+                bool facingLeft = spriteRenderer != null &&
+                                  (spriteRenderer.flipX ^ invertFacing);
+                return facingLeft ? -1f : 1f;
+            }
+        }
+
         void Awake()
         {
             _controller = GetComponent<PlayerCombatController>();

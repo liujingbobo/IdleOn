@@ -182,8 +182,10 @@ namespace IdleOn.Combat
                 return;
             }
 
-            bool facingLeft = _spriteRenderer != null && _spriteRenderer.flipX;
-            Vector2 direction = facingLeft ? Vector2.left : Vector2.right;
+            float facingDirectionX = _animatorDriver != null
+                ? _animatorDriver.FacingDirectionX
+                : (_spriteRenderer != null && _spriteRenderer.flipX ? -1f : 1f);
+            Vector2 direction = facingDirectionX < 0f ? Vector2.left : Vector2.right;
 
             // Phase 1: spawn height is lane-based (groundY + projectileHeight), not pivot-based,
             // so it stays horizontal on the lane and still hits 1-tile-high enemies after the
