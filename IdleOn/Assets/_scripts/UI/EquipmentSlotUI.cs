@@ -30,14 +30,11 @@ namespace IdleOn.UI
 
             bool hasIcon = def?.Icon != null;
 
-            if (hasIcon)
+            if (iconImage != null)
             {
-                iconImage.sprite  = def.Icon;
-                iconImage.enabled = true;
-            }
-            else
-            {
-                iconImage.enabled = false;
+                iconImage.sprite = hasIcon ? def.Icon : null;
+                iconImage.enabled = hasIcon;
+                iconImage.gameObject.SetActive(hasIcon);
             }
 
             placeholder?.SetActive(!hasIcon);
