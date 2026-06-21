@@ -2048,8 +2048,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5bd5c489d70afb46b8c4943e360a118, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   visualTarget: {fileID: 866968444}
   selectable: {fileID: 866968440}
   hoverScale: 1.06
@@ -2066,8 +2066,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5bd5c489d70afb46b8c4943e360a118, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   visualTarget: {fileID: 1544049697}
   selectable: {fileID: 1544049701}
   hoverScale: 1.06
@@ -2084,8 +2084,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5bd5c489d70afb46b8c4943e360a118, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   visualTarget: {fileID: 1764603448}
   selectable: {fileID: 1764603452}
   hoverScale: 1.06
