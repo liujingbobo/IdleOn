@@ -198,7 +198,67 @@ Both player and slime now play real Hurt/Death sprite animations instead of any 
 
 ## Next work
 
-The Grassland3-respawn / enemy-speed / portal-return-spawn bugfix pass above is done. No bugs are currently pending. Next work is **polish, regression testing, and one full manual Q1–Q12 playthrough only**, unless explicitly redirected. Do not implement Map4, Map5, or the boss yet.
+Claude session is handing off to Codex with a token budget exhausted. **No further Claude implementation this pass — docs only.** See the backlog below for the queued bugs/features and recommended order. Do not implement Map4, Map5, or the boss.
+
+## Known current state (2026-06-21, Claude→Codex handoff)
+
+- Q1–Q12 remains complete/frozen.
+- BootScene + TestCombat two-scene flow remains current (TestCombat is still the only gameplay scene with map roots).
+- Vault + Map unlock after Q12. Craft unlocks after Q7. Talents/AutoCombat unlock after Q10.
+- Player/slime Hurt/Death animations are implemented (see "Hurt/Death animation pass" above).
+- AutoCombat target discovery uses active-scene/local-respawn enemies via `EnemyTargetRegistry` (see CLAUDE.md).
+- Dialogue node portraits are implemented (per-node `Sprite`, VillageChef assigned to existing Chief nodes).
+- CharacterPanel StatsGroup hover popup is implemented (`MainHUD.cs` + `TestCombat.unity`, see CLAUDE.md).
+- UI animation pass for Inventory/Crafting/Dialogue windows is implemented (`ItemWindow.cs`, `CraftingWindow.cs`, `DialogueWindowUI.cs`).
+- Rebuilt VaultWindow UI is implemented and committed (`VaultInfoPanel.cs` new, `VaultSlotUI.cs`/prefab and `VaultWindow.cs` rewritten) — working tree is clean, nothing Vault-related is pending/dirty.
+
+## Backlog for Codex handoff (queued — not started)
+
+Recommended implementation order. Bugs first (smaller, isolated, regression-risk-sensitive), then features.
+
+### 1. Inventory equipped item icon not showing (bug)
+
+- **Suspected files:** `Assets/_scripts/UI/ItemWindow.cs` (`_inventorySlots[i].Populate(...)` and the equipment-slot refresh path), `Assets/_scripts/UI/InventorySlotUI.cs` / `EquipmentSlotUI.cs` (icon vs placeholder show/hide), `Assets/_scripts/Equipment/EquipmentSystem.cs` (confirm `OnEquipmentChanged` actually carries the right item before UI refresh).
+- **Risk:** Low — isolated to inventory/equipment UI, no save-format or stat changes expected.
+- **Type:** Code-only (verify no scene re-wiring needed unless an `Image`/placeholder reference is missing in the Inspector).
+- **Verify:** Equip an item from inventory → slot shows real icon, placeholder hidden. Unequip → placeholder returns, icon hidden. Re-equip a different item → icon updates (no stale icon). Reload save with equipment already on → icons show correctly on first frame (not just after a UI refresh event).
+
+### 2. Fireball direction reversed (bug)
+
+- **Suspected files:** `Assets/_scripts/Combat/PlayerCombatController.cs` (`SpawnFireballProjectile`, ~line 177–197 — uses `_spriteRenderer.flipX` to pick `Vector2.left`/`Vector2.right`), `Assets/_scripts/Combat/FireballProjectile.cs` (`Init(direction, damage)` — confirm it doesn't also invert), `PlayerAnimatorDriver`/facing logic (confirm `flipX` truth table matches actual sprite art orientation).
+- **Risk:** Low — isolated to Fireball cast, no other skill/combat path affected (Fireball Training talent bonus and MP cost logic untouched).
+- **Type:** Code-only.
+- **Verify:** Face right, cast Fireball → projectile travels right and can hit/damage an enemy to the right. Face left (move left first) → projectile travels left and hits an enemy to the left. Confirm cooldown/MP cost/damage values unchanged.
+
+### 3. Map Window travel-point stuck / doesn't transition (bug)
+
+- **Suspected files:** `Assets/_scripts/UI/MapWindowUI.cs` (`TravelTo()` ~line 122, `mapSystem.TravelTo(point.MapId)` and its rejection-warning path), `Assets/_scripts/World/MapSystem.cs` (`TravelTo` — unlocked/not-current guard), `Assets/_scripts/World/MapContentController.cs` (`HandleMapChanged` root-activation/spawn — confirm it isn't silently failing to find a back-portal and leaving the player mid-transition), `PortalGate.cs` (confirm `MapProgressData.IsUnlocked` sync isn't racing with the click).
+- **Risk:** Medium — `MapSystem`/`MapContentController` are protected systems (see "Do not touch casually" below); only the **point this bug actually lives in** should change, not the architecture.
+- **Type:** Both — likely code-only (a guard/race condition), but check `MapWindowUI.points[]` Inspector wiring in `TestCombat.unity` isn't pointing at a stale/duplicate Button first.
+- **Verify:** Click every currently-unlocked map point from every other map in sequence (not just adjacent ones) → each click transitions immediately, lands at the correct spawn (including back-portal spawn where applicable). Click a locked point → no-op, no console error. Click the current point → no-op. Repeat clicking rapidly → no double-transition or stuck state.
+
+### 4. Player-hit red screen flash (feature)
+
+- **Suspected files:** new lightweight UI flash component (full-screen `Image`, alpha pulse) wired under `Canvas` in `TestCombat.unity`; trigger from `HealthComponent.OnDamaged` (already exists — used by Hurt animation, see below) via a new subscriber, most naturally added in `MainHUD.cs` or a small dedicated script if a new file is approved at implementation time.
+- **Risk:** Low — purely additive presentation, must not interfere with existing `OnDamaged` consumers (`PlayerCombatController.HandleDamaged` → Hurt animation already subscribed; this is a second, independent subscriber, not a replacement).
+- **Type:** Both — code (subscribe + fade coroutine) and scene-wiring (new full-screen Image, raycastTarget off so it never blocks clicks).
+- **Verify:** Take non-fatal damage → screen flashes red briefly then clears. Take fatal damage → flash still plays (or is intentionally skipped — decide once, document it), Death animation/respawn unaffected. Flash never blocks pointer/raycast on any UI behind it. No flash on enemy-takes-damage (player-only).
+
+### 5. Enemy HP bar above each monster (feature)
+
+- **Suspected files:** `Assets/_assets/Prefabs/Enemies/Slime.prefab` (new child Canvas/`Image` HP bar above the sprite), `Assets/_scripts/Enemies/EnemyController.cs` (subscribe to its own `HealthComponent.OnHPChanged` to drive the bar fill), `HealthComponent.cs` (confirm `OnHPChanged` signature is reusable as-is — it already exists, used by the player HUD HP bar).
+- **Risk:** Low-medium — touches `Slime.prefab` (shared by all enemy instances) and `EnemyController` (a system with existing Hurt/Death/registry wiring this pass must not disturb).
+- **Type:** Both — prefab/scene wiring (new child UI) and code (one new subscriber method).
+- **Verify:** Slime HP bar starts full, depletes proportionally on each hit, reaches empty exactly at death (Death animation still plays normally). Bar resets to full on `LocalEnemyRespawner` respawn (Grassland3) and on `EnemySpawner`-style re-enable if ever used. No bar position drift when `SpriteFeetAligner` adjusts the visual child. No regression to Hurt/Death animation, loot drop, or registry (de)registration.
+
+### 6. Iron mine / blacksmith object — hidden until Q7/Craft unlock (feature)
+
+- **Suspected files:** `Assets/_scenes/TestCombat.unity` (the iron mine/blacksmith GameObject — confirm which map root it lives on; likely `Map_town`), `Assets/_scripts/Quests/QuestSystem.cs` (read-only check, do not modify the linear chain), existing precedent: Craft/Talents/AutoCombat/Vault/Map HUD-button show/hide already gates off quest completion — follow that exact pattern rather than inventing a new one.
+- **Risk:** Low if it only toggles `SetActive`/interactable on an existing GameObject; do not give it new unlock-requirement fields if it's a `WorldInteractable` (mirror `PortalInteractable`'s travel-only purity — keep gating external to the interactable itself, e.g. driven by the same q7/Craft-unlock event the HUD button already listens to).
+- **Type:** Both — scene wiring (default-hidden state) + a small code listener (`OnQuestChanged`/`OnTalentChanged`-equivalent — confirm which event currently flips Craft visibility and reuse it).
+- **Verify:** Fresh game before q7 → object hidden/inactive. Complete q7 (Craft unlocks) → object becomes visible/active without a scene reload. Save/quit/reload after q7 → object stays visible (state derived from quest completion, not a one-time scene flag). Save/quit/reload before q7 → object stays hidden.
+
+---
 
 ## Known debt / out of scope
 

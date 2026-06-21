@@ -67,7 +67,11 @@ This is not a full IdleOn clone.
 | Offline progression | Not implemented |
 | Settings | Not implemented |
 
-**Bugfix pass (2026-06-20):** Grassland3 enemies respawn locally for grinding; enemy/slime movement speed reduced 60%; portal travel spawns the player near the destination map's portal back to the source map when one exists, falling back to default spawn otherwise. See `.claude/HANDOFF_CURRENT_STATE.md` for detail. Next work is polish/regression/full Q1–Q12 manual run only, unless redirected. Do not implement Map4/Map5/boss yet.
+**Bugfix pass (2026-06-20):** Grassland3 enemies respawn locally for grinding; enemy/slime movement speed reduced 60%; portal travel spawns the player near the destination map's portal back to the source map when one exists, falling back to default spawn otherwise. See `.claude/HANDOFF_CURRENT_STATE.md` for detail.
+
+**Since then (2026-06-20/21):** player/slime Hurt and Death animations, dialogue node portraits, an open/close animation pass on Inventory/Crafting/Dialogue/Vault windows, a character-panel stat hover popup, and a full Vault UI rebuild (per-upgrade info panel with description/level/effect text and an Upgrade button) all shipped. Auto Combat target-finding was also fixed to track enemies that respawn locally on a map.
+
+Next work is a queued bug/feature backlog (equipped-item icon bug, Fireball direction bug, Map travel-point bug, player-hit screen flash, enemy HP bars, Q7-gated iron mine/blacksmith) — see `.claude/HANDOFF_CURRENT_STATE.md` for the full list, suspected files, risk, and verification steps per item. Do not implement Map4/Map5/boss yet.
 
 ---
 
@@ -597,6 +601,7 @@ Always-visible HUD anchored to the bottom of the screen.
 * Level
 * HP bar, MP bar, XP bar — all live
 * Silver and Gold coin display — live
+* Hovering the panel reveals a stat popup (STR/AGI/WIS/LUK and derived combat stats) that fades in/out
 
 **Button bar** (bottom strip):
 * Auto Combat toggle

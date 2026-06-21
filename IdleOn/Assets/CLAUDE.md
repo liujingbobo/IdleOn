@@ -501,6 +501,16 @@ Public API: `Open()`, `Close()`, `Toggle()`.
 
 Subscribes to `OnVaultChanged` and `OnCurrencyChanged` (Silver only).
 
+**Rebuilt and implemented (2026-06-21):** `VaultSlotUI.cs` (slot icon/level/selection), `VaultInfoPanel.cs` (new — name/description/icon/level fill/current-vs-next effect text/Upgrade button), `VaultWindow.cs` rewrite to drive the new info panel, `VaultSlotUI.prefab`. Each `VaultUpgradeDefinition` now carries an `Icon` and `Description` field; vault icon art lives under `Assets/_assets/Art/Vault/`. All committed.
+
+### Dialogue Portraits
+
+`DialogueNode` carries a per-node portrait `Sprite` (falls back to `DialogueDefinition.Portrait` if unset). `DialogueWindowUI` refreshes the portrait each time the current node changes, rendered into the existing `DialogueWindow` body image in `TestCombat`. All existing Chief dialogue nodes have the VillageChef portrait assigned.
+
+### UI Animation Pass
+
+`Inventory`/`Crafting`/`Dialogue` windows gained open/close motion (`ItemWindow.cs`, `CraftingWindow.cs`, `DialogueWindowUI.cs`), following the same `UIWindowMotion`/`UIButtonMotion` alpha/scale-tween pattern already used elsewhere. Vault/Map/Talent window motion was wired during the Vault rebuild pass above.
+
 ### Main HUD
 
 `MainHUD` component lives on `Canvas/MainHUD` child.
@@ -527,6 +537,8 @@ Placeholder buttons (Quest, Settings) still call `Debug.Log(...)` only — inact
 Requires `[SerializeField]` references to: `PlayerCombatController`, `ItemWindow`, `CraftingWindow`, `VaultWindow`, `MapWindow`, `TalentWindow`, `PlayerProgression`, plus `invButton/craftButton/vaultButton/talentButtonRef/mapButton` (Button refs for interactable sync).
 
 **MP bar shows real current MP** — `PlayerStats.CurrentMP` / `FinalStats.MaxMP`. No longer a placeholder.
+
+**CharacterPanel StatsGroup hover popup (implemented):** `Canvas/MainHUD/CharacterPanel/StatsGroup` holds a `CanvasGroup` (hidden by default — alpha 0, not interactable, no raycast block) and 12 TMP texts (STR/AGI/WIS/LUK/MAXHP/MAXMP/ATKMin/ATKMax/DEF/ACC/CRITChance/MoveSpeed) under `LeftGroup`/`RightGroup`. An `EventTrigger` on `CharacterPanel` (PointerEnter/PointerExit) calls `MainHUD.OnCharacterPanelPointerEnter`/`OnCharacterPanelPointerExit`, which fade `statsGroup.alpha` 0↔1 over `statsFadeDuration` (0.12s, `Time.unscaledDeltaTime`-driven coroutine) and refresh all 12 texts once on show from `PlayerStats.Instance.FinalStats` (`"Name: value"` format).
 
 **XP bar** uses `PlayerProgression.ExpForNextLevel(Level)` as cap — tied to the real level-up formula.
 
@@ -592,6 +604,10 @@ Single LMB click — priority order: drop pickup → UI (`EventSystem.IsPointerO
 - Clicking a **different** enemy switches `_currentTarget`; the attack cooldown timer is global and carries over unchanged (no free attack on switch).
 - Clicking the ground clears `_currentTarget`, moves to the clicked X, then idles (AutoCombat off) or resumes `SeekTarget()` (AutoCombat on).
 - Auto combat ON with no clicks → player repeatedly seeks nearest monster (`SeekTarget()`/`EnemySpawner.GetNearestEnemy`), moves to attack range, attacks, continues after each kill.
+
+### AutoCombat Target Discovery (registry-based, 2026-06-20)
+
+`EnemyTargetRegistry` (`_scripts/Enemies/EnemyTargetRegistry.cs`, new static class) — `EnemyController.OnEnable`/`OnDisable` register/unregister themselves. `GetNearestValidEnemy(position)` scans only currently-registered, active, alive, non-`Dead`-state enemies and returns the nearest, sweeping stale (destroyed) entries as it goes. `PlayerCombatController.SeekTarget()` calls this instead of any scene-wide find — fixes AutoCombat not finding enemies spawned/respawned (e.g. via `LocalEnemyRespawner`) after the player entered the map. Resets on every domain reload (`RuntimeInitializeOnLoadMethod`).
 
 ### Required Inspector Setup
 
