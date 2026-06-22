@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/984d3b2b-1011-47df-ba93-8605836bbc69
+
 # IdleOn-Inspired Unity Demo
 
 A small, polished Unity vertical slice inspired by the early-game feel of **IdleOn** and classic 2D idle RPGs.
