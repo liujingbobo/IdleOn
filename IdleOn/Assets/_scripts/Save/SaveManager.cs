@@ -105,6 +105,8 @@ namespace IdleOn.Save
                     CurrentSave.UnlockedFeatureFlags = FeatureUnlockSystem.Instance.ExportState();
                 if (EnemyKillTracker.Instance != null)
                     CurrentSave.EnemyKillCounts = EnemyKillTracker.Instance.ExportState();
+                if (OfflineEarningsSystem.Instance != null)
+                    OfflineEarningsSystem.Instance.RecordLogoutSnapshot();
             }
 
             string json = JsonUtility.ToJson(CurrentAccount, prettyPrint: true);

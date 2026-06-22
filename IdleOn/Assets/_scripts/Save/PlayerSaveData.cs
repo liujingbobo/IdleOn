@@ -35,6 +35,12 @@ namespace IdleOn.Save
         public string CurrentMapId   = "grassland_1";
         public string LastLogoutTime = string.Empty;
 
+        // Offline earnings — snapshot taken on save/quit, consumed once on next load.
+        // 0 means "no pending offline reward" (covers first-ever entry and old saves).
+        public long   LastLogoutUtcTicks      = 0;
+        public string LastOfflineMapId        = string.Empty;
+        public bool   WasAutoCombatOnAtLogout = false;
+
         // Map progression
         public List<MapProgressData> MapProgress = new List<MapProgressData>();
 

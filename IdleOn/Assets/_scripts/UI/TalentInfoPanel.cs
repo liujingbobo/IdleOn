@@ -12,6 +12,7 @@ namespace IdleOn.UI
         [SerializeField] private GameObject panel;
 
         [Header("Talent Info")]
+        [SerializeField] private Image    iconImage;
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text descriptionText;
 
@@ -65,6 +66,7 @@ namespace IdleOn.UI
             int level = TalentSystem.Instance?.GetLevel(_talent.TalentId) ?? 0;
             bool maxed = level >= _talent.MaxLevel;
 
+            iconImage.sprite = _talent.Icon;
             nameText.text        = _talent.DisplayName;
             descriptionText.text = _talent.Description;
 
@@ -103,7 +105,7 @@ namespace IdleOn.UI
                 text.gameObject.SetActive(visible);
             }
 
-            separatorRoot?.SetActive(visible);
+            // separatorRoot?.SetActive(visible);
         }
 
         private void ResolveEffectReferences()

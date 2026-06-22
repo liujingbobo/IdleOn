@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyId: slime
   DisplayName: Slime
-  MaxHP: 50
+  MaxHP: 30
   ATK: 8
   DEF: 0
   MoveSpeed: 0

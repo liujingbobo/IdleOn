@@ -78,13 +78,13 @@ namespace IdleOn.UI
                 StopCoroutine(_hoverCoroutine);
                 _hoverCoroutine = null;
             }
-            SkillTooltipUI.Instance?.Hide();
+            // SkillTooltipUI.Instance?.Hide();
         }
 
         private IEnumerator HoverAndShowTooltip()
         {
             yield return new WaitForSeconds(TooltipHoverDelay);
-            SkillTooltipUI.Instance?.Show(_assignedSkill);
+            // SkillTooltipUI.Instance?.Show(_assignedSkill);
             _hoverCoroutine = null;
         }
 

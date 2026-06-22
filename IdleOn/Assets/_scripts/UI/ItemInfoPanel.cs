@@ -36,16 +36,16 @@ namespace IdleOn.UI
             typeText.text        = def.ItemType.ToString();
             descriptionText.text = def.Description;
 
-            bool isEquipment = def.ItemType == ItemType.Equipment;
-            slotRow.SetActive(isEquipment);
-            if (isEquipment) slotText.text = def.EquipmentSlot.ToString();
-
-            bool hasStats = isEquipment && AnyBonusNonZero(def.StatBonuses);
-            statsRow.SetActive(hasStats);
-            if (hasStats) statsText.text = BuildStatsText(def.StatBonuses);
-
-            quantityRow.SetActive(quantity > 1);
-            if (quantity > 1) quantityText.text = "Qty: " + quantity;
+            // bool isEquipment = def.ItemType == ItemType.Equipment;
+            // slotRow.SetActive(isEquipment);
+            // if (isEquipment) slotText.text = def.EquipmentSlot.ToString();
+            //
+            // bool hasStats = isEquipment && AnyBonusNonZero(def.StatBonuses);
+            // statsRow.SetActive(hasStats);
+            // if (hasStats) statsText.text = BuildStatsText(def.StatBonuses);
+            //
+            // quantityRow.SetActive(quantity > 1);
+            // if (quantity > 1) quantityText.text = "Qty: " + quantity;
 
             gameObject.SetActive(true);
             Reposition(anchor);

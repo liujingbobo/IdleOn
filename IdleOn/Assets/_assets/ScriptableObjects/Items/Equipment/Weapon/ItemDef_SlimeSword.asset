@@ -21,7 +21,7 @@ MonoBehaviour:
   Rarity: 1
   EquipmentSlot: 1
   StatBonuses:
-    STR: 0
+    STR: 2
     AGI: 0
     WIS: 0
     LUK: 0

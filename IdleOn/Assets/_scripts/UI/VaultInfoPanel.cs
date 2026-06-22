@@ -82,14 +82,14 @@ namespace IdleOn.UI
             bool showCurrent = level > 0;
             bool showNext    = !maxed;
 
-            currentSeparatorRoot?.SetActive(showCurrent && showNext);
+            currentSeparatorRoot?.SetActive(showCurrent);
             if (currentEffectText != null)
             {
                 currentEffectText.gameObject.SetActive(showCurrent);
                 if (showCurrent) currentEffectText.text = _def.GetCurrentEffectText(level);
             }
 
-            nextSeparatorRoot?.SetActive(showCurrent && showNext);
+            nextSeparatorRoot?.SetActive(showNext);
             if (nextEffectText != null)
             {
                 nextEffectText.gameObject.SetActive(showNext);

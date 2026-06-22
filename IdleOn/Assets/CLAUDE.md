@@ -503,6 +503,14 @@ Subscribes to `OnVaultChanged` and `OnCurrencyChanged` (Silver only).
 
 **Rebuilt and implemented (2026-06-21):** `VaultSlotUI.cs` (slot icon/level/selection), `VaultInfoPanel.cs` (new — name/description/icon/level fill/current-vs-next effect text/Upgrade button), `VaultWindow.cs` rewrite to drive the new info panel, `VaultSlotUI.prefab`. Each `VaultUpgradeDefinition` now carries an `Icon` and `Description` field; vault icon art lives under `Assets/_assets/Art/Vault/`. All committed.
 
+### Offline Earnings Window
+
+`Canvas/OfflineEarnings` (`OfflineEarningsWindowUI` + `OfflineEarningsSystem`, `BookUI` reused as `windowPanel`/`motion`). Closed by default via `UIWindowMotion.SetClosedImmediate()` in `Awake()` — same convention as every other window.
+
+`OfflineEarningsSystem.RecordLogoutSnapshot()` is called from `SaveManager.SaveAccountToDisk()` and snapshots `LastLogoutUtcTicks`/`LastOfflineMapId`/`WasAutoCombatOnAtLogout` onto `PlayerSaveData`. On `SaveManager.OnSaveLoaded`, `HandleSaveLoaded()` consumes (zeroes) the snapshot immediately — preventing duplicate grants — then grants rewards only if: tutorial complete (`QuestSystem.IsCompleted("q12")`), AutoCombat was on at logout, and the logged-out map was `grassland_2` or `grassland_3`. Reward formula: `offlineSeconds = max(1, elapsed)`; grassland_2 → `Gold = offlineSeconds*50`, `slime_essence = offlineSeconds*2`; grassland_3 → `Gold = offlineSeconds*120`, `slime_essence = offlineSeconds*5`. Rewards are added via `CurrencySystem`/`InventorySystem` before the popup (`EarningSlotUI` slots in `ContentRow/BackgroundGrid`) is shown.
+
+Do NOT add EXP, additional maps, or repeat-grant logic to this system without explicit instruction.
+
 ### Dialogue Portraits
 
 `DialogueNode` carries a per-node portrait `Sprite` (falls back to `DialogueDefinition.Portrait` if unset). `DialogueWindowUI` refreshes the portrait each time the current node changes, rendered into the existing `DialogueWindow` body image in `TestCombat`. All existing Chief dialogue nodes have the VillageChef portrait assigned.

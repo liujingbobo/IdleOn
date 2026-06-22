@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2030610533312326149}
   - component: {fileID: 3374367582175771344}
   - component: {fileID: 8647333453948149170}
+  - component: {fileID: 1737344166008175190}
   m_Layer: 0
   m_Name: EarningsSlotUI
   m_TagString: Untagged
@@ -77,6 +78,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1737344166008175190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4516391760082546493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab52a6d617e5b843b87f7711f50a9b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amountText: {fileID: 4088816007513558555}
+  coin: {fileID: -6051709103645849995, guid: f38f26e7e588f4c4e823d3782d3ccf95, type: 3}
+  essence: {fileID: 3000608211166667148, guid: a18976b5975e7e4479468935ef11029a, type: 3}
+  icon: {fileID: 4089348711281282868}
 --- !u!1 &6948794385599742431
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,14 +152,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 3000608211166667148, guid: a18976b5975e7e4479468935ef11029a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -221,9 +238,11 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b33d9b6e5b55ee945adffc5cdd099b79, type: 2}
   m_sharedMaterial: {fileID: -8929037070627532393, guid: b33d9b6e5b55ee945adffc5cdd099b79, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 0}
   m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
+  m_fontMaterials:
+  - {fileID: 0}
   m_fontColor32:
     serializedVersion: 2
     rgba: 4289255422
